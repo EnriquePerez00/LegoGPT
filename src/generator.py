@@ -50,7 +50,7 @@ class LegoGenerator:
             
             for parts_list, score in beams:
                 # Build PyG graph for the current state in the beam
-                graph_data = build_pyg_graph(parts_list, self.allowed_parts).to(self.device)
+                graph_data = build_pyg_graph(parts_list, self.allowed_parts, allowed_colors=self.allowed_colors).to(self.device)
                 batch = torch.zeros(graph_data.num_nodes, dtype=torch.long, device=self.device)
                 
                 with torch.no_grad():

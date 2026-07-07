@@ -117,13 +117,15 @@ def parse_ldraw_file(file_path: str) -> list[ParsedPart]:
                     
     return parts
 
-def build_pyg_graph(parts: list[ParsedPart], allowed_parts=None) -> Data:
+def build_pyg_graph(parts: list[ParsedPart], allowed_parts=None, allowed_colors=None) -> Data:
     """
     Converts a list of ParsedParts into a PyTorch Geometric Graph (Data).
     Nodes are the parts, and edges are physical contact connections.
     
     Args:
         parts: List of ParsedPart objects.
+        allowed_parts: Optional list of allowed part IDs.
+        allowed_colors: Optional list of allowed color codes.
         
     Returns:
         A torch_geometric.data.Data object.
@@ -133,6 +135,8 @@ def build_pyg_graph(parts: list[ParsedPart], allowed_parts=None) -> Data:
     
     if allowed_parts is None:
         allowed_parts = ALLOWED_PARTS
+    if allowed_colors is None:
+        allowed_colors = ALLOWED_COLORS
         
     num_nodes = len(parts)
     node_features = []
@@ -143,7 +147,7 @@ def build_pyg_graph(parts: list[ParsedPart], allowed_parts=None) -> Data:
         part_one_hot = [1.0 if part.part_id == p else 0.0 for p in allowed_parts]
         
         # Color One-hot encoding
-        color_one_hot = [1.0 if part.color == c else 0.0 for c in ALLOWED_COLORS]
+        color_one_hot = [1.0 if part.color == c else 0.0 for c in allowed_colors]
         
         # Translation vector (X, Y, Z)
         translation = part.transform[:3, 3].tolist()

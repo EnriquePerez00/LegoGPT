@@ -77,7 +77,7 @@ def convert_io_to_ldr(io_file_path: str, output_ldr_path: str) -> bool:
         print(f"Conversion error: {e}")
         return False
 
-def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink") -> str:
+def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_raw") -> str:
     """
     Downloads a custom model from the BrickLink Studio gallery.
     """

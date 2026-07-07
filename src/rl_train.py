@@ -122,7 +122,7 @@ def train_rl_step(model, optimizer, device="cpu", mode="general") -> float:
         target_part = parts[i]
         
         # Build PyG graph of the state
-        graph_data = build_pyg_graph(state, vocab).to(device)
+        graph_data = build_pyg_graph(state, vocab, allowed_colors=colors).to(device)
         batch = torch.zeros(graph_data.num_nodes, dtype=torch.long, device=device)
         
         # Forward pass
