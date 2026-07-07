@@ -1,0 +1,1434 @@
+{
+    "0": {
+        "name": "Various",
+        "ldraw_code": "508",
+        "hex": "#808080",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "11": {
+        "name": "Black",
+        "ldraw_code": "256",
+        "hex": "#202020",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "7": {
+        "name": "Blue",
+        "ldraw_code": "273",
+        "hex": "#0032B1",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "6": {
+        "name": "Green",
+        "ldraw_code": "2",
+        "hex": "#24793D",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "39": {
+        "name": "Dark Turquoise",
+        "ldraw_code": "3",
+        "hex": "#00828E",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "5": {
+        "name": "Red",
+        "ldraw_code": "324",
+        "hex": "#C30025",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "47": {
+        "name": "Dark Pink",
+        "ldraw_code": "5",
+        "hex": "#C76F9F",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "8": {
+        "name": "Brown",
+        "ldraw_code": "6",
+        "hex": "#573826",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "9": {
+        "name": "Light Gray",
+        "ldraw_code": "375",
+        "hex": "#C0C1C0",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "10": {
+        "name": "Dark Gray",
+        "ldraw_code": "8",
+        "hex": "#6C6D5B",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "62": {
+        "name": "Light Blue",
+        "ldraw_code": "9",
+        "hex": "#B3D1E2",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "36": {
+        "name": "Bright Green",
+        "ldraw_code": "10010",
+        "hex": "#58AB41",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "40": {
+        "name": "Light Turquoise",
+        "ldraw_code": "11",
+        "hex": "#54A4AE",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "25": {
+        "name": "Salmon",
+        "ldraw_code": "12",
+        "hex": "#F16F5D",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "23": {
+        "name": "Pink",
+        "ldraw_code": "13",
+        "hex": "#FB96AB",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "3": {
+        "name": "Yellow",
+        "ldraw_code": "65",
+        "hex": "#F4CC2E",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "1": {
+        "name": "White",
+        "ldraw_code": "511",
+        "hex": "#F9F9F9",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "-1": {
+        "name": "None",
+        "ldraw_code": "10047",
+        "hex": "#FFFFFF",
+        "alpha": 0.05,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "38": {
+        "name": "Light Green",
+        "ldraw_code": "17",
+        "hex": "#C1D9B7",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "33": {
+        "name": "Light Yellow",
+        "ldraw_code": "18",
+        "hex": "#FAE595",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "2": {
+        "name": "Tan",
+        "ldraw_code": "19",
+        "hex": "#E3CC9D",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "44": {
+        "name": "Light Violet",
+        "ldraw_code": "20",
+        "hex": "#C9CAE2",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "46": {
+        "name": "Glow in Dark Opaque",
+        "ldraw_code": "21",
+        "hex": "#DFFEAF",
+        "alpha": 0.9803922,
+        "category": "Milky Colors",
+        "material_type": "transparent"
+    },
+    "24": {
+        "name": "Purple",
+        "ldraw_code": "449",
+        "hex": "#80007A",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "109": {
+        "name": "Dark Royal Blue",
+        "ldraw_code": "23",
+        "hex": "#1F31AF",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "4": {
+        "name": "Orange",
+        "ldraw_code": "350",
+        "hex": "#CF650F",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "71": {
+        "name": "Magenta",
+        "ldraw_code": "10026",
+        "hex": "#901F76",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "34": {
+        "name": "Lime",
+        "ldraw_code": "490",
+        "hex": "#D6EF00",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "69": {
+        "name": "Dark Tan",
+        "ldraw_code": "28",
+        "hex": "#948972",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "104": {
+        "name": "Bright Pink",
+        "ldraw_code": "295",
+        "hex": "#FF94C2",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "157": {
+        "name": "Medium Lavender",
+        "ldraw_code": "10030",
+        "hex": "#A06EB9",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "154": {
+        "name": "Lavender",
+        "ldraw_code": "10031",
+        "hex": "#CDA4DE",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "14": {
+        "name": "Trans-Dark Blue",
+        "ldraw_code": "33",
+        "hex": "#001F9F",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "20": {
+        "name": "Trans-Green",
+        "ldraw_code": "34",
+        "hex": "#227740",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "226": {
+        "name": "Trans-Light Bright Green",
+        "ldraw_code": "227",
+        "hex": "#B5D96C",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "108": {
+        "name": "Trans-Bright Green",
+        "ldraw_code": "10035",
+        "hex": "#56E646",
+        "alpha": 0.8,
+        "category": "Rubber Colors",
+        "material_type": "transparent"
+    },
+    "17": {
+        "name": "Trans-Red",
+        "ldraw_code": "10036",
+        "hex": "#C91A09",
+        "alpha": 0.8,
+        "category": "Rubber Colors",
+        "material_type": "transparent"
+    },
+    "50": {
+        "name": "Trans-Dark Pink",
+        "ldraw_code": "158",
+        "hex": "#FB96AB",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "18": {
+        "name": "Trans-Neon Orange",
+        "ldraw_code": "38",
+        "hex": "#FE7F0C",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "113": {
+        "name": "Trans-Aqua",
+        "ldraw_code": "39",
+        "hex": "#C0DEEF",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "13": {
+        "name": "Trans-Brown",
+        "ldraw_code": "40",
+        "hex": "#625E51",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "74": {
+        "name": "Trans-Medium Blue",
+        "ldraw_code": "293",
+        "hex": "#6BABE4",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "16": {
+        "name": "Trans-Neon Green",
+        "ldraw_code": "42",
+        "hex": "#BFFE00",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "15": {
+        "name": "Trans-Light Blue",
+        "ldraw_code": "10043",
+        "hex": "#AEE9EF",
+        "alpha": 0.8,
+        "category": "Rubber Colors",
+        "material_type": "transparent"
+    },
+    "234": {
+        "name": "Trans-Medium Purple",
+        "ldraw_code": "44",
+        "hex": "#956F9E",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "107": {
+        "name": "Trans-Pink",
+        "ldraw_code": "45",
+        "hex": "#FB96AB",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "19": {
+        "name": "Trans-Yellow",
+        "ldraw_code": "66",
+        "hex": "#C9AF00",
+        "alpha": 0.8,
+        "category": "Rubber Colors",
+        "material_type": "transparent"
+    },
+    "12": {
+        "name": "Trans-Clear",
+        "ldraw_code": "67",
+        "hex": "#FEFEFE",
+        "alpha": 0.8,
+        "category": "Rubber Colors",
+        "material_type": "transparent"
+    },
+    "51": {
+        "name": "Trans-Purple",
+        "ldraw_code": "52",
+        "hex": "#A4A4CA",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "121": {
+        "name": "Trans-Neon Yellow",
+        "ldraw_code": "234",
+        "hex": "#FBE890",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "98": {
+        "name": "Trans-Orange",
+        "ldraw_code": "57",
+        "hex": "#EF8E1B",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "57": {
+        "name": "Chrome Antique Brass",
+        "ldraw_code": "60",
+        "hex": "#63594B",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "52": {
+        "name": "Chrome Blue",
+        "ldraw_code": "61",
+        "hex": "#6B95BE",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "64": {
+        "name": "Chrome Green",
+        "ldraw_code": "62",
+        "hex": "#3BB270",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "82": {
+        "name": "Chrome Pink",
+        "ldraw_code": "63",
+        "hex": "#A94C8D",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "122": {
+        "name": "Chrome Black",
+        "ldraw_code": "64",
+        "hex": "#1A2933",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "96": {
+        "name": "Very Light Orange",
+        "ldraw_code": "68",
+        "hex": "#F2CE9A",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "93": {
+        "name": "Light Purple",
+        "ldraw_code": "69",
+        "hex": "#AF3195",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "88": {
+        "name": "Reddish Brown",
+        "ldraw_code": "10070",
+        "hex": "#5F3109",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "86": {
+        "name": "Light Bluish Gray",
+        "ldraw_code": "496",
+        "hex": "#A2A1A3",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "85": {
+        "name": "Dark Bluish Gray",
+        "ldraw_code": "72",
+        "hex": "#6B6D67",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "42": {
+        "name": "Medium Blue",
+        "ldraw_code": "10073",
+        "hex": "#7396C8",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "37": {
+        "name": "Medium Green",
+        "ldraw_code": "74",
+        "hex": "#72DBA0",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "116": {
+        "name": "Speckle Black-Copper",
+        "ldraw_code": "75",
+        "hex": "#000000",
+        "alpha": 1.0,
+        "category": "Speckle Colors",
+        "material_type": "solid"
+    },
+    "117": {
+        "name": "Speckle DBGray-Silver",
+        "ldraw_code": "76",
+        "hex": "#625E60",
+        "alpha": 1.0,
+        "category": "Speckle Colors",
+        "material_type": "solid"
+    },
+    "56": {
+        "name": "Light Pink",
+        "ldraw_code": "77",
+        "hex": "#FDCBCE",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "90": {
+        "name": "Light Nougat",
+        "ldraw_code": "10078",
+        "hex": "#FFC995",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "60": {
+        "name": "Milky White",
+        "ldraw_code": "79",
+        "hex": "#FEFEFE",
+        "alpha": 0.8784314,
+        "category": "Milky Colors",
+        "material_type": "transparent"
+    },
+    "67": {
+        "name": "Metallic Silver",
+        "ldraw_code": "80",
+        "hex": "#A4A8B3",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "70": {
+        "name": "Metallic Green",
+        "ldraw_code": "200",
+        "hex": "#889A5E",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "65": {
+        "name": "Metallic Gold",
+        "ldraw_code": "82",
+        "hex": "#DAAB33",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "244": {
+        "name": "Pearl Black",
+        "ldraw_code": "83",
+        "hex": "#192730",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "150": {
+        "name": "Medium Nougat",
+        "ldraw_code": "84",
+        "hex": "#e3a05b",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "89": {
+        "name": "Dark Purple",
+        "ldraw_code": "85",
+        "hex": "#3E3590",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "91": {
+        "name": "Light Brown",
+        "ldraw_code": "86",
+        "hex": "#7B4F39",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "77": {
+        "name": "Pearl Dark Gray",
+        "ldraw_code": "148",
+        "hex": "#565756",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "97": {
+        "name": "Royal Blue(Old Blue-Violet)",
+        "ldraw_code": "89",
+        "hex": "#4B60DA",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "28": {
+        "name": "Nougat",
+        "ldraw_code": "92",
+        "hex": "#CF9067",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "26": {
+        "name": "Light Salmon",
+        "ldraw_code": "100",
+        "hex": "#FDB9BC",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "43": {
+        "name": "Violet",
+        "ldraw_code": "110",
+        "hex": "#4253A2",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "73": {
+        "name": "Medium Violet",
+        "ldraw_code": "112",
+        "hex": "#6773C9",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "100": {
+        "name": "Glitter Trans-Dark Pink",
+        "ldraw_code": "114",
+        "hex": "#DF6695",
+        "alpha": 0.5019608,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "76": {
+        "name": "Medium Lime",
+        "ldraw_code": "115",
+        "hex": "#C6D13B",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "101": {
+        "name": "Glitter Trans-Clear",
+        "ldraw_code": "117",
+        "hex": "#FEFEFE",
+        "alpha": 0.5019608,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "41": {
+        "name": "Aqua",
+        "ldraw_code": "118",
+        "hex": "#B2D6D0",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "35": {
+        "name": "Light Lime",
+        "ldraw_code": "120",
+        "hex": "#e2db5f",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "32": {
+        "name": "Light Orange",
+        "ldraw_code": "125",
+        "hex": "#F8B960",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "225": {
+        "name": "Dark Nougat",
+        "ldraw_code": "128",
+        "hex": "#A95500",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "102": {
+        "name": "Glitter Trans-Purple",
+        "ldraw_code": "129",
+        "hex": "#630060",
+        "alpha": 0.5019608,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "111": {
+        "name": "Speckle Black-Silver",
+        "ldraw_code": "132",
+        "hex": "#000000",
+        "alpha": 1.0,
+        "category": "Speckle Colors",
+        "material_type": "solid"
+    },
+    "151": {
+        "name": "Speckle Black-Gold",
+        "ldraw_code": "133",
+        "hex": "#000000",
+        "alpha": 1.0,
+        "category": "Speckle Colors",
+        "material_type": "solid"
+    },
+    "84": {
+        "name": "Copper",
+        "ldraw_code": "134",
+        "hex": "#954926",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "66": {
+        "name": "Pearl Light Gray",
+        "ldraw_code": "135",
+        "hex": "#9BA2A7",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "78": {
+        "name": "Pearl Sand Blue",
+        "ldraw_code": "137",
+        "hex": "#5576B9",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "61": {
+        "name": "Pearl Light Gold",
+        "ldraw_code": "142",
+        "hex": "#DBBD60",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "81": {
+        "name": "Flat Dark Gold",
+        "ldraw_code": "147",
+        "hex": "#83724F",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "119": {
+        "name": "Pearl Very Light Gray",
+        "ldraw_code": "150",
+        "hex": "#BABCBB",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "99": {
+        "name": "Very Light Bluish Gray",
+        "ldraw_code": "151",
+        "hex": "#E5E2DF",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "238": {
+        "name": "Bionicle Gold",
+        "ldraw_code": "100238",
+        "hex": "#AB673A",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "95": {
+        "name": "Flat Silver",
+        "ldraw_code": "504",
+        "hex": "#888687",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "83": {
+        "name": "Pearl White",
+        "ldraw_code": "183",
+        "hex": "#F1F2F1",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "252": {
+        "name": "Pearl Red",
+        "ldraw_code": "184",
+        "hex": "#D60026",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "254": {
+        "name": "Pearl Blue",
+        "ldraw_code": "185",
+        "hex": "#0059A3",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "253": {
+        "name": "Pearl Green",
+        "ldraw_code": "186",
+        "hex": "#008E3C",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "235": {
+        "name": "Reddish Gold",
+        "ldraw_code": "189",
+        "hex": "#AC8247",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "110": {
+        "name": "Bright Light Orange",
+        "ldraw_code": "191",
+        "hex": "#F7BA3C",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "105": {
+        "name": "Bright Light Blue",
+        "ldraw_code": "212",
+        "hex": "#85C0E0",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "27": {
+        "name": "Rust",
+        "ldraw_code": "508",
+        "hex": "#FF8014",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "227": {
+        "name": "Clikits Lavender",
+        "ldraw_code": "218",
+        "hex": "#eeadf7",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "245": {
+        "name": "Lilac",
+        "ldraw_code": "219",
+        "hex": "#7862CE",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "103": {
+        "name": "Bright Light Yellow",
+        "ldraw_code": "10226",
+        "hex": "#FFEC6C",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "164": {
+        "name": "Trans-Light Orange",
+        "ldraw_code": "231",
+        "hex": "#F0A423",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "87": {
+        "name": "Sky Blue",
+        "ldraw_code": "232",
+        "hex": "#55BDD5",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "63": {
+        "name": "Dark Blue",
+        "ldraw_code": "406",
+        "hex": "#001C67",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "114": {
+        "name": "Trans-Light Purple",
+        "ldraw_code": "284",
+        "hex": "#956F9E",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "221": {
+        "name": "Trans-Light Green",
+        "ldraw_code": "285",
+        "hex": "#94E5AB",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "80": {
+        "name": "Dark Green",
+        "ldraw_code": "288",
+        "hex": "#174531",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "118": {
+        "name": "Glow In Dark Trans",
+        "ldraw_code": "294",
+        "hex": "#BCC5AC",
+        "alpha": 0.9803922,
+        "category": "Milky Colors",
+        "material_type": "transparent"
+    },
+    "115": {
+        "name": "Pearl Gold",
+        "ldraw_code": "297",
+        "hex": "#CB9B2A",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "250": {
+        "name": "Metallic Copper",
+        "ldraw_code": "300",
+        "hex": "#C27F53",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "162": {
+        "name": "Glitter Trans-Light Blue",
+        "ldraw_code": "302",
+        "hex": "#AEE9EF",
+        "alpha": 0.5019608,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "120": {
+        "name": "Dark Brown",
+        "ldraw_code": "10308",
+        "hex": "#352100",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "72": {
+        "name": "Maersk Blue",
+        "ldraw_code": "313",
+        "hex": "#53A8C7",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "59": {
+        "name": "Dark Red",
+        "ldraw_code": "10320",
+        "hex": "#720012",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "153": {
+        "name": "Dark Azure",
+        "ldraw_code": "10321",
+        "hex": "#469BC3",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "156": {
+        "name": "Medium Azure",
+        "ldraw_code": "10322",
+        "hex": "#68C3E2",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "152": {
+        "name": "Light Aqua",
+        "ldraw_code": "10323",
+        "hex": "#D3F2EA",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "158": {
+        "name": "Yellowish Green",
+        "ldraw_code": "326",
+        "hex": "#DEEDA4",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "159": {
+        "name": "Glow In Dark White",
+        "ldraw_code": "329",
+        "hex": "#ECECEC",
+        "alpha": 1.0,
+        "category": "Milky Colors",
+        "material_type": "solid"
+    },
+    "155": {
+        "name": "Olive Green",
+        "ldraw_code": "330",
+        "hex": "#9A9959",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "21": {
+        "name": "Chrome Gold",
+        "ldraw_code": "334",
+        "hex": "#BAA43C",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "58": {
+        "name": "Sand Red",
+        "ldraw_code": "335",
+        "hex": "#a37876",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "163": {
+        "name": "Glitter Trans-Neon Green",
+        "ldraw_code": "10351",
+        "hex": "#56E646",
+        "alpha": 0.8,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "222": {
+        "name": "Glitter Trans-Orange",
+        "ldraw_code": "341",
+        "hex": "#F08F1C",
+        "alpha": 0.8,
+        "category": "Glitter Colors",
+        "material_type": "transparent"
+    },
+    "94": {
+        "name": "Medium Dark Pink",
+        "ldraw_code": "351",
+        "hex": "#F684B0",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "220": {
+        "name": "Coral",
+        "ldraw_code": "353",
+        "hex": "#ff7575",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "228": {
+        "name": "Satin Trans-Clear",
+        "ldraw_code": "360",
+        "hex": "#FCFCFC",
+        "alpha": 0.94,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "223": {
+        "name": "Satin Trans-Light Blue",
+        "ldraw_code": "362",
+        "hex": "#AEE9EF",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "229": {
+        "name": "Satin Trans-Brown",
+        "ldraw_code": "363",
+        "hex": "#635F52",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "224": {
+        "name": "Satin Trans-Dark Pink",
+        "ldraw_code": "364",
+        "hex": "#DF6695",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "230": {
+        "name": "Satin Trans-Purple",
+        "ldraw_code": "365",
+        "hex": "#671F81",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "29": {
+        "name": "Earth Orange",
+        "ldraw_code": "507",
+        "hex": "#FA9C1C",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "233": {
+        "name": "Satin Trans-Bright Green",
+        "ldraw_code": "367",
+        "hex": "#237841",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "236": {
+        "name": "Neon Yellow",
+        "ldraw_code": "368",
+        "hex": "#EDFF21",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "240": {
+        "name": "Medium Brown",
+        "ldraw_code": "370",
+        "hex": "#755945",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "54": {
+        "name": "Sand Purple",
+        "ldraw_code": "373",
+        "hex": "#835D83",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "48": {
+        "name": "Sand Green",
+        "ldraw_code": "10378",
+        "hex": "#708E7C",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "55": {
+        "name": "Sand Blue",
+        "ldraw_code": "379",
+        "hex": "#587083",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "22": {
+        "name": "Chrome Silver",
+        "ldraw_code": "383",
+        "hex": "#DFDFDF",
+        "alpha": 1.0,
+        "category": "Chrome Colors",
+        "material_type": "metallic"
+    },
+    "169": {
+        "name": "Sienna",
+        "ldraw_code": "422",
+        "hex": "#915C3C",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "168": {
+        "name": "Umber",
+        "ldraw_code": "423",
+        "hex": "#543F33",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "106": {
+        "name": "Fabuland Brown",
+        "ldraw_code": "450",
+        "hex": "#B3694E",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "31": {
+        "name": "Medium Orange",
+        "ldraw_code": "462",
+        "hex": "#FEA60A",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "68": {
+        "name": "Dark Orange",
+        "ldraw_code": "10484",
+        "hex": "#91501C",
+        "alpha": 1.0,
+        "category": "Rubber Colors",
+        "material_type": "rubber"
+    },
+    "-10": {
+        "name": "Magnet",
+        "ldraw_code": "493",
+        "hex": "#656761",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "-11": {
+        "name": "Electric_Contact_Alloy",
+        "ldraw_code": "494",
+        "hex": "#D0D0D0",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "-12": {
+        "name": "Electric_Contact_Copper",
+        "ldraw_code": "495",
+        "hex": "#AE7A59",
+        "alpha": 1.0,
+        "category": "Metallic Colors",
+        "material_type": "metallic"
+    },
+    "49": {
+        "name": "Very Light Gray",
+        "ldraw_code": "503",
+        "hex": "#E5E2D9",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "160": {
+        "name": "Fabuland Orange",
+        "ldraw_code": "509",
+        "hex": "#D6923D",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "248": {
+        "name": "Fabuland Lime",
+        "ldraw_code": "510",
+        "hex": "#78FC78",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "239": {
+        "name": "Bionicle Silver",
+        "ldraw_code": "10179",
+        "hex": "#737271",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "232": {
+        "name": "Satin Trans-Dark Blue",
+        "ldraw_code": "10366",
+        "hex": "#0020A0",
+        "alpha": 0.7,
+        "category": "Satin Colors",
+        "material_type": "transparent"
+    },
+    "161": {
+        "name": "Dark Yellow",
+        "ldraw_code": "100003",
+        "hex": "#E5B635",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "165": {
+        "name": "Neon Orange",
+        "ldraw_code": "100007",
+        "hex": "#FF7052",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "166": {
+        "name": "Neon Green",
+        "ldraw_code": "100009",
+        "hex": "#BCEF66",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "251": {
+        "name": "Trans-Black",
+        "ldraw_code": "10375",
+        "hex": "#5e5e5c",
+        "alpha": 0.5019608,
+        "category": "Transparent Colors",
+        "material_type": "transparent"
+    },
+    "167": {
+        "name": "Reddish Orange",
+        "ldraw_code": "402",
+        "hex": "#FF5500",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "241": {
+        "name": "Medium Tan",
+        "ldraw_code": "371",
+        "hex": "#CCA372",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "255": {
+        "name": "Pearl Brown",
+        "ldraw_code": "187",
+        "hex": "#57392C",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "237": {
+        "name": "Bionicle Copper",
+        "ldraw_code": "176",
+        "hex": "#945148",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "249": {
+        "name": "Reddish Copper",
+        "ldraw_code": "100249",
+        "hex": "#aa541e",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "173": {
+        "name": "Ochre Yellow",
+        "ldraw_code": "424",
+        "hex": "#DD9E47",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "175": {
+        "name": "Warm Pink",
+        "ldraw_code": "430",
+        "hex": "#F79B9B",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "174": {
+        "name": "Blue Violet",
+        "ldraw_code": "431",
+        "hex": "#665EA7",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "148": {
+        "name": "Pearl Dark Gray",
+        "ldraw_code": "10148",
+        "hex": "#575857",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "272": {
+        "name": "Dark Blue",
+        "ldraw_code": "10272",
+        "hex": "#0D2654",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "288": {
+        "name": "Dark Green",
+        "ldraw_code": "10288",
+        "hex": "#184632",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    },
+    "297": {
+        "name": "Flat Silver",
+        "ldraw_code": "10297",
+        "hex": "#899395",
+        "alpha": 1.0,
+        "category": "Pearl Colors",
+        "material_type": "solid"
+    },
+    "320": {
+        "name": "Dark Red",
+        "ldraw_code": "10320",
+        "hex": "#720012",
+        "alpha": 1.0,
+        "category": "Solid Colors",
+        "material_type": "solid"
+    }
+}

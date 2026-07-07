@@ -1,0 +1,44 @@
+Product Requirements Document (PRD): Proyecto LegoGPT
+Version: 1.0 | Status: Draft for Agentic Implementation
+1. Resumen Ejecutivo y Objetivos
+El objetivo de este proyecto es desarrollar el motor principal de "LegoGPT", una plataforma de IA generativa capaz de entender el lenguaje natural y generar modelos 3D estructurados, ensamblables y legales bajo el estándar de piezas reales. A diferencia de los modelos de difusión de imágenes, este sistema aprovechará un conjunto de datos estructurado (manuales, secuencias, inventarios y mallas 3D) para entrenar una red que entienda la topología de la construcción, emitiendo instrucciones formales (archivos LDraw) en lugar de píxeles.
+2. Arquitectura del Sistema
+El pipeline se divide en tres subsistemas diseñados para ser ejecutados y entrenados en entornos locales de alto rendimiento (específicamente optimizados para arquitecturas Apple Silicon con 48GB RAM unificada).
+Módulo de Ingesta y Vectorización (Data Pipeline): Procesa el dataset crudo, convirtiendo el histórico de manuales en grafos de conectividad espacial.
+Motor de Generación Secuencial (Core AI - Graph Neural Networks): Modelo multimodal que traduce el *prompt* de texto a una secuencia de acciones de ensamblaje predictivo (pieza_id, color, transform_matrix, step_id).
+Validador Físico (Constraint Checker): Motor algorítmico determinista que verifica colisiones y conexiones estructurales válidas antes de emitir la salida final.
+
+3. Stack Tecnológico Estricto
+Capa
+Tecnología / Framework
+Directrices para el Agente IA
+ 
+Infraestructura Local
+Ollama, MPS (Metal Performance Shaders)
+Optimización estricta para hardware Mac. El agente debe asegurar aceleración nativa (device='mps') en PyTorch para aprovechar la memoria unificada.
+Backend Core (ML)
+Python 3.10+, PyTorch Geometric (PyG)
+PyG es vital para procesar los datos estructurales de las piezas. Prohibido usar tensores simples; usar tensores de grafos espaciales.
+Procesamiento 3D & LDraw
+Trimesh, python-ldraw, NetworkX
+Manejo nativo de parseo .ldr/.mpd y cálculos de caja envolvente orientada (OBB).
+Agentes de Desarrollo
+Claude Code / Antigravity 2.0
+Exigencia de código auto-documentado, con Type Hints estrictos para facilitar el contexto en ventanas largas.
+
+4. Set de Datos Requeridos y Estrategia de Ingesta
+El agente de software debe construir la canalización de datos para extraer tres pilares fundamentales de tu repositorio de manuales:
+Dataset Topológico (Grafos Estructurales): Cada set original debe ser mapeado como un grafo G = (V, E). Los nodos (V) son las piezas con atributos de orientación 3D. Las aristas (E) representan las uniones lógicas (ej. un stud conectado a un tubo inferior).
+Dataset de Secuenciación (Time-Series): Extracción de los pasos de construcción (Steps). En lugar de procesar el set terminado, el modelo debe entrenarse ingiriendo el historial de pasos, aprendiendo cómo los humanos dividen el montaje lógicamente.
+Embeddings de Contexto (VLM): Uso de un Vision Language Model ligero para procesar los renders de las instrucciones y generar etiquetas descriptivas que sirvan como condicionamiento de texto para el entrenamiento.
+# Estructura JSON objetivo esperada tras el parseo del agente:{  "step_id": 14,  "action": "add_node",  "part_id": "3003.dat", # Brick 2x2  "color_code": 14, # Yellow  "transform_matrix": [1,0,0, 0,1,0, 0,0,1, 40, -24, 20],  "edges_formed": ["node_8_stud_1", "node_9_stud_2"]}
+5. Mecanismos de Prueba (Test-Driven Development)
+Dado que el desarrollo será automatizado por una IA, la implementación de pruebas es el único mecanismo de control de calidad. El agente debe desarrollar las siguientes suites en pytest antes de programar la lógica del modelo:
+Prueba de Gravedad y Conectividad: Un algoritmo de recorrido en profundidad (DFS) que asegure que no existen subgrafos desconectados (piezas flotantes). Toda pieza debe estar anclada a la base.
+Prueba de Colisión Fina (Trimesh): Tras la generación, instanciar las mallas 3D predichas y comprobar matemáticamente que no hay intersecciones de volumen entre las piezas generadas.
+Validación de Inventario Estricto: Un filtro booleano que asegure que los part_id generados pertenecen exclusivamente al subconjunto de piezas permitidas.
+Linting de LDraw: Verificación de que la salida del motor de inferencia es un archivo .ldr sintácticamente perfecto, capaz de ser importado a Studio sin errores.
+6. Criterios de Aceptación del Sprint Inicial
+El agente construye un parser de datos que convierte un manual LDraw estándar en un grafo PyG en menos de 3 segundos de procesamiento local.
+La arquitectura de red neuronal propuesta logra cargarse en memoria sin exceder los límites de VRAM unificada en un ciclo de entrenamiento batch de prueba.
+El motor de inferencia de validación rechaza exitosamente el 100% de las construcciones que presentan colisiones 3D introducidas intencionalmente en los tests.

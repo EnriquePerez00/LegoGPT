@@ -1,0 +1,1 @@
+# LegoGPT tests initialization

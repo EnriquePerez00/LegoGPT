@@ -1,0 +1,46 @@
+# Python Environment
+legogpt_env/
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Model Checkpoints & Logs
+models/*.pt
+models/*.json
+logs/
+*.log
+
+# Scraped and Auto-generated Data (Regenerable locally)
+data/omr_raw/
+data/processed/
+data/processed_vehicles/
+data/bricklink/
+data/mocs/
+data/standardized/
+data/catalog.json
+scratch/
+
+# Generated Outputs & Renders
+outputs/
+temp_uploaded.mpd
+temp_uploaded.ldr

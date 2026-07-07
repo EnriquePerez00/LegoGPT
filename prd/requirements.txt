@@ -1,0 +1,33 @@
+# ==========================================
+# Proyecto: LegoGPT - Motor Generativo Estructural
+# Entorno: Python 3.10+ / Apple Silicon (MPS)
+# ==========================================
+
+# 1. Core ML & Deep Learning (Soporte MPS nativo)
+torch>=2.2.0
+torchvision>=0.17.0
+torchaudio>=2.2.0
+
+# 2. Graph Neural Networks (PyTorch Geometric)
+torch-geometric>=2.5.0
+# Nota para el agente: En Apple Silicon, las dependencias de PyG (scatter, sparse) 
+# a veces requieren compilación local o instalación vía conda/wheels específicos.
+
+# 3. Procesamiento 3D, Geometría Espacial y Matemáticas
+trimesh>=4.0.0      # Para detección de colisiones y SDF
+networkx>=3.2.1     # Para creación de grafos topológicos de piezas
+scipy>=1.12.0       # Para árboles espaciales (cKDTree)
+numpy>=1.26.0       # Manipulación matricial
+
+# 4. Ecosistema LDraw
+ldraw>=0.1.2        # Parseo y generación de archivos .ldr/.dat
+# (El agente puede requerir crear un parser custom si las librerías existentes fallan con mallas complejas)
+
+# 5. Herramientas de Testing (TDD Estricto)
+pytest>=8.0.0       # Motor de pruebas
+pytest-mock>=3.12.0 # Mocking de tensores y mallas pesadas
+
+# 6. Web Dashboard (API y UI)
+fastapi>=0.111.0
+uvicorn>=0.30.0
+websockets>=12.0
