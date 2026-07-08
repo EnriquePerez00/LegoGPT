@@ -60,13 +60,16 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
         auth_state = "scratch/auth_state.json"
         storage = auth_state if os.path.exists(auth_state) else None
 
-        context = browser.new_context(
-            user_agent=ua,
-            viewport={"width": 1280, "height": 800},
-            locale="es-ES",
-            timezone_id="Europe/Madrid",
-            storage_state=storage
-        )
+        context_args = {
+            "viewport": {"width": 1280, "height": 800},
+            "locale": "es-ES",
+            "timezone_id": "Europe/Madrid",
+            "storage_state": storage
+        }
+        if not storage:
+            context_args["user_agent"] = ua
+            
+        context = browser.new_context(**context_args)
         
         # Anti-bot JS masking
         page = context.new_page()
@@ -111,21 +114,29 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
                 human_delay(1.5, 3.0)
                 
                 print("[Acción] Haciendo click en el botón de descarga...")
-                # Expect download event
-                with page.expect_download(timeout=10000) as download_info:
-                    download_btn.click()
+                try:
+                    # Expect download event
+                    with page.expect_download(timeout=10000) as download_info:
+                        download_btn.click()
                     
-                download = download_info.value
-                filename = download.suggested_filename
-                save_path = os.path.join(output_dir, filename)
-                
-                download.save_as(save_path)
-                print(f"[Éxito] Modelo descargado y guardado en: {save_path}")
-                
-                # Final inactivity pause after download
-                human_delay(4.0, 8.0)
-                browser.close()
-                return True, image_url, save_path
+                    download = download_info.value
+                    filename = download.suggested_filename
+                    save_path = os.path.join(output_dir, filename)
+                    
+                    download.save_as(save_path)
+                    print(f"[Éxito] Modelo descargado y guardado en: {save_path}")
+                    
+                    # Final inactivity pause after download
+                    human_delay(4.0, 8.0)
+                    browser.close()
+                    return True, image_url, save_path
+                except Exception as click_err:
+                    print(f"[ERROR] Error al descargar: {click_err}")
+                    screenshot_path = os.path.join(output_dir, f"error_click_{model_id}.png")
+                    page.screenshot(path=screenshot_path)
+                    print(f"Guardada captura tras click en {screenshot_path}")
+                    browser.close()
+                    return False, None, None
             else:
                 print("[ERROR] No se pudo encontrar el botón de descarga en la página.")
                 # Save page screenshot for debugging

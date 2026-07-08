@@ -19,6 +19,8 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
         file_path TEXT,
         normalized_file_path TEXT,
         parts_count INTEGER,
+        subassemblies_count INTEGER,
+        is_fully_connected INTEGER,
         tags TEXT,
         likes_count INTEGER,
         downloads_count INTEGER,
@@ -38,6 +40,12 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
     if "image_url" not in existing_columns:
         cursor.execute("ALTER TABLE sets ADD COLUMN image_url TEXT")
         print("Migración: Columna 'image_url' añadida a la tabla 'sets'.")
+    if "subassemblies_count" not in existing_columns:
+        cursor.execute("ALTER TABLE sets ADD COLUMN subassemblies_count INTEGER")
+        print("Migración: Columna 'subassemblies_count' añadida a la tabla 'sets'.")
+    if "is_fully_connected" not in existing_columns:
+        cursor.execute("ALTER TABLE sets ADD COLUMN is_fully_connected INTEGER")
+        print("Migración: Columna 'is_fully_connected' añadida a la tabla 'sets'.")
     
     # 2. Create parts_inventory table
     cursor.execute("""
@@ -71,6 +79,19 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
         attempts INTEGER DEFAULT 0,
         last_attempt_time TIMESTAMP,
         error_msg TEXT
+    )
+    """)
+    
+    # 5. Create subassemblies table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS subassemblies (
+        set_id TEXT,
+        subassembly_id INTEGER,
+        parts_count INTEGER,
+        parts_list TEXT,
+        is_grounded INTEGER,
+        PRIMARY KEY (set_id, subassembly_id),
+        FOREIGN KEY (set_id) REFERENCES sets(set_id)
     )
     """)
     

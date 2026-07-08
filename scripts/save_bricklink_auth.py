@@ -25,26 +25,18 @@ def save_auth():
         
         try:
             # Poll every 2 seconds to check if logged in
+            # Poll every 2 seconds to check if logged in
             for sec in range(150): # 5 minutes timeout
                 if page.is_closed():
-                    print("\n[Auth] El navegador fue cerrado por el usuario.")
+                    print("\n[Auth] El navegador fue cerrado por el usuario. Guardando estado actual...")
+                    context.storage_state(path=auth_path)
                     break
                 
-                # We search for "Sign Out" or "Log Out" in the text or profile links
-                logged_in = page.evaluate("""
-                () => {
-                    const text = document.body.innerText || "";
-                    const html = document.body.innerHTML || "";
-                    
-                    // Check if 'Sign Out', 'Log Out' or user menu is rendered
-                    return text.includes('Sign Out') || 
-                           text.includes('Log Out') || 
-                           html.includes('Sign Out') || 
-                           html.includes('Log Out') ||
-                           document.querySelector('#profile-menu') !== null ||
-                           document.querySelector('.header-profile') !== null;
-                }
-                """)
+                # Check cookies in context to see if user is authenticated
+                cookies = context.cookies()
+                cookie_names = [c["name"] for c in cookies]
+                
+                logged_in = "bricklink.portal.session" in cookie_names
                 
                 if logged_in:
                     print("\n[Auth] ¡Sesión de usuario detectada con éxito!")

@@ -19,7 +19,14 @@ def harvest_metadata_pages(db_path: str = "data/catalog/models_catalog.db", max_
             headless=True,
             args=["--disable-blink-features=AutomationControlled", "--no-sandbox"]
         )
-        context = browser.new_context(user_agent=ua)
+        auth_state = "scratch/auth_state.json"
+        storage = auth_state if os.path.exists(auth_state) else None
+        
+        context_args = {"storage_state": storage}
+        if not storage:
+            context_args["user_agent"] = ua
+            
+        context = browser.new_context(**context_args)
         page = context.new_page()
         page.evaluate("() => { Object.defineProperty(navigator, 'webdriver', { get: () => undefined }) }")
         
