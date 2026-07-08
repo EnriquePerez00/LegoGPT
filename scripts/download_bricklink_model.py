@@ -38,7 +38,7 @@ def simulate_scroll(page):
     page.evaluate(f"window.scrollBy(0, -{scroll_up})")
     human_delay(1.0, 2.5)
 
-def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_raw") -> bool:
+def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_raw", fast: bool = False) -> tuple:
     os.makedirs(output_dir, exist_ok=True)
     
     url = f"https://www.bricklink.com/v3/studio/design.page?idModel={model_id}"
@@ -78,7 +78,10 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
         print("[Navegación] Cargando página de BrickLink...")
         try:
             page.goto(url, wait_until="domcontentloaded", timeout=30000)
-            human_delay(3.0, 7.0)
+            if fast:
+                human_delay(1.0, 2.0)
+            else:
+                human_delay(3.0, 7.0)
             
             # Check for Cloudflare CAPTCHA trigger
             title = page.title().lower()
@@ -99,19 +102,22 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
             except Exception as img_err:
                 print(f"[Navegación Warning] No se pudo extraer og:image: {img_err}")
             
-            # Simulate human looking at the page details (scrolling)
-            simulate_scroll(page)
-            
-            # Longer pause to read description / details
-            long_inactivity_pause()
+            if not fast:
+                # Simulate human looking at the page details (scrolling)
+                simulate_scroll(page)
+                # Longer pause to read description / details
+                long_inactivity_pause()
             
             # Look for the download button in the page structure
             download_btn = page.locator('button[data-ts-name="studio-model__meta-button--download"]').first
             
             if download_btn.count() > 0:
                 print("[Acción] Botón de descarga encontrado. Simulando hover...")
-                download_btn.hover()
-                human_delay(1.5, 3.0)
+                if not fast:
+                    download_btn.hover()
+                    human_delay(1.5, 3.0)
+                else:
+                    human_delay(0.5, 1.0)
                 
                 print("[Acción] Haciendo click en el botón de descarga...")
                 try:
@@ -127,22 +133,18 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
                     print(f"[Éxito] Modelo descargado y guardado en: {save_path}")
                     
                     # Final inactivity pause after download
-                    human_delay(4.0, 8.0)
+                    if fast:
+                        human_delay(1.0, 2.0)
+                    else:
+                        human_delay(4.0, 8.0)
                     browser.close()
                     return True, image_url, save_path
                 except Exception as click_err:
                     print(f"[ERROR] Error al descargar: {click_err}")
-                    screenshot_path = os.path.join(output_dir, f"error_click_{model_id}.png")
-                    page.screenshot(path=screenshot_path)
-                    print(f"Guardada captura tras click en {screenshot_path}")
                     browser.close()
                     return False, None, None
             else:
                 print("[Warning] No se pudo encontrar el botón de descarga en la página (el MOC puede ser sólo de exhibición). Se registrarán metadatos e imagen.")
-                # Save page screenshot for debugging
-                screenshot_path = os.path.join(output_dir, f"error_{model_id}.png")
-                page.screenshot(path=screenshot_path)
-                print(f"Guardada captura de pantalla en {screenshot_path}")
                 browser.close()
                 return True, image_url, None
                 

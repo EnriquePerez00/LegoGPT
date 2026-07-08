@@ -7,7 +7,7 @@ from datetime import datetime
 from scripts.download_bricklink_model import download_bricklink_model
 
 class AdaptiveCadenceController:
-    def __init__(self, initial_delay=60.0, min_delay=30.0, max_delay=3600.0, success_threshold=3):
+    def __init__(self, initial_delay=3.0, min_delay=1.0, max_delay=60.0, success_threshold=3):
         self.current_delay = initial_delay
         self.min_delay = min_delay
         self.max_delay = max_delay
@@ -17,7 +17,7 @@ class AdaptiveCadenceController:
     def record_success(self) -> float:
         self.success_streak += 1
         if self.success_streak >= self.success_threshold:
-            self.current_delay = max(self.min_delay, self.current_delay - 10.0)
+            self.current_delay = max(self.min_delay, self.current_delay - 1.0)
             self.success_streak = 0
             print(f"[Adaptive Cadence] ¡Racha de éxitos lograda! Reduciendo delay a {self.current_delay:.1f}s")
         return self.current_delay
@@ -25,9 +25,9 @@ class AdaptiveCadenceController:
     def record_block(self) -> tuple[float, float]:
         self.success_streak = 0
         self.current_delay = min(self.max_delay, self.current_delay * 2.0)
-        cooldown = 900.0 # 15 minutes
+        cooldown = 15.0 # Short cooldown for fast testing
         print(f"[Adaptive WAF Alert] Bloqueo o timeout detectado. Incrementando delay a {self.current_delay:.1f}s.")
-        print(f"[Adaptive WAF Alert] Iniciando cooldown de {cooldown / 60.0:.1f} minutos...")
+        print(f"[Adaptive WAF Alert] Iniciando cooldown de {cooldown:.1f} segundos...")
         return self.current_delay, cooldown
 
 def get_next_pending_model(db_path: str) -> str:
@@ -85,7 +85,7 @@ def run_adaptive_db_queue(db_path: str = "data/catalog/models_catalog.db", outpu
         # Mark as downloading
         update_model_status(db_path, model_id, 'downloading')
         
-        success, image_url, save_path = download_bricklink_model(model_id, output_dir)
+        success, image_url, save_path = download_bricklink_model(model_id, output_dir, fast=True)
         
         if success:
             from src.ingestion_pipeline import process_and_register_downloaded_model
