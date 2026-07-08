@@ -35,6 +35,9 @@ data/omr_raw/
 data/processed/
 data/processed_vehicles/
 data/bricklink/
+data/bricklink_raw/
+data/bricklink_targets.json
+data/catalog/
 data/mocs/
 data/standardized/
 data/catalog.json

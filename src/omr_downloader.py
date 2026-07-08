@@ -79,9 +79,9 @@ def build_sets_index():
                 
     print(f"Índice construido. Encontrados {len(_sets_index)} sets/referencias únicas en OMR.")
 
-def search_set_download_url(set_number: str) -> Optional[str]:
+def search_set_metadata(set_number: str) -> Optional[dict]:
     """
-    Locates the download URL of the .mpd file for the given set number using the index.
+    Locates the download URL, source page URL, and image URL for the given set number.
     """
     build_sets_index()
     
@@ -101,31 +101,44 @@ def search_set_download_url(set_number: str) -> Optional[str]:
         
     print(f"Set {set_number} encontrado en: {set_page_url}")
     
-    # Get the set page and find the download URL
+    # Get the set page and find the download URL and image preview URL
     try:
         response = requests.get(set_page_url, timeout=10)
         if response.status_code == 200:
             content = response.text
-            # Extract download URL: href="https://library.ldraw.org/library/omr/{filename}.mpd"
             match = re.search(r'href="(https://library\.ldraw\.org/library/omr/[^"]+\.mpd)"', content)
+            img_match = re.search(r'src="(https://library\.ldraw\.org/media/omr_models/[^"]+)"', content)
+            
             if match:
-                return match.group(1)
+                return {
+                    "download_url": match.group(1),
+                    "image_url": img_match.group(1) if img_match else None,
+                    "source_url": set_page_url
+                }
     except Exception as e:
         print(f"Error accediendo a la página del set: {e}")
         
     return None
 
+def search_set_download_url(set_number: str) -> Optional[str]:
+    """
+    Locates the download URL of the .mpd file for the given set number using the index.
+    """
+    meta = search_set_metadata(set_number)
+    return meta["download_url"] if meta else None
+
 def download_set_by_number(set_number: str, output_dir: str = "data/omr_raw") -> Optional[str]:
     """
-    Downloads a set by its number directly.
+    Downloads a set by its number directly and processes it through the ingestion pipeline.
     """
     os.makedirs(output_dir, exist_ok=True)
-    download_url = search_set_download_url(set_number)
+    metadata = search_set_metadata(set_number)
     
-    if not download_url:
+    if not metadata or not metadata.get("download_url"):
         print(f"No se pudo encontrar el enlace de descarga para el set {set_number} en el OMR.")
         return None
         
+    download_url = metadata["download_url"]
     print(f"Descargando {download_url}...")
     try:
         response = requests.get(download_url, timeout=20)
@@ -138,6 +151,17 @@ def download_set_by_number(set_number: str, output_dir: str = "data/omr_raw") ->
             with open(file_path, "wb") as f:
                 f.write(response.content)
             print(f"Guardado en {file_path}")
+            
+            # Trigger ingestion pipeline!
+            from src.ingestion_pipeline import process_and_register_downloaded_model
+            print(f"[OMR Downloader] Iniciando pipeline de ingesta para {set_number}...")
+            process_and_register_downloaded_model(
+                file_path=file_path,
+                source="OMR",
+                source_url=metadata.get("source_url"),
+                image_url=metadata.get("image_url")
+            )
+            
             return file_path
         else:
             print(f"Error descargando (HTTP {response.status_code})")

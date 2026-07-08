@@ -1,6 +1,9 @@
+from __future__ import annotations
 import numpy as np
 import networkx as nx
-from src.parser import ParsedPart
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.parser import ParsedPart
 
 PART_DIMENSIONS = {
     "3005.dat": (20.0, 24.0, 20.0),

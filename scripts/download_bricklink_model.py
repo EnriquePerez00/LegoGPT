@@ -57,11 +57,15 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
         )
         
         # Configure context to simulate a clean Mac user session
+        auth_state = "scratch/auth_state.json"
+        storage = auth_state if os.path.exists(auth_state) else None
+
         context = browser.new_context(
             user_agent=ua,
             viewport={"width": 1280, "height": 800},
             locale="es-ES",
-            timezone_id="Europe/Madrid"
+            timezone_id="Europe/Madrid",
+            storage_state=storage
         )
         
         # Anti-bot JS masking
@@ -78,9 +82,19 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
             if "cloudflare" in title or "attention required" in title or "just a moment" in title:
                 print("[ERROR] Cloudflare bloqueó la petición (JS Challenge o CAPTCHA detectado).")
                 browser.close()
-                return False
+                return False, None, None
                 
             print(f"[Navegación] Título de página: {page.title()}")
+            
+            # Extract preview image URL from OpenGraph meta tags
+            image_url = None
+            try:
+                og_image_el = page.locator('meta[property="og:image"]')
+                if og_image_el.count() > 0:
+                    image_url = og_image_el.get_attribute("content")
+                    print(f"[Navegación] Imagen de previsualización encontrada: {image_url}")
+            except Exception as img_err:
+                print(f"[Navegación Warning] No se pudo extraer og:image: {img_err}")
             
             # Simulate human looking at the page details (scrolling)
             simulate_scroll(page)
@@ -89,10 +103,9 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
             long_inactivity_pause()
             
             # Look for the download button in the page structure
-            # BrickLink download button typically contains text like "Download" or "Download Studio File"
-            download_btn = page.locator("text=/Download/i").first
+            download_btn = page.locator('button[data-ts-name="studio-model__meta-button--download"]').first
             
-            if download_btn.is_visible():
+            if download_btn.count() > 0:
                 print("[Acción] Botón de descarga encontrado. Simulando hover...")
                 download_btn.hover()
                 human_delay(1.5, 3.0)
@@ -112,20 +125,20 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
                 # Final inactivity pause after download
                 human_delay(4.0, 8.0)
                 browser.close()
-                return True
+                return True, image_url, save_path
             else:
-                print("[ERROR] No se pudo encontrar el botón de descarga en la página. Es posible que el set sea de solo visualización.")
+                print("[ERROR] No se pudo encontrar el botón de descarga en la página.")
                 # Save page screenshot for debugging
                 screenshot_path = os.path.join(output_dir, f"error_{model_id}.png")
                 page.screenshot(path=screenshot_path)
                 print(f"Guardada captura de pantalla en {screenshot_path}")
                 browser.close()
-                return False
+                return False, None, None
                 
         except Exception as e:
             print(f"[ERROR] Excepción durante la automatización: {e}")
             browser.close()
-            return False
+            return False, None, None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -133,5 +146,5 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", type=str, default="data/bricklink_raw", help="Output directory")
     args = parser.parse_args()
     
-    success = download_bricklink_model(args.model_id, args.output_dir)
+    success, img_url, path = download_bricklink_model(args.model_id, args.output_dir)
     sys.exit(0 if success else 1)

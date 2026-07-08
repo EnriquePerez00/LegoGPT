@@ -99,20 +99,31 @@ def standardize_and_order_ldr(input_path: str, output_path: str) -> bool:
     if not flat_parts:
         return False
         
-    # Sort parts bottom-up (LDraw: highest Y coordinate is closest to ground, Y decreases upwards)
-    # So we sort in descending Y order (from ground layer upwards)
-    flat_parts_sorted = sorted(flat_parts, key=lambda p: p["transform"][1, 3], reverse=True)
+    # Plan physical sequence bottom-up using disassembly planning
+    from generative.llm_pipeline.sequence_planner import plan_disassembly_sequence
+    flat_parts_sorted = plan_disassembly_sequence(flat_parts)
     
-    # Group parts into step layers (different Y levels)
+    # Group parts into step layers (different Y levels or max 5 parts per step)
     lines = ["0 LegoGPT Standardized Sequence"]
     
     current_y = None
+    parts_in_current_step = 0
     for p in flat_parts_sorted:
         y_val = p["transform"][1, 3]
-        if current_y is not None and abs(y_val - current_y) > 5.0:
+        
+        # Trigger new step if height shifts significantly OR if we reach 5 parts in a step
+        trigger_step = False
+        if current_y is not None and abs(y_val - current_y) > 8.0:
+            trigger_step = True
+        if parts_in_current_step >= 5:
+            trigger_step = True
+            
+        if trigger_step:
             lines.append("0 STEP")
+            parts_in_current_step = 0
             
         current_y = y_val
+        parts_in_current_step += 1
         
         # Format part line
         color = p["color"]
