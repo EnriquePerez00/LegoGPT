@@ -138,13 +138,13 @@ def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_ra
                     browser.close()
                     return False, None, None
             else:
-                print("[ERROR] No se pudo encontrar el botón de descarga en la página.")
+                print("[Warning] No se pudo encontrar el botón de descarga en la página (el MOC puede ser sólo de exhibición). Se registrarán metadatos e imagen.")
                 # Save page screenshot for debugging
                 screenshot_path = os.path.join(output_dir, f"error_{model_id}.png")
                 page.screenshot(path=screenshot_path)
                 print(f"Guardada captura de pantalla en {screenshot_path}")
                 browser.close()
-                return False, None, None
+                return True, image_url, None
                 
         except Exception as e:
             print(f"[ERROR] Excepción durante la automatización: {e}")

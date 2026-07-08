@@ -7,7 +7,7 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
-    # 1. Create sets table with rich metadata columns
+    # 1. Create sets table with rich metadata and taxonomy columns
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS sets (
         set_id TEXT PRIMARY KEY,
@@ -27,26 +27,46 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
         views_count INTEGER,
         creator_username TEXT,
         source_url TEXT,
-        image_url TEXT
+        image_url TEXT,
+        level_1_entorno TEXT,
+        level_2_proposito TEXT,
+        level_3_clase TEXT,
+        level_4_escala TEXT,
+        level_4_motorizacion TEXT,
+        level_4_licencia TEXT,
+        confidence_score REAL,
+        reasoning_notes TEXT,
+        needs_human_review INTEGER,
+        review_table_payload TEXT
     )
     """)
     
     # Run migrations for existing databases
     cursor.execute("PRAGMA table_info(sets)")
     existing_columns = [col[1] for col in cursor.fetchall()]
-    if "source_url" not in existing_columns:
-        cursor.execute("ALTER TABLE sets ADD COLUMN source_url TEXT")
-        print("Migración: Columna 'source_url' añadida a la tabla 'sets'.")
-    if "image_url" not in existing_columns:
-        cursor.execute("ALTER TABLE sets ADD COLUMN image_url TEXT")
-        print("Migración: Columna 'image_url' añadida a la tabla 'sets'.")
-    if "subassemblies_count" not in existing_columns:
-        cursor.execute("ALTER TABLE sets ADD COLUMN subassemblies_count INTEGER")
-        print("Migración: Columna 'subassemblies_count' añadida a la tabla 'sets'.")
-    if "is_fully_connected" not in existing_columns:
-        cursor.execute("ALTER TABLE sets ADD COLUMN is_fully_connected INTEGER")
-        print("Migración: Columna 'is_fully_connected' añadida a la tabla 'sets'.")
     
+    migrations = [
+        ("source_url", "TEXT"),
+        ("image_url", "TEXT"),
+        ("subassemblies_count", "INTEGER"),
+        ("is_fully_connected", "INTEGER"),
+        ("level_1_entorno", "TEXT"),
+        ("level_2_proposito", "TEXT"),
+        ("level_3_clase", "TEXT"),
+        ("level_4_escala", "TEXT"),
+        ("level_4_motorizacion", "TEXT"),
+        ("level_4_licencia", "TEXT"),
+        ("confidence_score", "REAL"),
+        ("reasoning_notes", "TEXT"),
+        ("needs_human_review", "INTEGER"),
+        ("review_table_payload", "TEXT")
+    ]
+    
+    for col_name, col_type in migrations:
+        if col_name not in existing_columns:
+            cursor.execute(f"ALTER TABLE sets ADD COLUMN {col_name} {col_type}")
+            print(f"Migración: Columna '{col_name}' añadida a la tabla 'sets'.")
+            
     # 2. Create parts_inventory table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS parts_inventory (
@@ -95,11 +115,22 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
     )
     """)
     
+    # 6. Create set_images table for holding multiple images per set/MOC
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS set_images (
+        set_id TEXT,
+        image_url TEXT,
+        source TEXT,
+        PRIMARY KEY (set_id, image_url)
+    )
+    """)
+    
     # Create indexes for high query performance
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_parts_id ON parts_inventory(part_id)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_sets_theme ON sets(theme)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_sets_source ON sets(source)")
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_queue_status ON bricklink_scraping_queue(status)")
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_set_images_id ON set_images(set_id)")
     
     conn.commit()
     conn.close()
@@ -107,3 +138,4 @@ def initialize_database(db_path: str = "data/catalog/models_catalog.db"):
 
 if __name__ == "__main__":
     initialize_database()
+

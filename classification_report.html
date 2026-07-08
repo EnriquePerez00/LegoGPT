@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Clasificación de Vehículos LEGO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151c2c;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --border-color: #243049;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            line-height: 1.5;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+        
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a5b4fc, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        
+        /* Filters Bar */
+        .filters-bar {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        select, input {
+            background-color: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            padding: 8px 12px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        /* Cards */
+        .cards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .source-badge {
+            align-self: flex-start;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            letter-spacing: 0.05em;
+        }
+        
+        .badge-official {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .badge-bricklink {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge-omr {
+            background-color: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+        
+        .review-badge {
+            align-self: flex-start;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        
+        .review-required {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .review-approved {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .model-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .model-id {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        
+        .confidence-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 2px solid var(--border-color);
+            padding-left: 24px;
+        }
+        
+        .gauge-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--conf-color);
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .gauge-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Card Body Layout */
+        .card-body {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 900px) {
+            .card-body {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Carousel styling */
+        .carousel {
+            width: 100%;
+            position: relative;
+            background-color: #0b0f19;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            aspect-ratio: 4 / 3;
+        }
+        
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .carousel-slide.active {
+            display: flex;
+        }
+        
+        .carousel-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .carousel-control:hover {
+            background-color: var(--primary);
+        }
+        
+        .carousel-control.prev { left: 12px; }
+        .carousel-control.next { right: 12px; }
+        
+        .carousel-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+        }
+        
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .carousel-dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        
+        /* Tags */
+        .tags-container {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag-badge {
+            font-size: 0.75rem;
+            background-color: #1e293b;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Info Column */
+        .info-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .info-section h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .taxonomy-grid, .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        
+        .tax-item, .meta-item {
+            background-color: #1a2235;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .tax-item strong, .meta-item strong {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .tax-item span.highlight {
+            color: #a5b4fc;
+            font-weight: 600;
+        }
+        
+        .description-text {
+            font-size: 0.95rem;
+            color: #d1d5db;
+        }
+        
+        .reasoning-box {
+            background-color: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            font-style: italic;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .link-url {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .link-url:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LEGO Vehicle Classification Accuracy Report</h1>
+            <div class="subtitle">Análisis del proceso de asignación de categorías para MOCs y Sets (19 modelos cargados)</div>
+        </header>
+        
+        <div class="filters-bar">
+            <div class="filter-group">
+                <span class="filter-label">Fuente:</span>
+                <select id="filter-source" onchange="applyFilters()">
+                    <option value="all">Todas</option>
+                    <option value="Official">Sets Oficiales</option>
+                    <option value="BrickLink">BrickLink Gallery</option>
+                    <option value="OMR">OMR LDraw</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <span class="filter-label">Estado de Revisión:</span>
+                <select id="filter-review" onchange="applyFilters()">
+                    <option value="all">Todos</option>
+                    <option value="1">Requiere Validación (<= 80%)</option>
+                    <option value="0">Autoclasificados (> 80%)</option>
+                </select>
+            </div>
+            <div class="filter-group" style="margin-left: auto;">
+                <input type="text" id="search-input" placeholder="Buscar por nombre o ID..." oninput="applyFilters()">
+            </div>
+        </div>
+        
+        <div class="cards-list">
+            
+        <div class="card" data-source="Official" data-review="0">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-official">Official</span>
+                    <span class="review-badge review-approved">AUTOCLASIFICADO</span>
+                    <h2 class="model-title">Blue Express <span class="model-id">(31054-1)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #10b981">
+                    <div class="gauge-value">95%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-31054-1">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://cdn.rebrickable.com/media/sets/31054-1.jpg" alt="Render 1 de Blue Express" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 1</div>
+            </div>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Construccion/Industrial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Estatico</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>No applicable</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>71</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>None</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>2017</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="#" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Sin descripción disponible.</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y el nombre del set 'Blue Express' sugieren un vehículo, lo que se confirma con la imagen proporcionada, que muestra claramente un tren de pasajeros. El set pertenece a la temática Creator 3-in-1, lo cual es consistente con la naturaleza constructible y versátil del producto. No hay metadatos 3D disponibles para confirmar la estabilidad o simetría, pero la información textual y visual son coherentes, por lo que se mantiene una alta confianza en la clasificación. Sin embargo, dado que no se proporcionan detalles específicos sobre el diseño 3D, se mantiene un nivel de confianza moderado, no superior a 0.95 para evitar excesiva confiabilidad basada solo en la imagen y la descripción sin confirmación adicional de los metadatos físicos 3D del producto.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="0">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-approved">AUTOCLASIFICADO</span>
+                    <h2 class="model-title">Stormblade <span class="model-id">(563116)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #10b981">
+                    <div class="gauge-value">95%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-563116">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/3031/3031613.6987F2BE1CDD3601.png" alt="Render 1 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 6</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://file.bricklink.info/19/3031/3031615.BC95A43555604F05.png" alt="Render 2 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 6</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://file.bricklink.info/19/3031/3031617.C2853E54E017018F.png" alt="Render 3 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 6</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://file.bricklink.info/19/3031/3031619.815AF36A0C772FE5.png" alt="Render 4 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">4 / 6</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://file.bricklink.info/19/3031/3031621.F1D75C02A813F079.png" alt="Render 5 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">5 / 6</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://file.bricklink.info/19/3031/3031623.1ACF8AA933B210F9.png" alt="Render 6 de Stormblade" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">6 / 6</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('563116', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('563116', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('563116', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('563116', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('563116', 2)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('563116', 3)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('563116', 4)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('563116', 5)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Multientorno</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Automóvil de Carrera</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Microscale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>No licenciado</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>250</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>None</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>2026</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=563116" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Sleek racing sports car MOC design.</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los tags indican claramente que se trata de un coche de carreras, lo cual es consistente con la imagen proporcionada. No hay metadatos 3D disponibles para revisar, pero el diseño parece estar bien definido en la imagen. La confianza es alta debido a la congruencia entre los datos textuales e visuales, aunque se mantiene un margen de error por la falta de metadatos físicos específicos del vehículo (como número de ruedas o estabilidad). Sin embargo, dada la claridad de la descripción y la imagen, la confianza es alta pero no perfecta para garantizar total precisión sin más datos. La temática Studio MOC sugiere que este es un diseño personalizado, lo cual también se refleja en el nombre 'Stormblade'. Aunque no hay metadatos 3D específicos, la imagen muestra claramente un vehículo de carreras, por lo que la clasificación es segura dentro del rango permitido para la confianza. Sin embargo, se recomienda una revisión adicional si los metadatos 3D futuros no coinciden con esta clasificación.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="OMR" data-review="0">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-omr">OMR</span>
+                    <span class="review-badge review-approved">AUTOCLASIFICADO</span>
+                    <h2 class="model-title">8303-1 <span class="model-id">(8303-1)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #10b981">
+                    <div class="gauge-value">85%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-8303-1">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://library.ldraw.org/media/omr_models/889/8303-1.png?v=1758944889" alt="Render 1 de 8303-1" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 1</div>
+            </div>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Automóvil</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>50</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://library.ldraw.org/omr/sets/806" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los metadatos 3D indican claramente que el set es un vehículo con cuatro ruedas, lo cual se alinea con la imagen proporcionada (aunque no está especificado qué tipo de vehículo). La simetría perfecta y la presencia de cuatro ruedas sugieren un automóvil. Sin embargo, dado que la temática y la descripción son desconocidas, la confianza es moderada. La ausencia de cabinas o partes del cuerpo humano en el diseño también apoya la clasificación como un vehículo, pero no excluye otras posibilidades como un camión o una furgoneta. La imagen confirmaría esta clasificación con más precisión, por lo que se mantiene una confianza alta pero no perfecta debido a la falta de información adicional en el texto y la descripción desconocida del set.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">2020 Dodge Challenger Hellcat Redeye <span class="model-id">(2020 Dodge Challenger Hellcat Redeye)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-2020 Dodge Challenger Hellcat Redeye">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de 2020 Dodge Challenger Hellcat Redeye" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de 2020 Dodge Challenger Hellcat Redeye" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de 2020 Dodge Challenger Hellcat Redeye" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('2020 Dodge Challenger Hellcat Redeye', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('2020 Dodge Challenger Hellcat Redeye', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('2020 Dodge Challenger Hellcat Redeye', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('2020 Dodge Challenger Hellcat Redeye', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('2020 Dodge Challenger Hellcat Redeye', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Carga/Comercial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ficticio</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>2</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=2020 Dodge Challenger Hellcat Redeye" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y el nombre del set indican claramente que se trata de un modelo de coche, específicamente un Dodge Challenger Hellcat Redeye. Sin embargo, los metadatos 3D muestran que no tiene ruedas (wheel_count: 0), lo cual contradice la naturaleza de un vehículo. Además, la falta de imagen reduce la confianza en la clasificación. A pesar de esto, se mantiene una confianza moderada debido a los detalles proporcionados en el nombre y la descripción del set, que son consistentes entre sí. Se recomienda revisión humana para confirmación visual o corrección de metadatos 3D.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">A jazzy scene <span class="model-id">(A jazzy scene)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-A jazzy scene">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de A jazzy scene" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de A jazzy scene" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de A jazzy scene" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('A jazzy scene', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('A jazzy scene', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('A jazzy scene', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('A jazzy scene', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('A jazzy scene', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>126</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=A jazzy scene" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se propone esta clasificación basada en la información proporcionada, incluyendo el número de ruedas (4) y la estabilidad (ruedas en la parte inferior). Sin embargo, la falta de una imagen reduce la confianza, ya que no se puede confirmar visualmente si se trata efectivamente de un vehículo o qué tipo específico. La temática desconocida y la descripción sin detalles adicionales también contribuyen a esta reducción de confianza. Se recomienda revisión humana para confirmación final basada en una imagen adicional, si es posible.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Beach fiat 500 <span class="model-id">(Beach fiat 500)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Beach fiat 500">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Beach fiat 500" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Beach fiat 500" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Beach fiat 500" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Beach fiat 500', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Beach fiat 500', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Beach fiat 500', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Beach fiat 500', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Beach fiat 500', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Fiat</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>204</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Beach fiat 500" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los metadatos 3D indican que este set LEGO no tiene ruedas, lo cual es inusual para un vehículo como el Fiat 500. Además, la simetría del diseño es muy baja (0.0049), lo que sugiere una falta de conformidad con las características normales de un coche. Sin embargo, dado que no se proporciona ninguna imagen para confirmar o refutar estas observaciones, la confianza se reduce a 0.80. Se recomienda revisión humana y posible verificación visual para confirmar la clasificación final del set LEGO en la taxonomía oficial de LEGO.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Circuit racer 3 <span class="model-id">(Circuit racer 3)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Circuit racer 3">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Circuit racer 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Circuit racer 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Circuit racer 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Circuit racer 3', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Circuit racer 3', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Circuit racer 3', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Circuit racer 3', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Circuit racer 3', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>5</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Circuit racer 3" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los metadatos 3D indican que este set es un vehículo de competición, pero la falta de imagen y el bajo número de piezas (5) hacen que la confianza sea baja. La ausencia de ruedas en los metadatos 3D también sugiere que esto podría no ser un coche tradicional, lo cual se alinea con la temática desconocida. Sin embargo, dado que no hay una imagen para confirmar visualmente el diseño, se reduce la confianza a 0.80 y se recomienda revisión humana para mayor precisión en la clasificación taxonómica.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Compact Patrol <span class="model-id">(Compact Patrol)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Compact Patrol">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Compact Patrol" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Compact Patrol" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Compact Patrol" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Compact Patrol', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Compact Patrol', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Compact Patrol', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Compact Patrol', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Compact Patrol', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Emergencias/Servicios</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>9</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Compact Patrol" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se propone la clasificación de este set como un vehículo terrestre miniatura basado en el nombre 'Compact Patrol' y los metadatos 3D que indican simetría y estabilidad, lo cual es común en vehículos. Sin embargo, la falta de imagen reduce la confianza a 0.80, ya que no se puede confirmar visualmente si se trata efectivamente de un vehículo o si tiene ruedas. La ausencia de cabinas (has_cabin_parts: false) y el hecho de que no tenga ruedas (wheel_count: 0) son contradictorios con la temática 'Unknown' y la descripción 'Modeled by Unknown', lo que justifica una confianza moderada pero requiere revisión visual para confirmación definitiva. Se recomienda revisar la clasificación si se obtiene una imagen del set en el futuro.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">HCR2 Rally Car <span class="model-id">(HCR2 Rally Car)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-HCR2 Rally Car">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de HCR2 Rally Car" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de HCR2 Rally Car" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de HCR2 Rally Car" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('HCR2 Rally Car', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('HCR2 Rally Car', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('HCR2 Rally Car', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('HCR2 Rally Car', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('HCR2 Rally Car', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Coche Rally</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Pull-back</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>201</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=HCR2 Rally Car" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se basa en la descripción de un 'Coche Rally' y los metadatos 3D que indican 8 ruedas, lo cual es típico para vehículos de rally. La simetría alta (93.5%) y el hecho de tener una cabina válida y centrada son características comunes en coches LEGO. Sin embargo, la falta de imagen reduce la confianza a un máximo del 80%. Se recomienda revisión visual para confirmación final.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Hommage <span class="model-id">(Hommage)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Hommage">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Hommage" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Hommage" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Hommage" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Hommage', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Hommage', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Hommage', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Hommage', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Hommage', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Construccion/Industrial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Avión</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>256</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Hommage" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La falta de ruedas (wheel_count: 0) y la descripción sin especificar el tipo de vehículo sugieren un diseño aéreo, lo que se confirma con los metadatos 3D que indican una simetría alta y posibles partes de cabinas. Sin embargo, la ausencia de imagen reduce la confianza, ya que no podemos verificar visualmente si es realmente un avión o algún otro tipo de vehículo aéreo. La temática desconocida (Unknown) también contribuye a esta incertidumbre. Dado el contexto y los metadatos 3D, se propone una clasificación como avión en miniatura, pero la confianza está reducida por la falta de imagen para confirmación visual.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Kai's hot rod <span class="model-id">(Kai's hot rod)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Kai's hot rod">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Kai's hot rod" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Kai's hot rod" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Kai's hot rod" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Kai's hot rod', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Kai's hot rod', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Kai's hot rod', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Kai's hot rod', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Kai's hot rod', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Construccion/Industrial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Microscale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>3</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Kai's hot rod" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La falta de ruedas (wheel_count: 0) y la ausencia de una imagen hacen que sea difícil clasificar este conjunto con precisión. Sin embargo, dada la descripción como un 'hot rod' y los metadatos 3D que indican simetría y una altura del cabinato válida, se propone una clasificación en el nivel más bajo de microescala y vehículos motorizados. La confianza es reducida debido a la falta de imagen para confirmación visual y la información limitada sobre la temática y el año del set original, que no se puede verificar con los datos proporcionados. Se recomienda revisión humana o verificación adicional de imágenes si están disponibles en el futuro para mejorar la precisión de esta clasificación taxonómica.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Red convertible_Copy <span class="model-id">(Red convertible_Copy)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Red convertible_Copy">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Red convertible_Copy" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Red convertible_Copy" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Red convertible_Copy" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Red convertible_Copy', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Red convertible_Copy', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Red convertible_Copy', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Red convertible_Copy', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Red convertible_Copy', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>3</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Red convertible_Copy" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La falta de ruedas (wheel_count: 0) en los metadatos 3D, junto con la ausencia de una imagen para confirmación visual, reduce significativamente la confianza en la clasificación. El set se describe como un 'convertible' pero sin detalles visuales o físicos que lo respalden, lo que hace difícil determinar su exacta clasificación dentro de la taxonomía oficial de LEGO. Sin embargo, dada la información proporcionada y la ausencia de piezas de cabina (has_cabin_parts: false), se propone una clasificación como vehículo aéreo para competición o deportes, basado en la temática desconocida y el hecho de que no tiene ruedas. La confianza máxima es reducida a 0.80 debido a la falta de imagen confirmatoria visual y detalles adicionales necesarios para una clasificación más precisa.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Subaru Baja grey different sides <span class="model-id">(Subaru Baja grey different sides)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Subaru Baja grey different sides">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Subaru Baja grey different sides" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Subaru Baja grey different sides" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Subaru Baja grey different sides" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Subaru Baja grey different sides', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Subaru Baja grey different sides', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Subaru Baja grey different sides', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Subaru Baja grey different sides', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Subaru Baja grey different sides', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Subaru</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>371</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Subaru Baja grey different sides" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se propone esta clasificación basada en el número de ruedas (8), la simetría alta y la presencia de cabinas, que sugieren un vehículo de competición o deportivo. Sin embargo, la falta de imagen reduce la confianza, ya que no se puede confirmar visualmente si es un coche de competición específico como el Subaru Baja. La temática desconocida y la descripción incompleta también contribuyen a esta reducción en la confianza. Se recomienda una revisión humana para confirmación final basada en la imagen, si se proporciona una posteriormente.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Transforming Blue Car - Accessories <span class="model-id">(Transforming Blue Car - Accessories)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Transforming Blue Car - Accessories">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Transforming Blue Car - Accessories" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Transforming Blue Car - Accessories" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Transforming Blue Car - Accessories" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Transforming Blue Car - Accessories', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Transforming Blue Car - Accessories', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Transforming Blue Car - Accessories', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Transforming Blue Car - Accessories', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Transforming Blue Car - Accessories', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>51</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Transforming Blue Car - Accessories" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La falta de ruedas (wheel_count: 0) y la baja simetría score (symmetry_score: 0.1765) sugieren que este set podría ser un concepto abstracto o una pieza de decoración, lo cual no se alinea con el término 'Coche' en el título. Además, dado que no hay imagen disponible para confirmar la clasificación, la confianza está reducida a 0.80. Se recomienda revisión humana para confirmar la clasificación final basada en más evidencia visual o contexto adicional del set.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">hot rod 2 <span class="model-id">(hot rod 2)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-hot rod 2">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de hot rod 2" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de hot rod 2" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de hot rod 2" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('hot rod 2', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('hot rod 2', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('hot rod 2', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('hot rod 2', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('hot rod 2', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Competicion/Deportes</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>Ninguna</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>24</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=hot rod 2" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se propone esta clasificación basada en la descripción de que el set está modelado como un 'hot rod', lo cual implica un vehículo automotor, probablemente sin ruedas (indicado por los metadatos 3D). Sin embargo, la falta de imagen y la ausencia de información adicional sobre la temática o características visibles reducen la confianza en esta clasificación. La presencia de cabinas y partes de vehículos típicamente se espera en un set LEGO relacionado con coches, pero aquí no hay evidencia visual confirmada. Se recomienda revisión humana para confirmación final basándose en una posible imagen adicional o más detalles del set.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">micro cart 3 <span class="model-id">(micro cart 3)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">80%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-micro cart 3">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de micro cart 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de micro cart 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de micro cart 3" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('micro cart 3', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('micro cart 3', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('micro cart 3', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('micro cart 3', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('micro cart 3', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Terrestre</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Carga/Comercial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Carruaje</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Microscale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>43</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=micro cart 3" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            Se propone la clasificación de este set como un carruaje microscópico basado en el número de piezas y los metadatos 3D, que indican una simetría alta y la ausencia de ruedas. Sin embargo, la falta de imagen reduce la confianza a 0.80, lo que sugiere que una revisión visual sería beneficiosa para confirmar esta clasificación definitiva. El set no tiene un nombre o descripción específica que indique otro tipo de vehículo, por lo que se asume que es un carruaje basado en la información disponible, pero la ausencia de ruedas y el hecho de que no sea un coche o helicóptero mantienen una confianza moderada. La simetría alta sugiere que podría ser un diseño bien equilibrado para su escala microscópica, lo cual es consistente con la clasificación propuesta en la taxonomía LEGO oficial de carruajes microscópicos motorizados. Sin embargo, la falta de imagen impide una confirmación visual y, por tanto, una mayor confianza en la clasificación exacta del vehículo representado en este set LEGO micro cart 3.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Station Hover Wagon <span class="model-id">(Station Hover Wagon)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">75%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Station Hover Wagon">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Station Hover Wagon" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Station Hover Wagon" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Station Hover Wagon" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Station Hover Wagon', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Station Hover Wagon', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Station Hover Wagon', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Station Hover Wagon', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Station Hover Wagon', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Carga/Comercial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Hovercraft/Vehículo flotante</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>114</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Station Hover Wagon" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los metadatos 3D indican que este es un vehículo sin ruedas, lo que sugiere una propuesta de hovercraft o vehículo flotante. La imagen, aunque no se proporciona aquí, probablemente confirme esta clasificación. Sin embargo, la falta de información sobre el año y la temática hace que la confianza sea moderada (0.75). La ausencia de piezas para un cabinaje centralizado y la baja simetría también apoyan la clasificación de hovercraft o vehículo flotante sin ruedas, lo cual es consistente con el título 'Station Hover Wagon'. Sin una imagen para confirmación visual, se mantiene cierta incertidumbre (0.75). La ausencia de tags específicos también reduce ligeramente la confianza en la clasificación exacta, pero las características 3D son consistentes con el hovercraft propuesto.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">4th of July <span class="model-id">(4th of July)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">65%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-4th of July">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de 4th of July" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de 4th of July" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de 4th of July" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('4th of July', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('4th of July', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('4th of July', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('4th of July', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('4th of July', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Ficcion/Fantasia</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Vehículo</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>No licenciado</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>51</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=4th of July" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los tags no proporcionan información clara sobre el tipo de vehículo, pero la ausencia de ruedas (wheel_count: 0) en los metadatos 3D sugiere que este es un objeto aéreo o una estructura. La imagen, aunque no se muestra aquí, probablemente confirme esta suposición. Dado que el texto y los metadatos son consistentes con la idea de un vehículo aéreo, pero no especifican si es realista o ficticio, se ha asignado una confianza moderada. La falta de imagen reduce ligeramente la confianza, pero no tanto como para requerir revisión humana inmediata, ya que los metadatos son consistentes entre sí y con el título del set.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" data-source="BrickLink" data-review="1">
+            <div class="card-header">
+                <div class="header-left">
+                    <span class="source-badge badge-bricklink">BrickLink</span>
+                    <span class="review-badge review-required">REQUIERE VALIDACIÓN</span>
+                    <h2 class="model-title">Obsidian monarch <span class="model-id">(Obsidian monarch)</span></h2>
+                </div>
+                <div class="confidence-gauge" style="--conf-color: #f59e0b">
+                    <div class="gauge-value">65%</div>
+                    <div class="gauge-label">Confianza</div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <div class="media-column">
+                    
+        <div class="carousel" id="carousel-Obsidian monarch">
+            <div class="carousel-track">
+                
+            <div class="carousel-slide active">
+                <img src="https://file.bricklink.info/19/4243/4243380.06F36F1042FAE9C8.jpg" alt="Render 1 de Obsidian monarch" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">1 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/bricklink_2026.svg" alt="Render 2 de Obsidian monarch" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">2 / 3</div>
+            </div>
+            
+            <div class="carousel-slide ">
+                <img src="https://static2.bricklink.com/img/studio-gallery/mech_header.png" alt="Render 3 de Obsidian monarch" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                <div class="slide-number">3 / 3</div>
+            </div>
+            
+            </div>
+            
+            <button class="carousel-control prev" onclick="moveSlide('Obsidian monarch', -1)">&#10094;</button>
+            <button class="carousel-control next" onclick="moveSlide('Obsidian monarch', 1)">&#10095;</button>
+            <div class="carousel-dots">
+                
+            <button class="carousel-dot active" onclick="setSlide('Obsidian monarch', 0)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Obsidian monarch', 1)"></button>
+            
+            <button class="carousel-dot " onclick="setSlide('Obsidian monarch', 2)"></button>
+            
+            </div>
+            </div>
+                    <div class="tags-container">
+                        
+                    </div>
+                </div>
+                
+                <div class="info-column">
+                    <div class="info-section">
+                        <h3>Propuesta de Taxonomía</h3>
+                        <div class="taxonomy-grid">
+                            <div class="tax-item"><strong>Entorno (L1):</strong> <span>Aéreo</span></div>
+                            <div class="tax-item"><strong>Propósito (L2):</strong> <span>Carga/Comercial</span></div>
+                            <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">Helicóptero</span></div>
+                            <div class="tax-item"><strong>Escala (L4):</strong> <span>Minifig-scale</span></div>
+                            <div class="tax-item"><strong>Motor (L4):</strong> <span>Motorizado</span></div>
+                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>N/A</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Metadatos Escrapeados y 3D</h3>
+                        <div class="metadata-grid">
+                            <div class="meta-item"><strong>Piezas:</strong> <span>301</span></div>
+                            <div class="meta-item"><strong>Subensamblajes:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Totalmente Conectado:</strong> <span>N/A</span></div>
+                            <div class="meta-item"><strong>Temática:</strong> <span>Unknown</span></div>
+                            <div class="meta-item"><strong>Año:</strong> <span>Desconocido</span></div>
+                            <div class="meta-item"><strong>Origen URL:</strong> <span><a href="https://www.bricklink.com/v3/studio/design.page?idModel=Obsidian monarch" target="_blank" class="link-url">Visitar Enlace</a></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Descripción</h3>
+                        <p class="description-text">Modeled by Unknown</p>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>Notas de Razonamiento de la IA</h3>
+                        <div class="reasoning-box">
+                            La descripción y los metadatos 3D indican que el diseño no tiene ruedas, lo cual es consistente con la imagen proporcionada, que muestra un helicóptero. Aunque la temática está marcada como 'Unknown', las características del objeto (falta de ruedas, simetría alta) son más consistentes con un helicóptero LEGO que con otro tipo de vehículo. La confianza se mantiene moderadamente alta debido a la consistencia entre los datos visuales y no visuales, pero se reduce ligeramente por la falta de información sobre el año y la temática oficial del set, lo que podría requerir una revisión adicional si más detalles se proporcionaran en el futuro. La confianza máxima se redujo ligeramente debido a la ausencia de imagen original del set para confirmación directa de los detalles visuales.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+
+    <script>
+        // Slideshow controls
+        const slideStates = {};
+        
+        function setSlide(setId, slideIdx) {
+            const carousel = document.getElementById('carousel-' + setId);
+            if (!carousel) return;
+            
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const dots = carousel.querySelectorAll('.carousel-dot');
+            
+            slides.forEach((slide, idx) => {
+                if (idx === slideIdx) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            
+            dots.forEach((dot, idx) => {
+                if (idx === slideIdx) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            slideStates[setId] = slideIdx;
+        }
+        
+        function moveSlide(setId, direction) {
+            const carousel = document.getElementById('carousel-' + setId);
+            if (!carousel) return;
+            
+            const slides = carousel.querySelectorAll('.carousel-slide');
+            const total = slides.length;
+            
+            let current = slideStates[setId] || 0;
+            current = (current + direction + total) % total;
+            
+            setSlide(setId, current);
+        }
+        
+        // Filtering logic
+        function applyFilters() {
+            const sourceFilter = document.getElementById('filter-source').value;
+            const reviewFilter = document.getElementById('filter-review').value;
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            
+            const cards = document.querySelectorAll('.card');
+            
+            cards.forEach(card => {
+                const src = card.getAttribute('data-source');
+                const rev = card.getAttribute('data-review');
+                const titleText = card.querySelector('.model-title').innerText.toLowerCase();
+                
+                const matchesSource = (sourceFilter === 'all' || src === sourceFilter);
+                const matchesReview = (reviewFilter === 'all' || rev === reviewFilter);
+                const matchesSearch = (!searchVal || titleText.includes(searchVal));
+                
+                if (matchesSource && matchesReview && matchesSearch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
