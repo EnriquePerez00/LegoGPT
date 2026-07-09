@@ -15,6 +15,12 @@ CABIN_PARTS = {
     "3829c01.dat"
 }
 
+AESTHETIC_PARTS = {
+    "3069b.dat", "2431.dat", "87079.dat", "3070b.dat", "63864.dat", "6636.dat",
+    "50950.dat", "61678.dat", "85970.dat", "54200.dat", "85984.dat", "6091.dat",
+    "11477.dat"
+}
+
 def evaluate_vehicle_topology(parts: list[ParsedPart]) -> dict:
     """
     Evaluates vehicle structural features and returns a dictionary of metrics.
@@ -24,6 +30,7 @@ def evaluate_vehicle_topology(parts: list[ParsedPart]) -> dict:
     - symmetry_score: Proportion of parts that have a mirrored counterpart on the opposite side of X-axis.
     - cabin_height_valid: True if cabin parts are higher (lower Y) than the wheels.
     - cabin_centered: True if cabin parts are centered on the X-axis.
+    - blocked_aesthetic_count: Number of aesthetic parts blocked by having parts stacked directly on top.
     """
     metrics = {
         "wheel_count": 0,
@@ -31,7 +38,8 @@ def evaluate_vehicle_topology(parts: list[ParsedPart]) -> dict:
         "symmetry_score": 1.0,
         "cabin_height_valid": True,
         "cabin_centered": True,
-        "has_cabin_parts": False
+        "has_cabin_parts": False,
+        "blocked_aesthetic_count": 0
     }
     
     if not parts:
@@ -113,6 +121,32 @@ def evaluate_vehicle_topology(parts: list[ParsedPart]) -> dict:
     if len(parts) > 0:
         metrics["symmetry_score"] = symmetric_count / len(parts)
         
+    # 5. Check for blocked aesthetic parts (structural block)
+    blocked_aesthetic = 0
+    for p1 in parts:
+        p1_id = p1.part_id.lower()
+        if p1_id in AESTHETIC_PARTS:
+            x1, y1, z1 = p1.transform[0, 3], p1.transform[1, 3], p1.transform[2, 3]
+            dim1 = get_part_dimensions(p1.part_id)
+            w1, d1 = dim1[0], dim1[2]
+            
+            # Check if any other part is directly above p1
+            for p2 in parts:
+                if p2 is p1:
+                    continue
+                x2, y2, z2 = p2.transform[0, 3], p2.transform[1, 3], p2.transform[2, 3]
+                
+                # In LDraw coordinates, Y decreases upwards. y2 < y1 means p2 is higher.
+                dy = y1 - y2
+                if 0.0 < dy <= 25.0:
+                    # Check horizontal overlap with simple bounding box
+                    dx = abs(x2 - x1)
+                    dz = abs(z2 - z1)
+                    if dx < (w1 / 2.0 + 4.0) and dz < (d1 / 2.0 + 4.0):
+                        blocked_aesthetic += 1
+                        break  # Count once per blocked aesthetic part
+                        
+    metrics["blocked_aesthetic_count"] = blocked_aesthetic
     return metrics
 
 def get_vehicle_rl_reward(parts: list[ParsedPart], base_stability_reward: float = 10.0) -> float:
@@ -150,8 +184,10 @@ def get_vehicle_rl_reward(parts: list[ParsedPart], base_stability_reward: float 
     wc = metrics["wheel_count"]
     if wc == 4:
         reward += 15.0
-    elif wc == 2:
-        reward += 4.0
+    elif wc == 2 or wc == 6:
+        reward += 8.0
+    elif wc == 3 or wc == 8:
+        reward += 3.0
     else:
         reward -= 10.0
         
@@ -172,4 +208,132 @@ def get_vehicle_rl_reward(parts: list[ParsedPart], base_stability_reward: float 
         else:
             reward -= 5.0
             
+    # Penalize structural block (blocked aesthetic parts)
+    reward -= 5.0 * metrics.get("blocked_aesthetic_count", 0)
+    
     return reward
+
+
+# ---------------------------------------------------------------------------
+# FASE 3: Reference-similarity enriched reward
+# ---------------------------------------------------------------------------
+
+def _histogram_similarity(parts: list, refs: list) -> float:
+    """
+    Computes normalised histogram similarity between the generated assembly
+    and the closest reference model.
+
+    Similarity metric: 1 - (L1 distance / max_possible_L1_distance)
+    where histograms are normalised part-frequency vectors.
+
+    Returns:
+        float in [0, 1] — 1.0 = identical histogram to closest ref.
+    """
+    if not refs or not parts:
+        return 0.0
+
+    from src.vehicle_vocab import VEHICLE_ALLOWED_PARTS
+    vocab = VEHICLE_ALLOWED_PARTS
+    n = len(vocab)
+
+    # Build generated histogram (normalised)
+    gen_counts = {}
+    for p in parts:
+        gen_counts[p.part_id] = gen_counts.get(p.part_id, 0) + 1
+    total_gen = max(len(parts), 1)
+    gen_hist = np.array([gen_counts.get(pid, 0) / total_gen for pid in vocab], dtype=np.float32)
+
+    best_sim = 0.0
+    for ref in refs:
+        ref_counts = ref.inventory if hasattr(ref, "inventory") else {}
+        total_ref = max(sum(ref_counts.values()), 1) if ref_counts else 1
+        ref_hist = np.array([ref_counts.get(pid, 0) / total_ref for pid in vocab], dtype=np.float32)
+        l1_dist = np.sum(np.abs(gen_hist - ref_hist))
+        sim = 1.0 - (l1_dist / 2.0)  # L1 in [0,2] for normalised histograms
+        if sim > best_sim:
+            best_sim = sim
+
+    return float(np.clip(best_sim, 0.0, 1.0))
+
+
+def _bigram_compliance_score(parts: list, design_priors) -> float:
+    """
+    Computes the average connectivity bigram compliance for the assembly.
+    For each pair of consecutive parts (in step order), looks up
+    P(part_j | part_i) in the design priors bigrams.
+
+    Returns:
+        float in [0, 1] — higher means the part-connection sequence matches
+        patterns from reference models.
+    """
+    if design_priors is None or design_priors.n_reference_models == 0:
+        return 0.5  # neutral, no signal
+    if len(parts) < 2:
+        return 0.5
+
+    import math
+    scores = []
+    for i in range(len(parts) - 1):
+        src = parts[i].part_id
+        dst = parts[i + 1].part_id
+        # get_connectivity_log_prior returns log(P(dst|src))
+        log_p = design_priors.get_connectivity_log_prior(src, dst, smoothing=1e-4)
+        # Convert to [0,1]: exp(log_p) in (0, 1], max is ~1 for known frequent pairs
+        scores.append(min(math.exp(log_p), 1.0))
+
+    return float(np.mean(scores))
+
+
+def get_vehicle_rl_reward_with_refs(
+    parts: list,
+    refs: list = None,
+    design_priors=None,
+    base_stability_reward: float = 10.0,
+    ref_similarity_weight: float = 5.0,
+    bigram_compliance_weight: float = 3.0,
+) -> float:
+    """
+    Enhanced RL reward for vehicle generation, enriched with:
+    - Reference model histogram similarity (how close is the part distribution
+      to the closest known-good vehicle reference)
+    - Bigram compliance score (how well do part transitions match reference patterns)
+
+    Falls back to get_vehicle_rl_reward() when refs/priors are not available.
+
+    Args:
+        parts:                    List[ParsedPart] — generated assembly.
+        refs:                     Optional List[RefModel] — reference vehicles.
+        design_priors:            Optional DesignPriors — for bigram compliance.
+        base_stability_reward:    Base reward for structural validity.
+        ref_similarity_weight:    Weight for histogram similarity bonus (default 5.0).
+        bigram_compliance_weight: Weight for bigram compliance bonus (default 3.0).
+
+    Returns:
+        float: Total reward.
+
+    Reward breakdown (approximate ranges):
+      Base (get_vehicle_rl_reward):  [-20, +45]
+      + ref_similarity: [0, +5]
+      + bigram_compliance: [0, +3]
+      Total range: [-20, +53]
+    """
+    # Base reward (topology + stability)
+    base_reward = get_vehicle_rl_reward(parts, base_stability_reward=base_stability_reward)
+
+    # Early exit: no enrichment if base reward is catastrophically bad
+    if base_reward <= -10.0:
+        return base_reward
+
+    # Reference histogram similarity bonus
+    sim_bonus = 0.0
+    if refs:
+        sim = _histogram_similarity(parts, refs)
+        sim_bonus = ref_similarity_weight * sim
+
+    # Bigram compliance bonus
+    bigram_bonus = 0.0
+    if design_priors is not None and design_priors.n_reference_models > 0:
+        compliance = _bigram_compliance_score(parts, design_priors)
+        bigram_bonus = bigram_compliance_weight * compliance
+
+    return base_reward + sim_bonus + bigram_bonus
