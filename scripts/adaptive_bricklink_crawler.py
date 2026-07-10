@@ -7,7 +7,7 @@ from datetime import datetime
 from scripts.download_bricklink_model import download_bricklink_model
 
 class AdaptiveCadenceController:
-    def __init__(self, initial_delay=60.0, min_delay=30.0, max_delay=3600.0, success_threshold=3):
+    def __init__(self, initial_delay=10.0, min_delay=5.0, max_delay=15.0, success_threshold=3):
         self.current_delay = initial_delay
         self.min_delay = min_delay
         self.max_delay = max_delay
@@ -17,7 +17,7 @@ class AdaptiveCadenceController:
     def record_success(self) -> float:
         self.success_streak += 1
         if self.success_streak >= self.success_threshold:
-            self.current_delay = max(self.min_delay, self.current_delay - 10.0)
+            self.current_delay = max(self.min_delay, self.current_delay - 2.0)
             self.success_streak = 0
             print(f"[Adaptive Cadence] ¡Racha de éxitos lograda! Reduciendo delay a {self.current_delay:.1f}s")
         return self.current_delay
@@ -65,10 +65,13 @@ def update_model_status(db_path: str, model_id: str, status: str, error_msg: str
     conn.commit()
     conn.close()
 
-def run_adaptive_db_queue(db_path: str = "data/catalog/models_catalog.db", output_dir: str = "data/bricklink_raw", limit_count: int = 15):
+def run_adaptive_db_queue(db_path: str = "data/catalog/models_catalog.db", output_dir: str = "data/bricklink_raw", limit_count: int = 999999):
     controller = AdaptiveCadenceController()
     
-    print(f"\nIniciando cola adaptativa desde la Base de Datos ({db_path}). Límite de sesión: {limit_count} descargas...")
+    if limit_count >= 999999:
+        print(f"\nIniciando cola adaptativa desde la Base de Datos ({db_path}). Ejecución continua (sin límite)...")
+    else:
+        print(f"\nIniciando cola adaptativa desde la Base de Datos ({db_path}). Límite de sesión: {limit_count} descargas...")
     
     downloaded_this_session = 0
     
@@ -80,7 +83,10 @@ def run_adaptive_db_queue(db_path: str = "data/catalog/models_catalog.db", outpu
             break
             
         print(f"\n--------------------------------------------------")
-        print(f"Descargando [{downloaded_this_session + 1}/{limit_count}] de la base de datos: ID {model_id}")
+        if limit_count >= 999999:
+            print(f"Descargando [{downloaded_this_session + 1}] de la base de datos: ID {model_id}")
+        else:
+            print(f"Descargando [{downloaded_this_session + 1}/{limit_count}] de la base de datos: ID {model_id}")
         
         # Mark as downloading
         update_model_status(db_path, model_id, 'downloading')
@@ -124,7 +130,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--db_path", type=str, default="data/catalog/models_catalog.db", help="Path to SQLite catalog database")
     parser.add_argument("--output_dir", type=str, default="data/bricklink_raw", help="Output directory")
-    parser.add_argument("--limit", type=int, default=15, help="Max models to download in this session")
+    parser.add_argument("--limit", type=int, default=999999, help="Max models to download in this session")
     args = parser.parse_args()
     
     run_adaptive_db_queue(args.db_path, args.output_dir, args.limit)

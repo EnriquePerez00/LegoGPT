@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pytest*)",
+      "Bash(python*)",
+      "Bash(python3*)",
+      "Bash(pip*)",
+      "Bash(pip3*)",
+      "Bash(uvicorn*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(cat*)",
+      "Bash(ls*)",
+      "Bash(find*)",
+      "Bash(grep*)",
+      "Bash(wc*)",
+      "Bash(echo*)",
+      "Bash(mkdir*)",
+      "Bash(cp*)",
+      "Bash(source*)",
+      "Bash(sqlite3*)",
+      "Bash(curl*)",
+      "Bash(which*)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(DROP TABLE*)",
+      "Bash(DELETE FROM*)"
+    ]
+  },
+  "env": {
+    "PYTHONPATH": ".",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "1"
+  }
+}

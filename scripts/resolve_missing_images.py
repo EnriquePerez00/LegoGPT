@@ -79,7 +79,7 @@ def resolve_bricklink_images(limit=10):
     cursor = conn.cursor()
     
     cursor.execute("""
-    SELECT set_id FROM sets 
+    SELECT set_id, source_url FROM sets 
     WHERE source = 'BrickLink' AND (image_url IS NULL OR image_url = '')
     LIMIT ?
     """, (limit,))
@@ -90,7 +90,6 @@ def resolve_bricklink_images(limit=10):
         conn.close()
         return
         
-    model_ids = [r[0] for r in rows]
     ua = random.choice(USER_AGENTS)
     
     updated_count = 0
@@ -99,9 +98,14 @@ def resolve_bricklink_images(limit=10):
         context = browser.new_context(user_agent=ua)
         page = context.new_page()
         
-        for model_id in model_ids:
+        for set_id, source_url in rows:
+            # Extract numeric model_id from source_url if available
+            model_id = set_id
+            if source_url and "idModel=" in source_url:
+                model_id = source_url.split("idModel=")[-1].split("&")[0]
+                
             url = f"https://www.bricklink.com/v3/studio/design.page?idModel={model_id}"
-            print(f"Navegando a {url}...")
+            print(f"Navegando a {url} (Set: {set_id})...")
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=20000)
                 # Wait a bit for components
@@ -112,25 +116,42 @@ def resolve_bricklink_images(limit=10):
                 if og_image_el.count() > 0:
                     image_url = og_image_el.get_attribute("content")
                     if image_url:
-                        cursor.execute("UPDATE sets SET image_url = ?, source_url = ? WHERE set_id = ?", (image_url, url, model_id))
+                        cursor.execute("UPDATE sets SET image_url = ?, source_url = ? WHERE set_id = ?", (image_url, url, set_id))
                         conn.commit()
                         updated_count += 1
-                        print(f"  [+] Actualizada imagen para BrickLink ID {model_id} -> {image_url}")
+                        print(f"  [+] Actualizada imagen para BrickLink ID {set_id} -> {image_url}")
                         continue
                         
-                # Fallback to search inside page DOM
-                img_el = page.locator(".moc-card__image-content, img[src*='file.bricklink.info']").first
+                # Fallback to search inside page DOM (only specific model images, no recommendations)
+                img_el = page.locator(".studio-model__img, .studio-model img").first
                 if img_el.count() > 0:
                     image_url = img_el.get_attribute("src")
-                    if image_url:
+                    # Double check it is not inside a recommendation card
+                    is_rec = page.evaluate("""
+                        (img) => {
+                            if (!img) return false;
+                            let parent = img.parentElement;
+                            while (parent) {
+                                if (parent.classList.contains('moc-card') || 
+                                    parent.classList.contains('studio-gallery-feed') || 
+                                    parent.id === 'related-creations') {
+                                    return true;
+                                }
+                                parent = parent.parentElement;
+                            }
+                            return false;
+                        }
+                    """, img_el.element_handle()) if img_el.count() > 0 else False
+                    
+                    if image_url and not is_rec:
                         if not image_url.startswith("http"):
                             image_url = "https:" + image_url
-                        cursor.execute("UPDATE sets SET image_url = ?, source_url = ? WHERE set_id = ?", (image_url, url, model_id))
+                        cursor.execute("UPDATE sets SET image_url = ?, source_url = ? WHERE set_id = ?", (image_url, url, set_id))
                         conn.commit()
                         updated_count += 1
-                        print(f"  [+] Actualizada imagen (DOM Fallback) para BrickLink ID {model_id} -> {image_url}")
+                        print(f"  [+] Actualizada imagen (DOM Fallback) para BrickLink ID {set_id} -> {image_url}")
             except Exception as e:
-                print(f"Error procesando {model_id}: {e}")
+                print(f"Error procesando {set_id}: {e}")
                 
             # Short polite delay
             time_delay = random.uniform(2.0, 4.0)

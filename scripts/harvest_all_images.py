@@ -147,13 +147,13 @@ def harvest_bricklink_all_images(limit=10):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    cursor.execute("SELECT set_id, image_url FROM sets WHERE source = 'BrickLink' AND set_id != '563116' LIMIT ?", (limit,))
+    cursor.execute("SELECT set_id, image_url, source_url FROM sets WHERE source = 'BrickLink' LIMIT ?", (limit,))
     rows = cursor.fetchall()
     
     # Pre-populate main images
     main_images = []
     for r in rows:
-        set_id, img_url = r
+        set_id, img_url, src_url = r
         if img_url:
             main_images.append((set_id, img_url, 'BrickLink'))
             
@@ -172,9 +172,15 @@ def harvest_bricklink_all_images(limit=10):
         page = context.new_page()
         
         for r in rows:
-            model_id = r[0]
+            set_id, img_url, src_url = r
+            
+            # Extract numeric model_id from source_url if available
+            model_id = set_id
+            if src_url and "idModel=" in src_url:
+                model_id = src_url.split("idModel=")[-1].split("&")[0]
+                
             url = f"https://www.bricklink.com/v3/studio/design.page?idModel={model_id}"
-            print(f"Scraping BrickLink gallery for ID {model_id}...")
+            print(f"Scraping BrickLink gallery for ID {set_id} (Model: {model_id})...")
             try:
                 page.goto(url, wait_until="domcontentloaded", timeout=20000)
                 page.wait_for_timeout(3000)
@@ -223,7 +229,7 @@ def harvest_bricklink_all_images(limit=10):
                 
                 if found_urls:
                     print(f"  [+] Encontradas {len(found_urls)} imágenes específicas para {model_id}.")
-                    batch = [(model_id, url, 'BrickLink') for url in found_urls]
+                    batch = [(set_id, url, 'BrickLink') for url in found_urls]
                     cursor.executemany("INSERT OR IGNORE INTO set_images (set_id, image_url, source) VALUES (?, ?, ?)", batch)
                     conn.commit()
                     total_extra += len(found_urls)

@@ -15,7 +15,7 @@ def parse_mpd_to_submodels(file_path: str) -> dict[str, list[str]]:
     current_model = None
     current_lines = []
     
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+    with open(file_path, "r", encoding="utf-8-sig", errors="ignore") as f:
         lines = f.readlines()
         
     has_file_headers = any(line.strip().startswith("0 FILE") for line in lines)
@@ -56,8 +56,18 @@ def flatten_mpd(file_path: str) -> list[ParsedPart]:
     if not submodels:
         return []
         
-    # Main model is the first defined model (or "__main__" if it was a flat file)
-    main_model_name = "__main__" if "__main__" in submodels else list(submodels.keys())[0]
+    # Main model is "__main__" if present, otherwise find the submodel with the most direct part references
+    if "__main__" in submodels:
+        main_model_name = "__main__"
+    else:
+        best_model = None
+        max_direct_parts = -1
+        for name, lines in submodels.items():
+            direct_parts = sum(1 for l in lines if l.strip().startswith("1"))
+            if direct_parts > max_direct_parts:
+                max_direct_parts = direct_parts
+                best_model = name
+        main_model_name = best_model or list(submodels.keys())[0]
     
     physical_parts = []
     

@@ -47,3 +47,14 @@ scratch/
 outputs/
 temp_uploaded.mpd
 temp_uploaded.ldr
+
+# Claude Code
+CLAUDE.local.md
+.claude/cache/
+.claude/*.log
+
+# Generated thumbnails and progress files
+public/thumbnails/
+data/ingestion_progress.json
+data/bricklink_stats.json
+

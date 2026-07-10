@@ -31,3 +31,8 @@ pytest-mock>=3.12.0 # Mocking de tensores y mallas pesadas
 fastapi>=0.111.0
 uvicorn>=0.30.0
 websockets>=12.0
+# 7. OpenWiki Tool (langchain-ai/openwiki) — Busqueda Wikipedia para agentes LLM
+# Referencia: https://github.com/langchain-ai/openwiki
+langchain-community>=0.2.0   # WikipediaAPIWrapper (nucleo de openwiki)
+langchain-core>=0.2.0        # Tool, BaseTool para agentes LangChain
+wikipedia>=1.4.0             # Backend de busqueda Wikipedia

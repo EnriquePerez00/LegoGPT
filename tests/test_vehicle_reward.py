@@ -64,3 +64,58 @@ def test_vehicle_rl_reward():
     reward_invalid = get_vehicle_rl_reward(invalid_parts)
     
     assert reward_valid > reward_invalid
+
+def test_flexible_wheel_rewards():
+    # 4 wheels setup (valid stable base)
+    w1 = create_mock_part("42610.dat", 0, -10.0, 0.0, -30.0)
+    w2 = create_mock_part("42610.dat", 0, 10.0, 0.0, -30.0)
+    w3 = create_mock_part("42610.dat", 0, -10.0, 0.0, 30.0)
+    w4 = create_mock_part("42610.dat", 0, 10.0, 0.0, 30.0)
+    p1 = create_mock_part("3020.dat", 1, 0.0, -16.0, 0.0)
+    
+    parts_4_wheels = [w1, w2, w3, w4, p1]
+    reward_4 = get_vehicle_rl_reward(parts_4_wheels)
+    
+    # 2 wheels setup (motorcycle/trailer style - touches ground at 2 points <= 4)
+    parts_2_wheels = [w1, w3, p1]
+    reward_2 = get_vehicle_rl_reward(parts_2_wheels)
+    
+    # 1 wheel setup
+    parts_1_wheel = [w1, p1]
+    reward_1 = get_vehicle_rl_reward(parts_1_wheel)
+    
+    # 4 wheels is preferred, but 2 wheels (soft constraint) should still be significantly better than 1 wheel
+    assert reward_4 > reward_2
+    assert reward_2 > reward_1
+
+def test_blocked_aesthetic_penalty():
+    # 4 wheels base
+    w1 = create_mock_part("42610.dat", 0, -10.0, 0.0, -30.0)
+    w2 = create_mock_part("42610.dat", 0, 10.0, 0.0, -30.0)
+    w3 = create_mock_part("42610.dat", 0, -10.0, 0.0, 30.0)
+    w4 = create_mock_part("42610.dat", 0, 10.0, 0.0, 30.0)
+    
+    # Flat plate
+    p1 = create_mock_part("3020.dat", 1, 0.0, -16.0, 0.0)
+    
+    # CASE A: Aesthetic Tile 1x2 at the top (unblocked, Y = -24)
+    tile_unblocked = create_mock_part("3069b.dat", 14, 0.0, -24.0, 0.0)
+    parts_unblocked = [w1, w2, w3, w4, p1, tile_unblocked]
+    
+    # CASE B: Aesthetic Tile 1x2 blocked (Plate stacked on top of it: Tile at Y = -16, Plate at Y = -24)
+    tile_blocked = create_mock_part("3069b.dat", 14, 0.0, -16.0, 0.0)
+    plate_on_top = create_mock_part("3023.dat", 1, 0.0, -24.0, 0.0) # Stacked on top of tile
+    parts_blocked = [w1, w2, w3, w4, tile_blocked, plate_on_top]
+    
+    metrics_unblocked = evaluate_vehicle_topology(parts_unblocked)
+    metrics_blocked = evaluate_vehicle_topology(parts_blocked)
+    
+    assert metrics_unblocked["blocked_aesthetic_count"] == 0
+    assert metrics_blocked["blocked_aesthetic_count"] == 1
+    
+    reward_unblocked = get_vehicle_rl_reward(parts_unblocked)
+    reward_blocked = get_vehicle_rl_reward(parts_blocked)
+    
+    # Blocked tile receives a penalty, thus lower reward
+    assert reward_unblocked > reward_blocked
+

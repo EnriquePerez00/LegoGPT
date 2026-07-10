@@ -41,10 +41,6 @@ def generate_set_dataset(file_path: str, output_dir: str = "data/processed") -> 
             print(f"  [OMITIDO] El archivo no contiene piezas físicas.")
             return False
             
-        if num_parts >= 100:
-            print(f"  [OMITIDO] {filename} tiene {num_parts} piezas (>= 100).")
-            return False
-            
         # 2. Sort parts by step_id to represent the correct assembly sequence
         parts_sorted = sorted(parts, key=lambda p: p.step_id)
         

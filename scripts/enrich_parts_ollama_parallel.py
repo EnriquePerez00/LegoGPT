@@ -196,20 +196,22 @@ def main():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    # Prioritize City and Technic
-    print("Recuperando listado de piezas ordenadas por prioridad (Lego City & Technic)...")
+    # Target themes
+    print("Recuperando listado de piezas de las series: Speed Champions, Creator 3-in-1, Friends, Icons...")
     cursor.execute("""
-        SELECT p.part_num, p.name,
-               MAX(CASE WHEN t.name LIKE '%City%' OR t.name LIKE '%Technic%' THEN 1 ELSE 0 END) as is_priority
+        SELECT DISTINCT p.part_num, p.name
         FROM rb_parts p
-        LEFT JOIN rb_inventory_parts ip ON p.part_num = ip.part_num
-        LEFT JOIN rb_inventories i ON ip.inventory_id = i.id
-        LEFT JOIN rb_sets s ON i.set_num = s.set_num
-        LEFT JOIN rb_themes t ON s.theme_id = t.id
+        JOIN rb_inventory_parts ip ON p.part_num = ip.part_num
+        JOIN rb_inventories i ON ip.inventory_id = i.id
+        JOIN rb_sets s ON i.set_num = s.set_num
+        JOIN rb_themes t ON s.theme_id = t.id
         LEFT JOIN rb_parts_enriched e ON p.part_num = e.part_num
         WHERE e.part_num IS NULL
-        GROUP BY p.part_num
-        ORDER BY is_priority DESC, p.part_num ASC
+          AND (t.name LIKE '%Speed Champions%'
+               OR t.name LIKE '%Creator 3-in-1%'
+               OR t.name LIKE '%Friends%'
+               OR t.name LIKE '%Icons%')
+        ORDER BY p.part_num ASC
     """)
     parts_to_process = cursor.fetchall()
     conn.close()
@@ -217,11 +219,11 @@ def main():
     total_parts = len(parts_to_process)
     print(f"Encontradas {total_parts} piezas pendientes de enriquecimiento.")
     if total_parts == 0:
-        print("No hay piezas pendientes de procesamiento.")
+        print("No hay piezas pendientes de procesamiento para estas series.")
         return
         
     print(f"Iniciando ThreadPoolExecutor con {MAX_WORKERS} hilos concurrentes.")
-    print("Las piezas de 'Lego City' y 'Technic' se procesarán primero.")
+    print("Procesando exclusivamente piezas de las series seleccionadas. El job finalizará al terminar.")
     
     completed = 0
     success_count = 0
@@ -230,13 +232,19 @@ def main():
         futures = {executor.submit(process_part, p[0], p[1]): p for p in parts_to_process}
         
         for future in as_completed(futures):
-            success, part_num, theme_name, cat_group, labels = future.result()
-            completed += 1
-            if success:
-                success_count += 1
-                print(f"[{completed}/{total_parts}] [ÉXITO] {part_num} ({theme_name}) -> {cat_group} {labels}")
-            else:
-                print(f"[{completed}/{total_parts}] [FALLO] {part_num}")
+            try:
+                success, part_num, theme_name, cat_group, labels = future.result()
+                completed += 1
+                if success:
+                    success_count += 1
+                    print(f"[{completed}/{total_parts}] [ÉXITO] {part_num} ({theme_name}) -> {cat_group} {labels}")
+                else:
+                    print(f"[{completed}/{total_parts}] [FALLO] {part_num}")
+            except Exception as e:
+                completed += 1
+                # Retrieve part info from futures dict mapping to print context
+                part_info = futures[future]
+                print(f"[{completed}/{total_parts}] [EXCEPCIÓN] Error procesando {part_info[0]}: {e}")
 
 if __name__ == "__main__":
     main()

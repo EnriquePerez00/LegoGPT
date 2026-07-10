@@ -19,10 +19,11 @@ def human_delay(min_sec=2.0, max_sec=5.0):
     time.sleep(delay)
 
 def long_inactivity_pause():
-    """Simulates a longer period of reading or examining page details."""
-    delay = random.randint(20, 45)
-    print(f"[Human Sim] Pausa larga (simulando lectura) por {delay} segundos...")
+    """Simulates a shorter period of reading or examining page details."""
+    delay = random.uniform(2.0, 6.0)
+    print(f"[Human Sim] Pausa (simulando lectura) por {delay:.2f} segundos...")
     time.sleep(delay)
+
 
 def simulate_scroll(page):
     """Simulates smooth mouse scrolling behavior."""
@@ -41,6 +42,27 @@ def simulate_scroll(page):
 def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_raw") -> bool:
     os.makedirs(output_dir, exist_ok=True)
     
+    # Check if model ID is already downloaded locally
+    import glob
+    existing_files = glob.glob(os.path.join(output_dir, f"*{model_id}*"))
+    valid_extensions = {".io", ".ldr", ".mpd"}
+    for f in existing_files:
+        ext = os.path.splitext(f)[1].lower()
+        if ext in valid_extensions and os.path.exists(f):
+            print(f"[Omitido] El modelo {model_id} ya existe localmente en: {f}")
+            image_url = None
+            try:
+                import sqlite3
+                conn = sqlite3.connect("data/catalog/models_catalog.db")
+                c = conn.cursor()
+                row = c.execute("SELECT image_url FROM sets WHERE set_id = ?", (model_id,)).fetchone()
+                if row:
+                    image_url = row[0]
+                conn.close()
+            except Exception:
+                pass
+            return True, image_url, f
+
     url = f"https://www.bricklink.com/v3/studio/design.page?idModel={model_id}"
     print(f"Iniciando descarga simulada para el modelo {model_id}...")
     print(f"Target URL: {url}")

@@ -15,7 +15,7 @@ def generate_report():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    # 1. Fetch all classified sets (where level_1_entorno is not NULL)
+    # 1. Fetch all classified sets (where level_1_entorno is not NULL and not 'Otros')
     cursor.execute("""
     SELECT 
         s.set_id, s.name, s.theme, s.year, s.description, s.source, s.file_path, 
@@ -23,10 +23,10 @@ def generate_report():
         s.tags, s.source_url, s.image_url,
         s.level_1_entorno, s.level_2_proposito, s.level_3_clase, s.level_4_escala, s.level_4_motorizacion, s.level_4_licencia,
         s.confidence_score, s.reasoning_notes, s.needs_human_review, s.review_table_payload,
-        s.subassemblies_count, s.is_fully_connected
+        s.subassemblies_count, s.is_fully_connected, s.classification_status
     FROM sets s
     LEFT JOIN rb_sets r ON s.set_id = r.set_num
-    WHERE s.level_1_entorno IS NOT NULL
+    WHERE s.level_1_entorno IS NOT NULL AND s.level_1_entorno != 'Otros'
     ORDER BY s.confidence_score DESC, s.set_id ASC
     """)
     
@@ -58,8 +58,7 @@ def generate_report():
             set_id, name, theme, year, desc, source, file_path, parts, tags, src_url, main_img,
             l1, l2, l3, l4_escala, l4_moto, l4_lic,
             confidence, reasoning, needs_review, review_payload,
-            subassemblies, fully_connected
-        ) = row
+            subassemblies, fully_connected, classification_status) = row
         
         # Get all images for this set
         set_imgs = images_by_set.get(set_id, [])
@@ -80,10 +79,15 @@ def generate_report():
         src_class = f"badge-{source.lower()}"
         
         # Review status badge style
-        review_class = "review-required" if needs_review else "review-approved"
-        review_text = "REQUIERE VALIDACIÓN" if needs_review else "AUTOCLASIFICADO"
+        if classification_status == 'human_verified':
+            review_class = "review-human-verified"
+            review_text = "VALIDADO POR HUMANO"
+        else:
+            review_class = "review-required" if needs_review else "review-approved"
+            review_text = "REQUIERE VALIDACIÓN" if needs_review else "AUTOCLASIFICADO VLM"
         
         # Confidence color
+        confidence = confidence if confidence is not None else 0.0
         conf_color = "#10b981" if confidence > 0.8 else ("#f59e0b" if confidence > 0.5 else "#ef4444")
         conf_pct = int(confidence * 100)
         
@@ -152,8 +156,6 @@ def generate_report():
                             <div class="tax-item"><strong>Propósito (L2):</strong> <span>{l2}</span></div>
                             <div class="tax-item"><strong>Clase (L3):</strong> <span class="highlight">{l3}</span></div>
                             <div class="tax-item"><strong>Escala (L4):</strong> <span>{l4_escala}</span></div>
-                            <div class="tax-item"><strong>Motor (L4):</strong> <span>{l4_moto}</span></div>
-                            <div class="tax-item"><strong>Licencia (L4):</strong> <span>{l4_lic}</span></div>
                         </div>
                     </div>
                     

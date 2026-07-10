@@ -15,7 +15,10 @@
 <body>
     <div class="dashboard">
         <header>
-            <h1>LegoGPT Dashboard</h1>
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <h1>LegoGPT Dashboard</h1>
+                <a href="journey.html" class="btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); font-size: 0.875rem;">Ir a User Journey (5 Fases)</a>
+            </div>
             <div class="status-indicator">
                 <span class="dot disconnected" id="ws-status-dot"></span>
                 <span id="ws-status-text">Desconectado</span>

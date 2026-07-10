@@ -60,6 +60,29 @@ VEHICLE_ALLOWED_PARTS = [
     "3008.dat",       # Brick 1 x 8
     "3007.dat",       # Brick 2 x 8
     "3006.dat",       # Brick 2 x 10
+
+    # MOC Curved Bricks & Slopes
+    "50950.dat",      # Brick Curved 3 x 1 No Studs
+    "61678.dat",      # Brick Curved 4 x 1 No Studs [Asymmetric Ridges]
+    "85970.dat",      # Brick Curved 10 x 1
+    "54200.dat",      # Slope 30° 1 x 1 x 2/3 (Cheese Slope)
+    "85984.dat",      # Slope 30° 1 x 2 x 2/3
+    "6091.dat",       # Brick Curved 1 x 2 x 1 1/3 with Curved Top
+    "11477.dat",      # Brick Curved 2 x 1 No Studs [1/2 Bow]
+
+    # MOC Smooth Tiles
+    "3069b.dat",      # Tile 1 x 2 with Groove
+    "2431.dat",       # Tile 1 x 4 with Groove
+    "87079.dat",      # Tile 2 x 4 with Groove
+    "3070b.dat",      # Tile 1 x 1 with Groove
+    "63864.dat",      # Tile 1 x 3
+    "6636.dat",       # Tile 1 x 6 with Groove
+
+    # MOC Special Plates & Bricks
+    "3623.dat",       # Plate 1 x 3
+    "3794a.dat",      # Plate Special 1 x 2 with 1 Stud (Jumper)
+    "86996.dat",      # Plate 1 x 1 x 2/3 with Open Stud
+    "3622.dat",       # Brick 1 x 3
 ]
 
 VEHICLE_ALLOWED_COLORS = [

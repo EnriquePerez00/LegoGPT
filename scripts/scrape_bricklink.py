@@ -27,7 +27,11 @@ def convert_io_to_ldr(io_file_path: str, output_ldr_path: str) -> bool:
                 if main_ldr not in ldr_files:
                     main_ldr = ldr_files[0]
                     
-                content = archive.read(main_ldr).decode("utf-8", errors="ignore")
+                try:
+                    content = archive.read(main_ldr, pwd=b"soho0909").decode("utf-8", errors="ignore")
+                except Exception:
+                    # Fallback to no password
+                    content = archive.read(main_ldr).decode("utf-8", errors="ignore")
                 with open(output_ldr_path, "w", encoding="utf-8") as f:
                     f.write(content)
                 print(f"Successfully extracted nested {main_ldr} from {io_file_path} to {output_ldr_path}")

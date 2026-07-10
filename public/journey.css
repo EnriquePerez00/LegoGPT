@@ -1,0 +1,252 @@
+/* LegoGPT User Journey Specific Styles */
+
+:root {
+    --primary-glow: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    --success-glow: linear-gradient(135deg, #10b981, #059669);
+    --glass-background: rgba(15, 23, 42, 0.45);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --accent-color: #6366f1;
+}
+
+body {
+    background: radial-gradient(circle at top right, #0f172a, #020617);
+    color: #f8fafc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.journey-container {
+    padding: 1.5rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Wizard Progress Bar */
+.wizard-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 1.25rem 2rem;
+    margin-top: 1rem;
+    border-radius: 12px;
+    background: var(--glass-background);
+    border: var(--glass-border);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+}
+
+.progress-track {
+    position: absolute;
+    top: 50%;
+    left: 4rem;
+    right: 4rem;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-50%);
+    z-index: -1;
+}
+
+.step-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    position: relative;
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-indicator .circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 2px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+}
+
+.step-indicator span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.3s ease;
+}
+
+/* Active & Completed States */
+.step-indicator.active .circle {
+    background: var(--primary-glow);
+    border-color: #60a5fa;
+    color: white;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+    transform: scale(1.1);
+}
+
+.step-indicator.active span {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+.step-indicator.completed .circle {
+    background: var(--success-glow);
+    border-color: #34d399;
+    color: white;
+}
+
+.step-indicator.completed span {
+    color: #10b981;
+}
+
+/* Step Content Sections */
+.step-section {
+    display: none;
+    height: 100%;
+}
+
+.step-section.active {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.step-section h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.step-section .description {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+/* Sidebar Inputs styling */
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.05em;
+}
+
+.select-input, .text-input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(15, 23, 42, 0.6);
+    color: white;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+}
+
+.select-input:focus, .text-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255,255,255,0.02);
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.checkbox-group input {
+    width: 16px;
+    height: 16px;
+    accent-color: #3b82f6;
+}
+
+.checkbox-group label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+}
+
+/* Metrics Cards (Fase 3) */
+.metric-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    background: rgba(255,255,255,0.02);
+    border: var(--glass-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.metric-card .label {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.metric-card .val {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.metric-card.success {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.metric-card.success .val {
+    color: #10b981;
+}
+
+.metric-card.warning {
+    border-color: rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.metric-card.warning .val {
+    color: #f59e0b;
+}
+
+.metric-card.danger {
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.metric-card.danger .val {
+    color: #ef4444;
+}
+
+/* Animations */
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+}
+
+.pulse-glow {
+    animation: glowPulse 2s infinite;
+}

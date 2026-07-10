@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegoGPT - User Journey de 5 Fases</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="journey.css">
+    <!-- Three.js for 3D Viewer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard journey-container">
+        <header>
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <h1>LegoGPT Journey</h1>
+                <a href="index.html" class="btn" style="background: rgba(255, 255, 255, 0.1); color: white; text-decoration: none; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); font-size: 0.875rem;">Volver al Dashboard</a>
+            </div>
+            <div class="status-indicator">
+                <span class="dot disconnected" id="ws-status-dot"></span>
+                <span id="ws-status-text">Desconectado</span>
+            </div>
+        </header>
+
+        <!-- Progress Wizard Bar -->
+        <div class="wizard-progress glass-panel">
+            <div class="progress-track"></div>
+            <div class="step-indicator active" id="step-ind-1" onclick="jumpToStep(1)">
+                <div class="circle">1</div>
+                <span>Fase 1: Mosaico 2D</span>
+            </div>
+            <div class="step-indicator" id="step-ind-2" onclick="jumpToStep(2)">
+                <div class="circle">2</div>
+                <span>Fase 2: Estructura 3D</span>
+            </div>
+            <div class="step-indicator" id="step-ind-3" onclick="jumpToStep(3)">
+                <div class="circle">3</div>
+                <span>Fase 3: LegoGraph</span>
+            </div>
+            <div class="step-indicator" id="step-ind-4" onclick="jumpToStep(4)">
+                <div class="circle">4</div>
+                <span>Fase 4: Montaje</span>
+            </div>
+            <div class="step-indicator" id="step-ind-5" onclick="jumpToStep(5)">
+                <div class="circle">5</div>
+                <span>Fase 5: Render Eevee</span>
+            </div>
+        </div>
+
+        <div class="main-layout" style="display: grid; grid-template-columns: 350px 1fr; gap: 1.5rem; margin-top: 1.5rem; height: calc(100vh - 220px); min-height: 550px;">
+            <!-- Left Panel: Controls per Phase -->
+            <div class="sidebar-controls glass-panel" style="display: flex; flex-direction: column; justify-content: space-between; overflow-y: auto;">
+                <div class="step-sections">
+                    <!-- Phase 1 Sections -->
+                    <div class="step-section active" id="sec-step-1">
+                        <h2>Fase 1: Dominio 2D</h2>
+                        <p class="description">Convierte cualquier imagen en un mosaico bidimensional optimizando el color mediante el algoritmo perceptivo CIE Lab Delta-E.</p>
+                        
+                        <div class="control-group">
+                            <label for="mosaic-file">Seleccionar Imagen</label>
+                            <input type="file" id="mosaic-file" accept="image/*" style="display: none;" onchange="handleImageSelection(event)">
+                            <button class="btn" style="width: 100%; background: #3b82f6;" onclick="document.getElementById('mosaic-file').click()">Subir Archivo de Imagen</button>
+                            <div id="image-name-display" style="margin-top: 0.5rem; font-size: 0.85rem; color: #94a3b8; text-align: center;">Ningún archivo seleccionado</div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="mosaic-size">Resolución de la Cuadrícula</label>
+                            <select id="mosaic-size" class="select-input">
+                                <option value="16">16 x 16 placas</option>
+                                <option value="32" selected>32 x 32 placas</option>
+                                <option value="48">48 x 48 placas</option>
+                                <option value="64">64 x 64 placas</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group checkbox-group">
+                            <input type="checkbox" id="mosaic-dither" checked>
+                            <label for="mosaic-dither">Activar Difuminado (Dithering Floyd-Steinberg)</label>
+                        </div>
+
+                        <button id="btn-generate-mosaic" class="btn success" style="width: 100%; margin-top: 1rem;">Generar Mosaico 2D</button>
+                    </div>
+
+                    <!-- Phase 2 Sections -->
+                    <div class="step-section" id="sec-step-2">
+                        <h2>Fase 2: Estructura 3D</h2>
+                        <p class="description">Traduce un prompt en lenguaje natural a un modelo de construcción 3D equilibrado y conectado espacialmente.</p>
+                        
+                        <div class="control-group">
+                            <label for="journey-prompt">Instrucción (Prompt) para LegoGPT</label>
+                            <input type="text" id="journey-prompt" class="text-input" placeholder="Ej. coche deportivo, racer azul, camión..." value="coche deportivo">
+                        </div>
+
+                        <div class="control-group">
+                            <label for="journey-pieces">Número de Piezas</label>
+                            <input type="number" id="journey-pieces" class="text-input" value="12" min="3" max="50">
+                        </div>
+
+                        <div class="control-group">
+                            <label for="journey-model-select">Modelo Entrenado</label>
+                            <select id="journey-model-select" class="select-input">
+                                <option value="">-- Cargar Modelo --</option>
+                            </select>
+                        </div>
+
+                        <button id="btn-generate-3d" class="btn" style="width: 100%; background: #3b82f6; margin-top: 1rem;">Generar Estructura 3D</button>
+                    </div>
+
+                    <!-- Phase 3 Sections -->
+                    <div class="step-section" id="sec-step-3">
+                        <h2>Fase 3: LegoGraph Check</h2>
+                        <p class="description">Validación topológica determinista de colisiones (OBB), conectividad estructural stud-to-socket y reglas de centro de gravedad.</p>
+                        
+                        <div class="graph-metrics" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div class="metric-card" id="metric-stability">
+                                <span class="label">Estabilidad Física</span>
+                                <span class="val">-</span>
+                            </div>
+                            <div class="metric-card" id="metric-connected">
+                                <span class="label">Conectividad de Grafo</span>
+                                <span class="val">-</span>
+                            </div>
+                            <div class="metric-card" id="metric-base-parts">
+                                <span class="label">Piezas en el Suelo</span>
+                                <span class="val">- / 4</span>
+                            </div>
+                            <div class="metric-card" id="metric-symmetry">
+                                <span class="label">Simetría Bilateral</span>
+                                <span class="val">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 Sections -->
+                    <div class="step-section" id="sec-step-4">
+                        <h2>Fase 4: Secuenciador</h2>
+                        <p class="description">Visualiza la viabilidad de la construcción paso a paso. Se desensambla el modelo de abajo hacia arriba evitando bloques colgantes.</p>
+                        
+                        <div class="step-playback" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="step-progress-text" id="play-step-info" style="text-align: center; font-weight: 600; font-size: 1.1rem; color: #3b82f6;">Paso: 0 / 0</div>
+                            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+                                <button id="btn-play-prev" class="btn" style="padding: 0.5rem 1rem;">Atrás</button>
+                                <button id="btn-play-toggle" class="btn success" style="padding: 0.5rem 1rem; min-width: 90px;">Reproducir</button>
+                                <button id="btn-play-next" class="btn" style="padding: 0.5rem 1rem;">Sig.</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 5 Sections -->
+                    <div class="step-section" id="sec-step-5">
+                        <h2>Fase 5: Render Eevee</h2>
+                        <p class="description">Descarga el manual instructivo en formato LDraw (.ldr) y renderiza la estructura final con un motor fotorrealista de trazado de rayos.</p>
+                        
+                        <button id="btn-download-ldr" class="btn" style="width: 100%; background: #8b5cf6; margin-top: 1rem;">Descargar Archivo LDraw</button>
+                        <div id="render-status-msg" style="margin-top: 0.5rem; text-align: center; font-size: 0.85rem; color: #94a3b8;">Renderizado disponible</div>
+                    </div>
+                </div>
+
+                <!-- Navigation buttons (Next/Prev step) -->
+                <div class="wizard-nav" style="display: flex; gap: 1rem; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
+                    <button id="btn-wizard-prev" class="btn" style="flex: 1; background: rgba(255,255,255,0.05);" disabled>Anterior</button>
+                    <button id="btn-wizard-next" class="btn primary" style="flex: 1;">Siguiente</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Visualizer Canvas + Split Previews -->
+            <div class="viewer-main glass-panel" style="display: grid; grid-template-rows: 1fr 120px; gap: 1.5rem; position: relative;">
+                <div style="display: flex; gap: 1.5rem; height: 100%; overflow: hidden;">
+                    <!-- Three.js 3D Viewer -->
+                    <div style="flex: 2; position: relative; height: 100%; border-radius: 8px; overflow: hidden; background: #020617; border: 1px solid rgba(255,255,255,0.05);">
+                        <div id="journey-viewer3d" style="width: 100%; height: 100%;"></div>
+                        <span id="journey-piece-count" style="position: absolute; top: 1rem; left: 1rem; padding: 0.25rem 0.6rem; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 6px; font-size: 0.875rem; font-weight: 600; color: white;">0 piezas</span>
+                    </div>
+
+                    <!-- Split view for original image or render preview -->
+                    <div class="split-preview-panel" style="flex: 1; display: flex; flex-direction: column; gap: 1rem; height: 100%;">
+                        <div class="preview-box glass-panel" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; background: #090d16;">
+                            <span class="preview-label" style="position: absolute; top: 0.5rem; left: 0.5rem; font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; z-index: 10;">Entrada Original (Fase 1)</span>
+                            <span class="no-img-text" id="original-preview-placeholder">Sube una imagen para ver la vista previa</span>
+                            <img id="original-preview-img" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
+                        </div>
+                        <div class="preview-box glass-panel" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; background: #090d16;">
+                            <span class="preview-label" style="position: absolute; top: 0.5rem; left: 0.5rem; font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; z-index: 10;">Renderizado Fotorrealista (Fase 5)</span>
+                            <span class="no-img-text" id="eevee-preview-placeholder">Esperando inferencia final</span>
+                            <img id="eevee-preview-img" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs viewer -->
+                <div class="journey-logs glass-panel" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 8px; display: flex; flex-direction: column;">
+                    <div style="font-weight: 600; font-size: 0.85rem; color: #64748b; text-transform: uppercase; margin-bottom: 0.25rem;">Consola del Servidor</div>
+                    <div id="journey-terminal-output" class="terminal-content" style="flex: 1; overflow-y: auto; font-family: monospace; font-size: 0.85rem; color: #10b981; line-height: 1.4;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="journey.js"></script>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Clasificación VLM - LegoGPT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-base:#0b0f19; --bg-surface:#151c2e; --bg-surface-hover:#1e2942; --primary:#6366f1; --primary-glow:rgba(99,102,241,0.15); --accent:#f59e0b; --accent-glow:rgba(245,158,11,0.15); --text-main:#f1f5f9; --text-muted:#94a3b8; --border:#2e3b5e; --success:#10b981; --error:#ef4444; --shadow:0 8px 30px rgba(0,0,0,0.3); --glass:rgba(21,28,46,0.8); --radius:16px; --transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { font-family:'Plus Jakarta Sans',sans-serif; background-color:var(--bg-base); color:var(--text-main); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+        header { background-color:var(--glass); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; z-index:10; }
+        .logo-section h1 { font-family:'Outfit',sans-serif; font-size:24px; font-weight:700; background:linear-gradient(135deg,#a5b4fc,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; display:flex; align-items:center; gap:8px; }
+        .logo-badge { background-color:var(--accent-glow); color:var(--accent); border:1px solid var(--accent); padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+        .app-container { display:flex; flex:1; overflow:hidden; }
+        .sidebar { width:380px; border-right:1px solid var(--border); background-color:rgba(15,23,42,0.4); display:flex; flex-direction:column; overflow:hidden; }
+        .search-input { width:100%; padding:12px 16px; border-radius:var(--radius); border:1px solid var(--border); background-color:var(--bg-surface); color:var(--text-main); font-family:inherit; outline:none; transition:var(--transition); }
+        .search-input:focus { border-color:var(--primary); box-shadow:0 0 12px var(--primary-glow); }
+        .set-list { flex:1; overflow-y:auto; padding:10px 20px; }
+        .set-list::-webkit-scrollbar { width:6px; }
+        .set-list::-webkit-scrollbar-thumb { background-color:var(--border); border-radius:4px; }
+        .set-item { padding:14px; border-radius:var(--radius); margin-bottom:12px; background-color:var(--bg-surface); border:1px solid transparent; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:16px; }
+        .set-item:hover { background-color:var(--bg-surface-hover); transform:translateY(-2px); }
+        .set-item.active { border-color:var(--primary); background-color:var(--bg-surface-hover); box-shadow:0 4px 20px var(--primary-glow); }
+        .set-item-img { width:60px; height:60px; border-radius:8px; object-fit:cover; background-color:rgba(0,0,0,0.2); border:1px solid var(--border); }
+        .set-item-info { flex:1; min-width:0; }
+        .set-item-name { font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; }
+        .set-item-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; }
+        .detail-panel { flex:1; background-color:var(--bg-base); display:flex; flex-direction:column; overflow-y:auto; padding:32px; }
+        .welcome-view { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--text-muted); text-align:center; gap:16px; }
+        .welcome-icon { font-size:64px; opacity:0.5; }
+        .detail-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:20px; }
+        .detail-title-area h2 { font-family:'Outfit',sans-serif; font-size:28px; font-weight:700; margin-bottom:6px; }
+        .detail-id { font-family:monospace; color:var(--text-muted); font-size:13px; }
+        .bricklink-link { color:var(--primary); text-decoration:none; font-weight:600; font-size:14px; display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); padding:8px 16px; border-radius:var(--radius); background-color:var(--bg-surface); transition:var(--transition); }
+        .bricklink-link:hover { background-color:var(--bg-surface-hover); border-color:var(--primary); }
+        .detail-content { display:grid; grid-template-columns:1fr 1fr; gap:32px; flex:1; }
+        .preview-pane { background-color:var(--bg-surface); border-radius:var(--radius); border:1px solid var(--border); overflow:hidden; display:flex; flex-direction:column; position:relative; min-height:350px; }
+        .preview-img { flex:1; width:100%; height:100%; object-fit:contain; background-color:rgba(0,0,0,0.1); padding:20px; }
+        .preview-stats { background-color:rgba(11,15,25,0.6); backdrop-filter:blur(8px); border-top:1px solid var(--border); padding:16px; display:flex; justify-content:space-around; text-align:center; }
+        .stat-item { display:flex; flex-direction:column; gap:4px; }
+        .stat-val { font-weight:700; font-size:18px; color:var(--accent); }
+        .stat-label { font-size:11px; color:var(--text-muted); text-transform:uppercase; }
+        .form-pane { display:flex; flex-direction:column; gap:20px; }
+        .form-group { display:flex; flex-direction:column; gap:8px; }
+        .form-group label { font-size:13px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+        .form-input { width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background-color:var(--bg-surface); color:var(--text-main); font-family:inherit; outline:none; transition:var(--transition); }
+        .form-input:focus { border-color:var(--primary); }
+        select.form-input { cursor:pointer; }
+        .btn-save { background-color:var(--primary); color:#fff; border:none; padding:14px 28px; border-radius:var(--radius); font-weight:700; cursor:pointer; font-family:inherit; transition:var(--transition); margin-top:10px; box-shadow:0 4px 15px rgba(99,102,241,0.4); display:inline-flex; justify-content:center; align-items:center; gap:8px; }
+        .btn-save:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,0.6); }
+        .btn-save:active { transform:translateY(0); }
+        .toast { position:fixed; bottom:30px; right:30px; background-color:var(--glass); border:1px solid var(--border); padding:16px 24px; border-radius:var(--radius); box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; transform:translateY(100px); opacity:0; transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); z-index:100; }
+        .toast.show { transform:translateY(0); opacity:1; }
+        .toast-success { border-color:var(--success); }
+        .toast-icon { font-size:20px; }
+        .toast-success .toast-icon { color:var(--success); }
+        .toast-message { font-weight:600; font-size:14px; }
+        .reasoning-box { background-color:rgba(245,158,11,0.05); border:1px solid var(--accent); padding:16px; border-radius:8px; font-size:13px; line-height:1.5; color:var(--text-muted); margin-top:10px; }
+        .reasoning-box strong { color:var(--accent); }
+        .comparison-pane { background-color:rgba(99,102,241,0.03); border:1px dashed var(--primary); padding:16px; border-radius:var(--radius); margin-top:15px; text-align:left; }
+        .comparison-title { font-size:11px; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+        .comparison-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px; }
+        .comparison-item { color:var(--text-muted); }
+        .comparison-item strong { color:var(--text-main); }
+        .status-badge { display:inline-block; padding:2px 6px; border-radius:4px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-top:6px; }
+        .status-verified { background-color:rgba(16,185,129,0.1); color:var(--success); border:1px solid rgba(16,185,129,0.3); }
+        .status-raw { background-color:rgba(99,102,241,0.1); color:var(--primary); border:1px solid rgba(99,102,241,0.3); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-section">
+            <h1>LegoGPT <span class="logo-badge">VLM Classifier</span></h1>
+        </div>
+        <div style="font-size:13px; color:var(--text-muted);">Database: <strong>models_catalog.db</strong></div>
+    </header>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="search-container" style="display:flex; flex-direction:column; gap:12px; padding:20px; border-bottom:1px solid var(--border);">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar set por nombre o ID..." style="margin-bottom:0;">
+                <div style="display:flex; gap:10px; align-items:center; width:100%;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Piezas Máx</label>
+                        <input type="number" id="maxPartsInput" class="search-input" placeholder="Ej: 500" style="padding:8px 12px; margin-bottom:0;">
+                    </div>
+                    <div style="flex:1.5; display:flex; flex-direction:column; gap:4px;">
+                        <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Verificación</label>
+                        <select id="verificationFilter" class="search-input" style="padding:8px 12px; margin-bottom:0; background-color:var(--bg-surface); color:var(--text-main); border:1px solid var(--border); border-radius:8px; cursor:pointer; height:38px;">
+                            <option value="all">Cualquiera</option>
+                            <option value="human_verified">Verificado Humano</option>
+                            <option value="vlm_verified">Verificado LLM</option>
+                            <option value="pending">Por Verificar</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Tipo de Modelo</label>
+                    <select id="modelTypeFilter" class="search-input" style="padding:8px 12px; margin-bottom:0; background-color:var(--bg-surface); color:var(--text-main); border:1px solid var(--border); border-radius:8px; cursor:pointer; height:38px;">
+                        <option value="all">Cualquiera</option>
+                        <option value="vehiculo">Vehículo</option>
+                        <option value="animal">Animal</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+            </div>
+            <div class="set-list" id="setList"></div>
+        </div>
+        <div class="detail-panel" id="detailPanel">
+            <div class="welcome-view">
+                <div class="welcome-icon">🔍</div>
+                <h3>Selecciona un modelo de la lista</h3>
+                <p>Podrás validar la taxonomía VLM, modificar las categorías y guardar los cambios directamente en la base de datos.</p>
+            </div>
+        </div>
+    </div>
+    <div class="toast" id="toast">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message" id="toastMessage">Cambios guardados con éxito.</span>
+    </div>
+<script>
+        let allSets = [];
+        let activeSet = null;
+
+        async function loadSets() {
+            try {
+                const res = await fetch('/api/vlm/sets');
+                const data = await res.json();
+                if (data.status === 'success') { allSets = data.sets; renderList(allSets); }
+                else { console.error('Failed to load sets:', data.message); }
+            } catch (err) { console.error('API error:', err); }
+        }
+
+        function renderList(sets) {
+            const list = document.getElementById('setList');
+            list.innerHTML = '';
+            if (sets.length === 0) {
+                list.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px;">No se encontraron resultados.</div>';
+                return;
+            }
+            sets.forEach(set => {
+                const item = document.createElement('div');
+                item.className = 'set-item' + (activeSet && activeSet.set_id === set.set_id ? ' active' : '');
+                const imgSrc = set.image_url || 'https://placehold.co/600x400?text=No+Image';
+                const statusHtml = set.classification_status === 'human_verified'
+                    ? '<span class="status-badge status-verified">Validado</span>'
+                    : '<span class="status-badge status-raw">VLM Raw</span>';
+                item.innerHTML = `<img src="${imgSrc}" class="set-item-img" alt="${set.name}" onerror="this.src='https://placehold.co/600x400?text=Error'">
+                    <div class="set-item-info">
+                        <div class="set-item-name">${set.name}</div>
+                        <div class="set-item-meta"><span>ID: ${set.set_id}</span><span>&#129001; ${set.parts_count}</span></div>
+                        ${statusHtml}
+                    </div>`;
+                item.onclick = () => selectSet(set);
+                list.appendChild(item);
+            });
+        }
+
+        function selectSet(set) {
+            activeSet = set;
+            renderList(filterSets());
+            const panel = document.getElementById('detailPanel');
+            const imgSrc = set.image_url || 'https://placehold.co/600x400?text=No+Image';
+            const statusHtml = set.classification_status === 'human_verified'
+                ? '<span class="status-badge status-verified" style="margin-top:0;margin-left:10px;vertical-align:middle;">Validado</span>'
+                : '<span class="status-badge status-raw" style="margin-top:0;margin-left:10px;vertical-align:middle;">VLM Raw</span>';
+            const isAnimal = set.animal_level_1_habitat ? true : false;
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-title-area">
+                        <h2>${set.name} ${statusHtml}</h2>
+                        <div class="detail-id">Set ID: ${set.set_id} | Tema: ${set.theme}</div>
+                    </div>
+                    ${set.source_url ? `<a href="${set.source_url}" target="_blank" class="bricklink-link">&#128279; Ficha BrickLink</a>` : ''}
+                </div>
+                <div class="detail-content">
+                    <div class="preview-pane">
+                        <img src="${imgSrc}" class="preview-img" alt="${set.name}" onerror="this.src='https://placehold.co/600x400?text=Error+Loading+Image'">
+                        <div class="preview-stats">
+                            <div class="stat-item"><span class="stat-val">${set.parts_count}</span><span class="stat-label">Piezas</span></div>
+                            <div class="stat-item"><span class="stat-val">${set.subassemblies_count}</span><span class="stat-label">Subensambles</span></div>
+                            <div class="stat-item"><span class="stat-val">${Math.round(set.confidence_score*100)}%</span><span class="stat-label">Confianza VLM</span></div>
+                        </div>
+                    </div>
+                    <div class="form-pane">
+                        <div class="form-group">
+                            <label>Tipo de Modelo</label>
+                            <select id="model_type" class="form-input" onchange="toggleModelType()">
+                                <option value="vehiculo">Veh&#237;culo</option>
+                                <option value="animal">Animal</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="label_level1">Entorno (Level 1)</label>
+                            <select id="level1" class="form-input">
+                                <option value="Terrestre">Terrestre</option>
+                                <option value="A&#233;reo">A&#233;reo</option>
+                                <option value="Mar&#237;timo">Mar&#237;timo</option>
+                                <option value="Espacial">Espacial</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="label_level2">Prop&#243;sito (Level 2)</label>
+                            <select id="level2" class="form-input">
+                                <option value="Civil/Pasajeros">Civil/Pasajeros</option>
+                                <option value="Militar/Defensa">Militar/Defensa</option>
+                                <option value="Carga/Trabajo">Carga/Trabajo</option>
+                                <option value="Deportivo/Carreras">Deportivo/Carreras</option>
+                                <option value="Recreativo/Fantas&#237;a">Recreativo/Fantas&#237;a</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="label_level3">Clase (Level 3)</label>
+                            <select id="level3" class="form-input">
+                                <option value="Coche">Coche</option>
+                                <option value="Motocicleta">Motocicleta</option>
+                                <option value="Cami&#243;n">Cami&#243;n</option>
+                                <option value="Furgoneta">Furgoneta</option>
+                                <option value="Tren">Tren</option>
+                                <option value="Maquinaria">Maquinaria</option>
+                                <option value="Quad">Quad</option>
+                                <option value="Avi&#243;n">Avi&#243;n</option>
+                                <option value="Helic&#243;ptero">Helic&#243;ptero</option>
+                                <option value="Nave Espacial">Nave Espacial</option>
+                                <option value="Barco">Barco</option>
+                                <option value="Otros">Otros</option>
+                                <option value="Desconocido">Desconocido</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="label_level4">Escala (Level 4)</label>
+                            <select id="level4_escala" class="form-input">
+                                <option value="Microscale">Microscale</option>
+                                <option value="Minifig-scale">Minifig-scale</option>
+                                <option value="UCS/Gran Escala">UCS/Gran Escala</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        ${set.reasoning_notes ? `<div class="reasoning-box"><strong>Razonamiento del VLM:</strong><br>${set.reasoning_notes}</div>` : ''}
+                        <div class="comparison-pane">
+                            <div class="comparison-title">&#129302; Propuesta VLM Original</div>
+                            <div class="comparison-grid" id="vlmProposalGrid">
+                                ${isAnimal ? `
+                                <div class="comparison-item">H&#225;bitat: <strong>${set.animal_level_1_habitat || 'Terrestre'}</strong></div>
+                                <div class="comparison-item">Categor&#237;a: <strong>${set.animal_level_2_categoria || 'Otros'}</strong></div>
+                                <div class="comparison-item">Especie: <strong>${set.animal_level_3_especie || 'Desconocido'}</strong></div>
+                                <div class="comparison-item">Estilo: <strong>${set.animal_level_4_estilo || 'Otros'}</strong></div>
+                                ` : `
+                                <div class="comparison-item">Entorno: <strong>${set.vlm_level_1_entorno || set.level_1_entorno || 'Otros'}</strong></div>
+                                <div class="comparison-item">Prop&#243;sito: <strong>${set.vlm_level_2_proposito || set.level_2_proposito || 'Otros'}</strong></div>
+                                <div class="comparison-item">Clase: <strong>${set.vlm_level_3_clase || set.level_3_clase || 'Desconocido'}</strong></div>
+                                <div class="comparison-item">Escala: <strong>${set.vlm_level_4_escala || set.level_4_escala || 'Otros'}</strong></div>
+                                `}
+                            </div>
+                        </div>
+                        <button class="btn-save" onclick="saveClassification()">&#128190; Guardar y Validar</button>
+                    </div>
+                </div>`;
+
+            let modelTypeVal = 'vehiculo';
+            if (isAnimal) { modelTypeVal = 'animal'; }
+            else if (set.level_1_entorno === 'Otros' || set.level_1_entorno === '') { modelTypeVal = 'otros'; }
+            document.getElementById('model_type').value = modelTypeVal;
+            toggleModelType();
+
+            if (isAnimal) {
+                document.getElementById('level1').value = set.animal_level_1_habitat || 'Terrestre';
+                document.getElementById('level2').value = set.animal_level_2_categoria || 'Otros';
+                document.getElementById('level3').value = set.animal_level_3_especie || 'Desconocido';
+                document.getElementById('level4_escala').value = set.animal_level_4_estilo || 'Otros';
+            } else {
+                document.getElementById('level1').value = set.level_1_entorno || 'Otros';
+                document.getElementById('level2').value = set.level_2_proposito || 'Otros';
+                document.getElementById('level3').value = set.level_3_clase || 'Desconocido';
+                document.getElementById('level4_escala').value = set.level_4_escala || 'Otros';
+            }
+        }
+
+        function toggleModelType() {
+            const mType = document.getElementById('model_type').value;
+            const label1 = document.getElementById('label_level1');
+            const select1 = document.getElementById('level1');
+            const label2 = document.getElementById('label_level2');
+            const select2 = document.getElementById('level2');
+            const label3 = document.getElementById('label_level3');
+            const select3 = document.getElementById('level3');
+            const label4 = document.getElementById('label_level4');
+            const select4 = document.getElementById('level4_escala');
+            const fg1 = select1.closest('.form-group');
+            const fg2 = select2.closest('.form-group');
+            const fg3 = select3.closest('.form-group');
+            const fg4 = select4.closest('.form-group');
+            if (mType === 'otros') {
+                fg1.style.display='none'; fg2.style.display='none';
+                fg3.style.display='none'; fg4.style.display='none';
+            } else {
+                fg1.style.display='block'; fg2.style.display='block';
+                fg3.style.display='block'; fg4.style.display='block';
+                if (mType === 'animal') {
+                    label1.textContent = 'H&#225;bitat (Nivel 1)';
+                    select1.innerHTML = '<option value="Terrestre">Terrestre</option><option value="Acu&#225;tico">Acu&#225;tico</option><option value="A&#233;reo">A&#233;reo</option><option value="Anfibio/Multientorno">Anfibio/Multientorno</option><option value="Extinto/Prehist&#243;rico">Extinto/Prehist&#243;rico</option><option value="Mitol&#243;gico/Fantas&#237;a">Mitol&#243;gico/Fantas&#237;a</option>';
+                    label2.textContent = 'Categor&#237;a (Nivel 2)';
+                    select2.innerHTML = '<option value="Mam&#237;fero">Mam&#237;fero</option><option value="Ave">Ave</option><option value="Reptil/Anfibio">Reptil/Anfibio</option><option value="Pez/Vida Marina">Pez/Vida Marina</option><option value="Insecto/Invertebrado">Insecto/Invertebrado</option><option value="Dinosaurio">Dinosaurio</option><option value="Criatura Fant&#225;stica">Criatura Fant&#225;stica</option><option value="Otros">Otros</option>';
+                    label3.textContent = 'Especie (Nivel 3)';
+                    select3.innerHTML = '<option value="Dinosaurio">Dinosaurio</option><option value="Pato">Pato</option><option value="Oso">Oso</option><option value="Tibur&#243;n">Tibur&#243;n</option><option value="Gato">Gato</option><option value="Perro">Perro</option><option value="&#193;guila">&#193;guila</option><option value="Drag&#243;n">Drag&#243;n</option><option value="Otros">Otros</option><option value="Desconocido">Desconocido</option>';
+                    label4.textContent = 'Estilo (Nivel 4)';
+                    select4.innerHTML = '<option value="Escala Minifig">Escala Minifig</option><option value="Escultura/Exhibici&#243;n">Escultura/Exhibici&#243;n</option><option value="Brick-built (Peque&#241;a escala)">Brick-built (Peque&#241;a escala)</option><option value="Otros">Otros</option>';
+                } else {
+                    label1.textContent = 'Entorno (Level 1)';
+                    select1.innerHTML = '<option value="Terrestre">Terrestre</option><option value="A&#233;reo">A&#233;reo</option><option value="Mar&#237;timo">Mar&#237;timo</option><option value="Espacial">Espacial</option><option value="Otros">Otros</option>';label2.textContent = 'Prop&#243;sito (Level 2)';
+                    select2.innerHTML = '<option value="Civil/Pasajeros">Civil/Pasajeros</option><option value="Militar/Defensa">Militar/Defensa</option><option value="Carga/Trabajo">Carga/Trabajo</option><option value="Deportivo/Carreras">Deportivo/Carreras</option><option value="Recreativo/Fantas&#237;a">Recreativo/Fantas&#237;a</option><option value="Otros">Otros</option>';
+                    label3.textContent = 'Clase (Level 3)';
+                    select3.innerHTML = '<option value="Coche">Coche</option><option value="Motocicleta">Motocicleta</option><option value="Cami&#243;n">Cami&#243;n</option><option value="Furgoneta">Furgoneta</option><option value="Tren">Tren</option><option value="Maquinaria">Maquinaria</option><option value="Quad">Quad</option><option value="Avi&#243;n">Avi&#243;n</option><option value="Helic&#243;ptero">Helic&#243;ptero</option><option value="Nave Espacial">Nave Espacial</option><option value="Barco">Barco</option><option value="Otros">Otros</option><option value="Desconocido">Desconocido</option>';
+                    label4.textContent = 'Escala (Level 4)';
+                    select4.innerHTML = '<option value="Microscale">Microscale</option><option value="Minifig-scale">Minifig-scale</option><option value="UCS/Gran Escala">UCS/Gran Escala</option><option value="Otros">Otros</option>';
+                }
+            }
+        }
+
+        async function saveClassification() {
+            if (!activeSet) return;
+            const mType = document.getElementById('model_type').value;
+            const payload = { set_id: activeSet.set_id, is_animal: mType === 'animal' };
+            if (mType === 'animal') {
+                payload.animal_level_1_habitat = document.getElementById('level1').value;
+                payload.animal_level_2_categoria = document.getElementById('level2').value;
+                payload.animal_level_3_especie = document.getElementById('level3').value;
+                payload.animal_level_4_estilo = document.getElementById('level4_escala').value;
+            } else if (mType === 'vehiculo') {
+                payload.level_1_entorno = document.getElementById('level1').value;
+                payload.level_2_proposito = document.getElementById('level2').value;
+                payload.level_3_clase = document.getElementById('level3').value;
+                payload.level_4_escala = document.getElementById('level4_escala').value;
+            } else {
+                payload.level_1_entorno = 'Otros';
+                payload.level_2_proposito = 'Otros';
+                payload.level_3_clase = 'Otros';
+                payload.level_4_escala = 'Otros';
+            }
+            try {
+                const res = await fetch('/api/vlm/sets/classify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (mType === 'animal') {
+                        activeSet.animal_level_1_habitat = payload.animal_level_1_habitat;
+                        activeSet.animal_level_2_categoria = payload.animal_level_2_categoria;
+                        activeSet.animal_level_3_especie = payload.animal_level_3_especie;
+                        activeSet.animal_level_4_estilo = payload.animal_level_4_estilo;
+                        activeSet.level_1_entorno = 'Otros';
+                        activeSet.level_2_proposito = 'Otros';
+                        activeSet.level_3_clase = 'Otros';
+                        activeSet.level_4_escala = 'Otros';
+                    } else if (mType === 'vehiculo') {
+                        activeSet.level_1_entorno = payload.level_1_entorno;
+                        activeSet.level_2_proposito = payload.level_2_proposito;
+                        activeSet.level_3_clase = payload.level_3_clase;
+                        activeSet.level_4_escala = payload.level_4_escala;
+                        activeSet.animal_level_1_habitat = null;
+                    } else {
+                        activeSet.level_1_entorno = 'Otros';
+                        activeSet.level_2_proposito = 'Otros';
+                        activeSet.level_3_clase = 'Otros';
+                        activeSet.level_4_escala = 'Otros';
+                        activeSet.animal_level_1_habitat = null;
+                    }
+                    activeSet.classification_status = 'human_verified';
+                    showToast('Cambios guardados. Se cre&#243; una copia del cat&#225;logo.');
+                    renderList(filterSets());
+                } else {
+                    showToast('Error: ' + data.message, true);
+                }
+            } catch (err) {
+                showToast('Error de API: ' + err, true);
+            }
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = msg;
+            if (isError) {
+                toast.style.borderColor = 'var(--error)';
+                toast.querySelector('.toast-icon').innerText = '&#10007;';
+                toast.querySelector('.toast-icon').style.color = 'var(--error)';
+            } else {
+                toast.style.borderColor = 'var(--success)';
+                toast.querySelector('.toast-icon').innerText = '&#10003;';
+                toast.querySelector('.toast-icon').style.color = 'var(--success)';
+            }
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // Derive model type from set data
+        function getModelType(set) {
+            if (set.animal_level_1_habitat) return 'animal';
+            if (!set.level_1_entorno || set.level_1_entorno === 'Otros') return 'otros';
+            return 'vehiculo';
+        }
+
+        function filterSets() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const maxPartsVal = document.getElementById('maxPartsInput').value;
+            const maxParts = maxPartsVal ? parseInt(maxPartsVal) : null;
+            const verifFilter = document.getElementById('verificationFilter').value;
+            const modelTypeFilter = document.getElementById('modelTypeFilter').value;
+
+            return allSets.filter(set => {
+                const matchesQuery = set.name.toLowerCase().includes(query) || set.set_id.toLowerCase().includes(query);
+                const matchesParts = maxParts === null || (set.parts_count && set.parts_count <= maxParts);
+                let matchesVerif = true;
+                if (verifFilter === 'human_verified') {
+                    matchesVerif = set.classification_status === 'human_verified';
+                } else if (verifFilter === 'vlm_verified') {
+                    matchesVerif = set.classification_status !== 'human_verified' && set.confidence_score > 0.8;
+                } else if (verifFilter === 'pending') {
+                    matchesVerif = set.classification_status !== 'human_verified' && set.confidence_score <= 0.8;
+                }
+                const matchesModelType = modelTypeFilter === 'all' || getModelType(set) === modelTypeFilter;
+                return matchesQuery && matchesParts && matchesVerif && matchesModelType;
+            });
+        }
+
+        document.getElementById('searchInput').oninput = () => renderList(filterSets());
+        document.getElementById('maxPartsInput').oninput = () => renderList(filterSets());
+        document.getElementById('verificationFilter').onchange = () => renderList(filterSets());
+        document.getElementById('modelTypeFilter').onchange = () => renderList(filterSets());
+
+        loadSets();
+    </script>
+</body>
+</html>
