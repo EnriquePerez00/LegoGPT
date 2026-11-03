@@ -11,14 +11,37 @@ from src.writer import write_ldraw_file
 
 def main():
     parser = argparse.ArgumentParser(description="LegoGPT generate_build CLI")
-    parser.add_argument("--prompt", type=str, required=True, help="Prompt describing structure (e.g. 'Silla roja')")
+    parser.add_argument("--prompt", type=str, required=True, help="Prompt describing structure (e.g. 'Coche rojo', 'Perro marrón', 'Silla roja')")
     parser.add_argument("--output_dir", type=str, default="outputs", help="Output folder")
     parser.add_argument("--num_pieces", type=int, default=None, help="Force number of pieces")
+    parser.add_argument("--num_sets", type=int, default=1, help="Number of candidate sets (X) to generate in parallel")
+    parser.add_argument("--category", type=str, default=None, help="Optional category override: vehicle, animal, general")
     args = parser.parse_args()
     
     os.makedirs(args.output_dir, exist_ok=True)
     
     prompt = args.prompt.lower()
+    
+    from src.batch_generator import parse_prompt_semantics, generate_candidate_sets_parallel
+    semantics = parse_prompt_semantics(args.prompt, explicit_category=args.category)
+    
+    if args.num_sets > 1 or semantics["category"] in ("vehicle", "animal"):
+        n_pieces = args.num_pieces if args.num_pieces is not None else 12
+        batch_res = generate_candidate_sets_parallel(
+            prompt=args.prompt,
+            target_num_pieces=n_pieces,
+            num_sets=max(1, args.num_sets),
+            explicit_category=args.category,
+            output_dir=args.output_dir,
+        )
+        best_cand = batch_res["candidates"][0]
+        output_ldr_name = prompt.replace(" ", "_") + ".ldr"
+        output_ldr_path = os.path.join(args.output_dir, output_ldr_name)
+        from src.batch_generator import _write_stepped_ldraw
+        _write_stepped_ldraw(best_cand["parts"], args.prompt, output_ldr_path)
+        print(f"Generated {len(batch_res['candidates'])} set(s) in {batch_res['hardware']['elapsed_ms']} ms on {batch_res['hardware']['device']} ({batch_res['hardware']['workers_used']} workers).")
+        print(f"Primary LDraw file saved to: {output_ldr_path}")
+        return
     
     # 1. Semantic prompt extraction
     target_color = 14  # Default yellow

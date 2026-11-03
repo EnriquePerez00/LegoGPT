@@ -1,7 +1,35 @@
 import numpy as np
 import torch
-from torch_geometric.data import Data
 from dataclasses import dataclass
+
+try:
+    from torch_geometric.data import Data
+except ImportError:
+    class Data:
+        """Native PyTorch MPS-compatible graph container when torch_geometric is not installed."""
+        def __init__(self, x=None, edge_index=None, edge_attr=None, batch=None, **kwargs):
+            self.x = x
+            self.edge_index = edge_index
+            self.edge_attr = edge_attr
+            self.batch = batch
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+
+        @property
+        def num_nodes(self) -> int:
+            return int(self.x.size(0)) if self.x is not None else 0
+
+        def to(self, device):
+            if self.x is not None:
+                self.x = self.x.to(device)
+            if self.edge_index is not None:
+                self.edge_index = self.edge_index.to(device)
+            if self.edge_attr is not None:
+                self.edge_attr = self.edge_attr.to(device)
+            if self.batch is not None:
+                self.batch = self.batch.to(device)
+            return self
+
 
 ALLOWED_PARTS = [
     "3005.dat",

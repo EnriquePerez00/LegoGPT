@@ -54,7 +54,7 @@ class LegoGenerator:
                 batch = torch.zeros(graph_data.num_nodes, dtype=torch.long, device=self.device)
                 
                 with torch.no_grad():
-                    part_out, color_logits, _ = self.model(graph_data.x, graph_data.edge_index, batch)
+                    part_out, color_logits, transform_preds = self.model(graph_data.x, graph_data.edge_index, batch)
                 
                 # Get log probabilities
                 if hasattr(self.model, "head_part") and isinstance(self.model.head_part, HierarchicalSoftmax):
@@ -63,6 +63,7 @@ class LegoGenerator:
                     part_log_probs = F.log_softmax(part_out[0], dim=-1).cpu().numpy()
                     
                 color_log_probs = F.log_softmax(color_logits[0], dim=-1).cpu().numpy()
+                pred_translation = transform_preds[0, :3].cpu().numpy() if transform_preds is not None and transform_preds.shape[-1] >= 3 else np.zeros(3, dtype=np.float32)
                 
                 # Retrieve the top predicted parts and colors
                 top_part_indices = list(np.argsort(part_log_probs)[::-1][:max_candidates])
@@ -82,11 +83,11 @@ class LegoGenerator:
                 # Evaluate placing the top candidates
                 for part_idx in top_part_indices:
                     cand_part_id = self.allowed_parts[part_idx]
-                    part_score = part_log_probs[part_idx]
+                    part_score = float(part_log_probs[part_idx])
                     
                     for color_idx in top_color_indices:
                         cand_color = int(color_idx)
-                        color_score = color_log_probs[color_idx]
+                        color_score = float(color_log_probs[color_idx])
                         
                         # Instantiate a dummy part to extract its local studs and sockets
                         dummy_part = ParsedPart(part_id=cand_part_id, color=cand_color, transform=np.eye(4, dtype=np.float32), step_id=step)
@@ -112,8 +113,8 @@ class LegoGenerator:
                                     continue
                                     
                                 # Test connection alignments
-                                for p_anchor in p_anchors[:2]:  # Test top 2 anchors to maintain speed
-                                    for c_anchor in c_anchors[:2]:
+                                for p_anchor in p_anchors[:4]:
+                                    for c_anchor in c_anchors[:4]:
                                         for theta in [0, 90, 180, 270]:
                                             rad = np.radians(theta)
                                             c, s = int(round(np.cos(rad))), int(round(np.sin(rad)))
@@ -124,6 +125,16 @@ class LegoGenerator:
                                             ], dtype=np.float32)
                                             
                                             T = p_anchor - R @ c_anchor
+                                            
+                                            # Surface and Height Level Rules:
+                                            # 1. All parts must reside at or above ground level (Y <= 0.0 in LDraw coords, 1.0 LDU tolerance)
+                                            if T[1] > 1.0:
+                                                continue
+                                            # 2. At most 4 parts allowed to touch ground directly (|Y_world| <= 1.0)
+                                            if abs(T[1]) <= 1.0:
+                                                ground_count = sum(1 for p in parts_list if abs(p.transform[1, 3]) <= 1.0)
+                                                if ground_count >= 4:
+                                                    continue
                                             
                                             t_matrix = np.eye(4, dtype=np.float32)
                                             t_matrix[:3, :3] = R
@@ -145,8 +156,12 @@ class LegoGenerator:
                                                             cond_bias = -10.0  # Penalize overflow
                                                     else:
                                                         cond_bias = -20.0  # Penalize undesired parts
+                                                
+                                                # Spatial alignment bonus from neural transform prediction
+                                                dist_to_pred = float(np.linalg.norm(T - pred_translation))
+                                                spatial_bonus = -0.005 * min(dist_to_pred, 200.0)
                                                         
-                                                new_score = score + part_score + color_score + cond_bias
+                                                new_score = score + part_score + color_score + cond_bias + spatial_bonus
                                                 new_parts = parts_list + [candidate]
                                                 new_candidate_beams.append((new_parts, new_score))
                                                 

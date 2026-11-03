@@ -53,7 +53,7 @@ const lossChart = new Chart(ctx, {
 let ws;
 
 function connectWebSocket() {
-    ws = new WebSocket('ws://localhost:8000/ws');
+    ws = new WebSocket(((window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '/ws'));
 
     ws.onopen = () => {
         wsStatusDot.className = 'dot connected';
@@ -115,7 +115,7 @@ btnStart.addEventListener('click', async () => {
             early_stopping_patience: parseInt(inputPatience.value, 10)
         };
 
-        const res = await fetch('http://localhost:8000/train/start', { 
+        const res = await fetch('/train/start', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(config)
@@ -139,7 +139,7 @@ btnStart.addEventListener('click', async () => {
 
 btnStop.addEventListener('click', async () => {
     try {
-        const res = await fetch('http://localhost:8000/train/stop', { method: 'POST' });
+        const res = await fetch('/train/stop', { method: 'POST' });
         const data = await res.json();
         if (data.status === 'stopped') {
             btnStart.disabled = false;
@@ -222,13 +222,26 @@ function getPartDimensions(partId) {
         "3024.dat": { width: 20.0, height: 8.0, depth: 20.0 },    // Plate 1x1
         "3023.dat": { width: 20.0, height: 8.0, depth: 40.0 },    // Plate 1x2
         "3022.dat": { width: 40.0, height: 8.0, depth: 40.0 },    // Plate 2x2
+        "3021.dat": { width: 40.0, height: 8.0, depth: 60.0 },    // Plate 2x3
         "3020.dat": { width: 40.0, height: 8.0, depth: 80.0 },    // Plate 2x4
         "3710.dat": { width: 20.0, height: 8.0, depth: 80.0 },    // Plate 1x4
+        "3666.dat": { width: 20.0, height: 8.0, depth: 120.0 },   // Plate 1x6
+        "3034.dat": { width: 40.0, height: 8.0, depth: 160.0 },   // Plate 2x8
         "3005.dat": { width: 20.0, height: 24.0, depth: 20.0 },   // Brick 1x1
         "3004.dat": { width: 20.0, height: 24.0, depth: 40.0 },   // Brick 1x2
         "3003.dat": { width: 40.0, height: 24.0, depth: 40.0 },   // Brick 2x2
+        "3002.dat": { width: 40.0, height: 24.0, depth: 60.0 },   // Brick 2x3
         "3001.dat": { width: 40.0, height: 24.0, depth: 80.0 },   // Brick 2x4
         "3010.dat": { width: 20.0, height: 24.0, depth: 80.0 },   // Brick 1x4
+        "30027.dat": { width: 20.0, height: 16.0, depth: 20.0 },  // Wheel 8x6
+        "42610.dat": { width: 20.0, height: 16.0, depth: 20.0 },  // Wheel Rim 11x8
+        "3139.dat": { width: 20.0, height: 16.0, depth: 20.0 },   // Tire 14x6
+        "3823.dat": { width: 40.0, height: 48.0, depth: 80.0 },   // Windscreen 2x4x2
+        "50745.dat": { width: 40.0, height: 24.0, depth: 80.0 },  // Mudguard 4x2.5
+        "3040b.dat": { width: 20.0, height: 24.0, depth: 40.0 },  // Slope 45 2x1
+        "3039.dat": { width: 40.0, height: 24.0, depth: 40.0 },   // Slope 45 2x2
+        "54200.dat": { width: 20.0, height: 16.0, depth: 20.0 },  // Cheese Slope 1x1
+        "85984.dat": { width: 20.0, height: 16.0, depth: 40.0 },  // Slope 30 1x2
     };
     const key = partId.toLowerCase().replace(/\\/g, '/');
     const basename = key.split('/').pop();
@@ -238,6 +251,21 @@ function getPartDimensions(partId) {
         return { width: 20.0, height: 8.0, depth: 20.0 };
     }
     return { width: 20.0, height: 24.0, depth: 20.0 };
+}
+
+function addStudsToMesh(parentMesh, width, height, depth, material) {
+    const nX = Math.max(1, Math.round(width / 20.0));
+    const nZ = Math.max(1, Math.round(depth / 20.0));
+    const studGeo = new THREE.CylinderGeometry(6.0, 6.0, 4.0, 12);
+    for (let i = 0; i < nX; i++) {
+        const lx = -10.0 * (nX - 1) + 20.0 * i;
+        for (let j = 0; j < nZ; j++) {
+            const lz = -10.0 * (nZ - 1) + 20.0 * j;
+            const stud = new THREE.Mesh(studGeo, material);
+            stud.position.set(lx, height + 2.0, lz);
+            parentMesh.add(stud);
+        }
+    }
 }
 
 
@@ -255,7 +283,7 @@ btnGenerate.addEventListener('click', async () => {
     stopPlayback();
     
     try {
-        const res = await fetch('http://localhost:8000/generate', {
+        const res = await fetch('/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ model_name: modelName })
@@ -374,7 +402,7 @@ fileUpload.addEventListener('change', async (event) => {
     formData.append('file', file);
     
     try {
-        const res = await fetch('http://localhost:8000/upload-mpd', {
+        const res = await fetch('/upload-mpd', {
             method: 'POST',
             body: formData
         });
@@ -488,7 +516,6 @@ function renderActiveModelForStep(stepIndex) {
         );
         cube.rotation.setFromRotationMatrix(rotMatrix);
         
-        // Black outline, or blue outline if newly placed
         const edges = new THREE.EdgesGeometry(geometry);
         const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
             color: isNewPart ? 0x3b82f6 : 0x334155, 
@@ -496,6 +523,7 @@ function renderActiveModelForStep(stepIndex) {
         }));
 
         cube.add(line);
+        addStudsToMesh(cube, width, height, depth, material);
         
         scene.add(cube);
     });
@@ -555,7 +583,7 @@ function stopPlayback() {
 
 async function loadThemes() {
     try {
-        const res = await fetch('http://localhost:8000/themes');
+        const res = await fetch('/themes');
         const data = await res.json();
         const select = document.getElementById('input-theme');
         // Clear options keeping first one
@@ -577,7 +605,7 @@ let allModels = [];
 
 async function loadModels() {
     try {
-        const res = await fetch('http://localhost:8000/models');
+        const res = await fetch('/models');
         const data = await res.json();
         const select = document.getElementById('inference-model-select');
         const selectPartsModel = document.getElementById('parts-model-select');
@@ -661,7 +689,7 @@ window.deleteModel = async function(modelName) {
     if (!confirm(`¿Estás seguro de que quieres eliminar el modelo '${modelName}'?`)) return;
     
     try {
-        const res = await fetch(`http://localhost:8000/models/${modelName}`, {
+        const res = await fetch(`/models/${modelName}`, {
             method: 'DELETE'
         });
         const data = await res.json();
@@ -682,7 +710,7 @@ async function initData() {
         await loadThemes();
         await loadModels();
         
-        const setsRes = await fetch('http://localhost:8000/local-sets');
+        const setsRes = await fetch('/local-sets');
         const setsData = await setsRes.json();
         const select = document.getElementById('local-sets-select');
         if (setsData.sets) {
@@ -710,7 +738,7 @@ btnLoadLocal.addEventListener('click', async () => {
     logToTerminal(`Cargando archivo local OMR: ${filename}...`);
     
     try {
-        const res = await fetch('http://localhost:8000/upload-local', {
+        const res = await fetch('/upload-local', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ filename })
@@ -825,7 +853,7 @@ btnGeneratePrompt.addEventListener('click', async () => {
     renderPreviewPlaceholder.textContent = 'Renderizando en Blender...';
     
     try {
-        const res = await fetch('http://localhost:8000/generate-prompt', {
+        const res = await fetch('/generate-prompt', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -844,7 +872,7 @@ btnGeneratePrompt.addEventListener('click', async () => {
             // Update Eevee preview if available
             if (data.render_url) {
                 // Add timestamp to break browser cache
-                renderPreviewImg.src = `http://localhost:8000${data.render_url}?t=${Date.now()}`;
+                renderPreviewImg.src = `${data.render_url}?t=${Date.now()}`;
                 renderPreviewImg.style.display = 'block';
                 renderPreviewPlaceholder.style.display = 'none';
                 logToTerminal('Render de Blender Eevee cargado con éxito.');
@@ -898,6 +926,7 @@ function renderPartsInScene(parts) {
         const edges = new THREE.EdgesGeometry(geometry);
         const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000 }));
         cube.add(line);
+        addStudsToMesh(cube, width, height, depth, material);
         
         scene.add(cube);
     });
@@ -944,7 +973,7 @@ async function handleVoxelMeshUpload(file) {
     formData.append('file', file);
     
     try {
-        const res = await fetch('http://localhost:8000/voxelize', {
+        const res = await fetch('/voxelize', {
             method: 'POST',
             body: formData
         });
@@ -987,5 +1016,326 @@ voxelDropzone.addEventListener('drop', (e) => {
     const file = e.dataTransfer.files[0];
     if (file) handleVoxelMeshUpload(file);
 });
+
+// ==========================================
+// 3. Multi-Candidate Batch Generator & RLHF Validator (M4 + MPS)
+// ==========================================
+const btnGenerateBatch = document.getElementById('btn-generate-batch');
+const inputPromptCategory = document.getElementById('input-prompt-category');
+const inputPromptSets = document.getElementById('input-prompt-sets');
+const batchCandidatesGrid = document.getElementById('batch-candidates-grid');
+const batchHardwareTelemetry = document.getElementById('batch-hardware-telemetry');
+const feedbackStatsBadge = document.getElementById('feedback-stats-badge');
+const btnRefineRlhf = document.getElementById('btn-refine-rlhf');
+
+let currentBatchCandidates = [];
+
+window.applyPromptPreset = function(promptStr, categoryStr, numPieces, numSets) {
+    if (inputPrompt) inputPrompt.value = promptStr;
+    if (inputPromptCategory) inputPromptCategory.value = categoryStr;
+    if (inputPromptPieces) inputPromptPieces.value = numPieces;
+    if (inputPromptSets) inputPromptSets.value = numSets;
+    if (btnGenerateBatch) btnGenerateBatch.click();
+};
+
+async function loadFeedbackStats() {
+    try {
+        const res = await fetch('/feedback/stats');
+        const data = await res.json();
+        if (feedbackStatsBadge) {
+            feedbackStatsBadge.textContent = `👍 Validados: ${data.approved_count || 0} | 👎 Descartados: ${data.rejected_count || 0}`;
+        }
+    } catch (e) {
+        console.warn("Could not load feedback stats", e);
+    }
+}
+loadFeedbackStats();
+
+function hexToCss(hexNum) {
+    const hexStr = (hexNum !== undefined ? hexNum : 0x888888).toString(16).padStart(6, '0');
+    return `#${hexStr}`;
+}
+
+function drawIsometricCandidatePreview(canvas, parts) {
+    if (!canvas || !parts || parts.length === 0) return;
+    const ctx2d = canvas.getContext('2d');
+    const w = canvas.width = canvas.clientWidth || 240;
+    const h = canvas.height = canvas.clientHeight || 140;
+    ctx2d.clearRect(0, 0, w, h);
+
+    // Compute bounds in LDraw space
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+    let minZ = Infinity, maxZ = -Infinity;
+
+    parts.forEach(p => {
+        const m = p.transform;
+        const x = m[3], y = -m[7], z = m[11];
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+        if (z < minZ) minZ = z; if (z > maxZ) maxZ = z;
+    });
+
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+    const cz = (minZ + maxZ) / 2;
+    const span = Math.max(maxX - minX, maxY - minY, maxZ - minZ, 90);
+    const scale = Math.min(w, h) / (span * 1.45);
+
+    function projectIso(x, y, z) {
+        const dx = x - cx;
+        const dy = y - cy;
+        const dz = z - cz;
+        const px = w / 2 + (dx - dz) * Math.cos(Math.PI / 6) * scale;
+        const py = h / 2 - dy * scale + (dx + dz) * Math.sin(Math.PI / 6) * scale * 0.65;
+        return [px, py];
+    }
+
+    // Sort back-to-front + bottom-to-top for painter's algorithm
+    const sorted = [...parts].sort((a, b) => {
+        const ya = -a.transform[7], yb = -b.transform[7];
+        if (Math.abs(ya - yb) > 2) return ya - yb;
+        const da = a.transform[3] + a.transform[11];
+        const db = b.transform[3] + b.transform[11];
+        return da - db;
+    });
+
+    sorted.forEach(p => {
+        const dim = getPartDimensions(p.part_id);
+        const m = p.transform;
+        // Consider 90/270 rotation swapping width & depth
+        const isRot90 = Math.abs(m[0]) < 0.5;
+        const hw = (isRot90 ? dim.depth : dim.width) / 2;
+        const hd = (isRot90 ? dim.width : dim.depth) / 2;
+        const bh = dim.height;
+
+        const x = m[3], y = -m[7], z = m[11];
+        const baseColor = hexToCss(LEGO_COLORS[p.color] !== undefined ? LEGO_COLORS[p.color] : 0x3b82f6);
+
+        // Top face corners (at y + bh)
+        const t1 = projectIso(x - hw, y + bh, z - hd);
+        const t2 = projectIso(x + hw, y + bh, z - hd);
+        const t3 = projectIso(x + hw, y + bh, z + hd);
+        const t4 = projectIso(x - hw, y + bh, z + hd);
+
+        // Bottom front corners (at y)
+        const b2 = projectIso(x + hw, y, z - hd);
+        const b3 = projectIso(x + hw, y, z + hd);
+        const b4 = projectIso(x - hw, y, z + hd);
+
+        ctx2d.lineWidth = 1;
+        ctx2d.strokeStyle = 'rgba(2, 6, 23, 0.85)';
+
+        // Left face
+        ctx2d.fillStyle = baseColor;
+        ctx2d.beginPath();
+        ctx2d.moveTo(t4[0], t4[1]);
+        ctx2d.lineTo(t3[0], t3[1]);
+        ctx2d.lineTo(b3[0], b3[1]);
+        ctx2d.lineTo(b4[0], b4[1]);
+        ctx2d.closePath();
+        ctx2d.fill();
+        ctx2d.stroke();
+
+        // Right face
+        ctx2d.fillStyle = baseColor;
+        ctx2d.beginPath();
+        ctx2d.moveTo(t3[0], t3[1]);
+        ctx2d.lineTo(t2[0], t2[1]);
+        ctx2d.lineTo(b2[0], b2[1]);
+        ctx2d.lineTo(b3[0], b3[1]);
+        ctx2d.closePath();
+        ctx2d.fill();
+        ctx2d.stroke();
+
+        // Top face
+        ctx2d.fillStyle = baseColor;
+        ctx2d.beginPath();
+        ctx2d.moveTo(t1[0], t1[1]);
+        ctx2d.lineTo(t2[0], t2[1]);
+        ctx2d.lineTo(t3[0], t3[1]);
+        ctx2d.lineTo(t4[0], t4[1]);
+        ctx2d.closePath();
+        ctx2d.fill();
+        ctx2d.stroke();
+    });
+}
+
+window.inspectCandidateIn3D = function(candidateIndex) {
+    const cand = currentBatchCandidates.find(c => c.candidate_index === candidateIndex);
+    if (!cand) return;
+
+    document.querySelectorAll('.candidate-card').forEach(el => el.classList.remove('active-inspection'));
+    const cardEl = document.getElementById(`cand-card-${candidateIndex}`);
+    if (cardEl) cardEl.classList.add('active-inspection');
+
+    stopPlayback();
+    activeModelParts = cand.parts;
+    const steps = [...new Set(activeModelParts.map(p => p.step_id))].sort((a, b) => a - b);
+    availableSteps = steps;
+    currentStepIndex = steps.length - 1; // Show completed assembly initially, ready for step-by-step
+
+    viewerTitle.textContent = `Set #${cand.candidate_index}: ${cand.prompt} (${cand.category.toUpperCase()})`;
+    viewerStepControls.style.display = 'flex';
+
+    const badge = document.getElementById('viewer-piece-count');
+    if (badge) {
+        badge.textContent = `${activeModelParts.length} piezas | Simetría ${Math.round(cand.metrics.symmetry_score * 100)}%`;
+        badge.style.display = 'inline-block';
+    }
+
+    renderPartsInScene(activeModelParts);
+    stepInfo.textContent = `Paso: ${availableSteps.length} / ${availableSteps.length}`;
+};
+
+window.submitCandidateFeedback = async function(candidateIndex, approved) {
+    const cand = currentBatchCandidates.find(c => c.candidate_index === candidateIndex);
+    if (!cand) return;
+
+    try {
+        const res = await fetch('/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                candidate_id: cand.candidate_id,
+                prompt: cand.prompt,
+                category: cand.category,
+                approved: approved,
+                rating: approved ? 5 : 1,
+                parts: cand.parts
+            })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            if (feedbackStatsBadge) {
+                feedbackStatsBadge.textContent = `👍 Validados: ${data.approved_count} | 👎 Descartados: ${data.rejected_count}`;
+            }
+            const cardEl = document.getElementById(`cand-card-${candidateIndex}`);
+            const statusSlot = document.getElementById(`cand-verdict-${candidateIndex}`);
+            if (statusSlot) {
+                statusSlot.className = `verdict-badge ${approved ? 'approved' : 'rejected'}`;
+                statusSlot.textContent = approved ? '✓ Validado' : '✕ Descartado';
+            }
+            // Fallback for browsers without :has() support
+            if (cardEl && !CSS.supports('selector(:has(*))')) {
+                cardEl.classList.remove('has-approved', 'has-rejected');
+                cardEl.classList.add(approved ? 'has-approved' : 'has-rejected');
+            }
+        }
+    } catch (e) {
+        logToTerminal(`Error guardando validación: ${e.message}`, 'warning');
+    }
+};
+
+function renderBatchGallery(candidates) {
+    if (!batchCandidatesGrid) return;
+    batchCandidatesGrid.innerHTML = '';
+
+    candidates.forEach(cand => {
+        const m = cand.metrics;
+        const symPct = Math.round((m.symmetry_score || 0) * 100);
+        const card = document.createElement('div');
+        card.className = 'candidate-card';
+        card.id = `cand-card-${cand.candidate_index}`;
+
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #f8fafc; font-size: 0.92rem;">Set #${cand.candidate_index} (${m.num_pieces} pzs)</strong>
+                <span id="cand-verdict-${cand.candidate_index}" class="verdict-badge" style="color: #94a3b8;">Score: ${m.total_score}</span>
+            </div>
+            <canvas id="cand-canvas-${cand.candidate_index}" class="candidate-preview-canvas" title="Haz clic para inspeccionar en 3D y ver pasos de montaje" onclick="inspectCandidateIn3D(${cand.candidate_index})"></canvas>
+            <div class="candidate-metrics">
+                <span class="metric-pill legal">✓ 100% Físico</span>
+                <span class="metric-pill">Simetría: ${symPct}%</span>
+                <span class="metric-pill">Interlock: ${m.interlocking_score}</span>
+                <span class="metric-pill">Base: ${m.ground_parts}/4</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem; margin-top: 0.2rem;">
+                <button type="button" class="btn" style="flex: 1; padding: 0.4rem; font-size: 0.78rem; background: #1e293b; border: 1px solid #334155;" onclick="inspectCandidateIn3D(${cand.candidate_index})">👁️ Ver 3D / Pasos</button>
+                <button type="button" class="btn" style="flex: 1; padding: 0.4rem; font-size: 0.78rem; background: #059669;" onclick="submitCandidateFeedback(${cand.candidate_index}, true)">👍 Validar</button>
+                <button type="button" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.78rem; background: #dc2626;" onclick="submitCandidateFeedback(${cand.candidate_index}, false)">👎</button>
+            </div>
+        `;
+        batchCandidatesGrid.appendChild(card);
+
+        requestAnimationFrame(() => {
+            const cnv = document.getElementById(`cand-canvas-${cand.candidate_index}`);
+            drawIsometricCandidatePreview(cnv, cand.parts);
+        });
+    });
+
+    if (candidates.length > 0) {
+        inspectCandidateIn3D(candidates[0].candidate_index);
+    }
+}
+
+if (btnGenerateBatch) {
+    btnGenerateBatch.addEventListener('click', async () => {
+        const promptText = inputPrompt.value.trim() || 'Coche deportivo rojo';
+        const numPieces = parseInt(inputPromptPieces.value, 10) || 14;
+        const numSets = parseInt(inputPromptSets?.value || '6', 10) || 6;
+        const catVal = inputPromptCategory?.value || 'auto';
+
+        btnGenerateBatch.disabled = true;
+        logToTerminal(`Generando ${numSets} sets candidatos en paralelo para "${promptText}" (${numPieces} piezas)...`);
+
+        try {
+            const res = await fetch('/generate-batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: promptText,
+                    num_pieces: numPieces,
+                    num_sets: numSets,
+                    category: catVal === 'auto' ? null : catVal
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                currentBatchCandidates = data.candidates || [];
+                const hw = data.hardware || {};
+                if (batchHardwareTelemetry) {
+                    batchHardwareTelemetry.textContent = `Categoría: ${data.category.toUpperCase()} (${data.subtype}) | Acelerador: ${(hw.device || 'mps').toUpperCase()} | Workers CPU M4: ${hw.workers_used} | Tiempo: ${hw.elapsed_ms} ms | RAM libre: ${hw.memory?.available_gb || '--'} GB`;
+                }
+                renderBatchGallery(currentBatchCandidates);
+            } else {
+                logToTerminal(`Error en generación por lotes: ${data.message}`, 'warning');
+            }
+        } catch (err) {
+            logToTerminal(`Fallo de conexión: ${err.message}`, 'warning');
+        } finally {
+            btnGenerateBatch.disabled = false;
+        }
+    });
+}
+
+if (btnRefineRlhf) {
+    btnRefineRlhf.addEventListener('click', async () => {
+        btnRefineRlhf.disabled = true;
+        lossChart.data.labels = [];
+        lossChart.data.datasets[0].data = [];
+        lossChart.update();
+
+        try {
+            const res = await fetch('/feedback/refine', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ epochs: 8 })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                logToTerminal(`Refinamiento creativo en ${data.device.toUpperCase()} completado (${data.elapsed_ms} ms). Loss final: ${data.final_loss}`);
+                loadModels();
+            } else {
+                logToTerminal(`Aviso RLHF: ${data.message}`, 'warning');
+            }
+        } catch (err) {
+            logToTerminal(`Error en refinamiento RLHF: ${err.message}`, 'warning');
+        } finally {
+            btnRefineRlhf.disabled = false;
+        }
+    });
+}
+
 
 

@@ -1,8 +1,58 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import SAGEConv, global_mean_pool
-from torch_geometric.utils import to_dense_batch
+
+try:
+    from torch_geometric.nn import SAGEConv, global_mean_pool
+    from torch_geometric.utils import to_dense_batch
+except ImportError:
+    class SAGEConv(nn.Module):
+        """Native PyTorch MPS-accelerated GraphSAGE layer with PyG-compatible parameter names."""
+        def __init__(self, in_channels: int, out_channels: int):
+            super().__init__()
+            self.lin_l = nn.Linear(in_channels, out_channels, bias=True)
+            self.lin_r = nn.Linear(in_channels, out_channels, bias=False)
+
+        def forward(self, x: torch.Tensor, edge_index: torch.Tensor) -> torch.Tensor:
+            if edge_index is not None and edge_index.numel() > 0:
+                row, col = edge_index[0], edge_index[1]
+                agg = torch.zeros_like(x)
+                deg = torch.zeros((x.size(0), 1), dtype=x.dtype, device=x.device)
+                agg.index_add_(0, col, x[row])
+                ones = torch.ones((row.size(0), 1), dtype=x.dtype, device=x.device)
+                deg.index_add_(0, col, ones)
+                agg = agg / deg.clamp(min=1.0)
+            else:
+                agg = x
+            return self.lin_l(agg) + self.lin_r(x)
+
+    def global_mean_pool(x: torch.Tensor, batch: torch.Tensor | None) -> torch.Tensor:
+        if batch is None or batch.numel() == 0:
+            return x.mean(dim=0, keepdim=True)
+        num_graphs = int(batch.max().item()) + 1
+        out = torch.zeros((num_graphs, x.size(-1)), dtype=x.dtype, device=x.device)
+        deg = torch.zeros((num_graphs, 1), dtype=x.dtype, device=x.device)
+        out.index_add_(0, batch, x)
+        deg.index_add_(0, batch, torch.ones((batch.size(0), 1), dtype=x.dtype, device=x.device))
+        return out / deg.clamp(min=1.0)
+
+    def to_dense_batch(x: torch.Tensor, batch: torch.Tensor | None) -> tuple[torch.Tensor, torch.Tensor]:
+        if batch is None or batch.numel() == 0:
+            mask = torch.ones((1, x.size(0)), dtype=torch.bool, device=x.device)
+            return x.unsqueeze(0), mask
+        num_graphs = int(batch.max().item()) + 1
+        counts = [int((batch == g).sum().item()) for g in range(num_graphs)]
+        max_nodes = max(counts) if counts else 1
+        dense = torch.zeros((num_graphs, max_nodes, x.size(-1)), dtype=x.dtype, device=x.device)
+        mask = torch.zeros((num_graphs, max_nodes), dtype=torch.bool, device=x.device)
+        for g in range(num_graphs):
+            g_nodes = x[batch == g]
+            n = g_nodes.size(0)
+            if n > 0:
+                dense[g, :n] = g_nodes
+                mask[g, :n] = True
+        return dense, mask
+
 
 def get_device() -> str:
     """

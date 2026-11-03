@@ -29,21 +29,43 @@
                 <button class="tab-btn" onclick="switchTab('trainer')">Entrenador GNN</button>
             </div>
             
-            <!-- Tab 1: Prompt Generation -->
+            <!-- Tab 1: Prompt & Multi-Candidate Generation -->
             <div id="tab-prompt" class="tab-content active">
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="display: flex; gap: 1rem;">
-                        <div class="input-group" style="flex: 3;">
+                    <div class="preset-chips">
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); align-self: center;">Presets rápidos:</span>
+                        <button type="button" class="chip-btn" onclick="applyPromptPreset('Coche deportivo rojo', 'vehicle', 14, 6)">🚗 Coche Deportivo Rojo (14 pzs)</button>
+                        <button type="button" class="chip-btn" onclick="applyPromptPreset('Camión 4x4 azul', 'vehicle', 18, 6)">🚙 Camión 4x4 Azul (18 pzs)</button>
+                        <button type="button" class="chip-btn" onclick="applyPromptPreset('Perro marrón', 'animal', 14, 6)">🐕 Perro Marrón (14 pzs)</button>
+                        <button type="button" class="chip-btn" onclick="applyPromptPreset('Dinosaurio verde', 'animal', 16, 6)">🦖 Dinosaurio Verde (16 pzs)</button>
+                        <button type="button" class="chip-btn" onclick="applyPromptPreset('Pájaro amarillo', 'animal', 10, 6)">🐦 Pájaro Amarillo (10 pzs)</button>
+                    </div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="input-group" style="flex: 3; min-width: 240px;">
                             <label for="input-prompt">Instrucción (Prompt) para LegoGPT</label>
-                            <input type="text" id="input-prompt" placeholder="Ej. Una silla roja, una torre azul, una espada verde..." value="Silla roja" style="padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
+                            <input type="text" id="input-prompt" placeholder="Ej. Coche deportivo rojo, Perro marrón, Dinosaurio verde..." value="Coche deportivo rojo" style="padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
                         </div>
-                        <div class="input-group" style="flex: 1;">
-                            <label for="input-prompt-pieces">Número de Piezas</label>
-                            <input type="number" id="input-prompt-pieces" value="12" min="3" max="50" style="padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
+                        <div class="input-group" style="flex: 1; min-width: 150px;">
+                            <label for="input-prompt-category">Categoría Morfológica</label>
+                            <select id="input-prompt-category" style="padding: 0.75rem; font-size: 0.95rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
+                                <option value="auto">Auto-detectar</option>
+                                <option value="vehicle">Vehículo / Coche</option>
+                                <option value="animal">Animal / Criatura</option>
+                                <option value="general">General / Libre</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="flex: 0.8; min-width: 120px;">
+                            <label for="input-prompt-pieces">Nº Piezas (N)</label>
+                            <input type="number" id="input-prompt-pieces" value="14" min="4" max="250" style="padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
+                        </div>
+                        <div class="input-group" style="flex: 0.8; min-width: 120px;">
+                            <label for="input-prompt-sets">Sets a Generar (X)</label>
+                            <input type="number" id="input-prompt-sets" value="6" min="1" max="12" style="padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white;">
                         </div>
                     </div>
                     <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-                        <button id="btn-generate-prompt" class="btn" style="background-color: var(--success-color); font-weight: 600;">Generar Estructura (IA + Blender)</button>
+                        <button id="btn-generate-batch" class="btn primary" style="background: linear-gradient(135deg, #10b981, #059669); font-weight: 600;">⚡ Generar X Sets en Paralelo (M4 + MPS)</button>
+                        <button id="btn-generate-prompt" class="btn" style="background-color: #334155; font-size: 0.9rem; padding: 0.6rem 1rem;">Set Único (+ Blender)</button>
                         
                         <span style="border-left: 1px solid #334155; height: 30px; margin: 0 0.5rem;"></span>
                         
@@ -111,6 +133,29 @@
         </div>
 
         <div class="main-content">
+            <!-- Candidate Sets Gallery & Interactive RLHF Validator -->
+            <div id="batch-gallery-panel" class="batch-gallery-panel glass-panel" style="grid-column: 1 / -1;">
+                <div class="batch-gallery-header">
+                    <div>
+                        <h2 style="margin: 0;">Galería de Sets Generados & Validación Creativa (RLHF)</h2>
+                        <p id="batch-hardware-telemetry" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            Hardware local preparado: Apple Silicon M4 (MPS + Multiprocessing con margen de seguridad).
+                        </p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <span id="feedback-stats-badge" class="feedback-badge">👍 Validados: 0 | 👎 Descartados: 0</span>
+                        <button id="btn-refine-rlhf" class="btn primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; background: linear-gradient(135deg, #3b82f6, #6366f1);">
+                            ✨ Refinar Modelo con Validaciones (MPS)
+                        </button>
+                    </div>
+                </div>
+                <div id="batch-candidates-grid" class="batch-candidates-grid">
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; grid-column: 1 / -1;">
+                        Pulsa <strong>"⚡ Generar X Sets en Paralelo (M4 + MPS)"</strong> para crear múltiples candidatos físicamente válidos de coches o animales, inspeccionar su montaje paso a paso en 3D y validar los más realistas.
+                    </p>
+                </div>
+            </div>
+
             <div class="chart-container glass-panel">
                 <h2>Curva de Aprendizaje (Loss)</h2>
                 <canvas id="lossChart"></canvas>

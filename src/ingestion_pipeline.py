@@ -80,31 +80,19 @@ def process_and_register_downloaded_model(
                 print("[Pipeline Error] El modelo no contiene piezas físicas.")
                 return False
                 
-            # 3. Calculate structural connectivity & subassemblies (NetworkX)
+            # 3. Calculate structural connectivity & subassemblies (NetworkX & Port DB)
             print("[Pipeline] Analizando grafo de conectividad y subensamblajes...")
-            G = nx.Graph()
-            for idx in range(parts_count):
-                G.add_node(idx)
-                
-            for i in range(parts_count):
-                for j in range(i + 1, parts_count):
-                    if check_connection_optimized(parts[i], parts[j]):
-                        G.add_edge(i, j)
-                        
-            components = list(nx.connected_components(G))
-            subassemblies_count = len(components)
+            from src.subset_analyzer import analyze_subsets
+            subsets = analyze_subsets(parts)
+            subassemblies_count = len(subsets)
             is_fully_connected = 1 if subassemblies_count == 1 else 0
             
-            for s_idx, comp in enumerate(components):
-                comp_parts = [parts[p_idx] for p_idx in comp]
-                comp_part_ids = sorted(list(set(p.part_id.lower() for p in comp_parts)))
-                # Grounded rule: Y-world coordinate near 0
-                grounded = 1 if any(abs(p.transform[1, 3]) <= 1.0 for p in comp_parts) else 0
+            for s in subsets:
                 subassemblies_list.append({
-                    "subassembly_id": s_idx,
-                    "parts_count": len(comp),
-                    "parts_list": json.dumps(comp_part_ids),
-                    "is_grounded": grounded
+                    "subassembly_id": s.subassembly_id,
+                    "parts_count": s.parts_count,
+                    "parts_list": json.dumps(s.parts_list),
+                    "is_grounded": 1 if s.is_grounded else 0
                 })
                 
             # 4. Generate dataset sequences if part count is < 100

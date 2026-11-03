@@ -24,8 +24,37 @@ def homogenize_parts_list(parts: list[ParsedPart]) -> list[dict]:
         if idx > 0:
             for j in range(idx):
                 parent = parts[j]
-                if check_connection_optimized(parent, part):
-                    # Found mechanical connection. Determine which anchors align.
+                
+                # Check port database first
+                try:
+                    from src.connectivity_db import check_parts_connected_ports
+                    has_ports, port_matches = check_parts_connected_ports(parent, part)
+                except Exception:
+                    has_ports, port_matches = False, []
+                    
+                if has_ports and port_matches:
+                    m = port_matches[0]
+                    parent_anchor_name = m["port_a"]
+                    child_anchor_name = m["port_b"]
+                    dof = str(m.get("dof", "fixed"))
+                    clutch = float(sum(match.get("clutch_power", 2.0) for match in port_matches))
+                    
+                    R_rel = parent.transform[:3, :3].T @ part.transform[:3, :3]
+                    t_rel = part.transform[:3, 3] - parent.transform[:3, 3]
+                    rel_matrix = np.eye(4, dtype=np.float32)
+                    rel_matrix[:3, :3] = R_rel
+                    rel_matrix[:3, 3] = t_rel
+                    
+                    part_record["connections"].append({
+                        "parent_part_index": j,
+                        "parent_anchor": parent_anchor_name,
+                        "child_anchor": child_anchor_name,
+                        "dof": dof,
+                        "clutch_power": clutch,
+                        "relative_transform": rel_matrix.flatten().tolist()
+                    })
+                elif check_connection_optimized(parent, part):
+                    # Found mechanical connection via fallback. Determine which anchors align.
                     studs_parent, sockets_parent = get_studs_and_sockets_world(parent)
                     studs_child, sockets_child = get_studs_and_sockets_world(part)
                     

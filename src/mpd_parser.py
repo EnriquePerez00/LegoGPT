@@ -1,11 +1,39 @@
 import os
 import re
+import zipfile
 import numpy as np
 from src.parser import ParsedPart
 
+def extract_lines_from_source(file_path: str) -> list[str]:
+    """
+    Reads lines from an LDR/MPD file or extracts model.ldr from a BrickLink Studio .io archive.
+    """
+    if file_path.lower().endswith(".io") or zipfile.is_zipfile(file_path):
+        with zipfile.ZipFile(file_path, "r") as z:
+            candidates = ["model.ldr", "model2.ldr"]
+            for cand in candidates:
+                if cand in z.namelist():
+                    try:
+                        z.setpassword(b"soho0909")
+                        raw = z.read(cand)
+                    except Exception:
+                        raw = z.read(cand)
+                    return raw.decode("utf-8", errors="ignore").splitlines()
+            for name in z.namelist():
+                if name.lower().endswith(".ldr"):
+                    try:
+                        z.setpassword(b"soho0909")
+                        raw = z.read(name)
+                    except Exception:
+                        raw = z.read(name)
+                    return raw.decode("utf-8", errors="ignore").splitlines()
+        return []
+    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+        return f.readlines()
+
 def parse_mpd_to_submodels(file_path: str) -> dict[str, list[str]]:
     """
-    Reads an LDraw file (either LDR or MPD) and splits it into its constituent
+    Reads an LDraw file (either LDR, MPD, or Studio .io) and splits it into its constituent
     submodel files.
     
     Returns:
@@ -15,8 +43,7 @@ def parse_mpd_to_submodels(file_path: str) -> dict[str, list[str]]:
     current_model = None
     current_lines = []
     
-    with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-        lines = f.readlines()
+    lines = extract_lines_from_source(file_path)
         
     has_file_headers = any(line.strip().startswith("0 FILE") for line in lines)
     

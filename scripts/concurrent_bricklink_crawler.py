@@ -8,6 +8,7 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from scripts.download_bricklink_model import download_bricklink_model
 from src.ingestion_pipeline import process_and_register_downloaded_model
+from src.storage_guard import get_disk_status, MIN_FREE_GB
 
 # Lock to ensure thread-safe operations on the SQLite database
 db_lock = threading.Lock()
@@ -91,6 +92,14 @@ def worker_task(worker_id: int, db_path: str, output_dir: str, stop_event: threa
     print(f"[Worker-{worker_id}] Iniciado.")
     
     while not stop_event.is_set():
+        # Monitor disk space limit (stop if <= 10 GB)
+        disk_info = get_disk_status()
+        if not disk_info["is_safe"]:
+            print(f"\n[Worker-{worker_id}] ALERTA DE DISCO: Solo quedan {disk_info['free_gb']} GB de espacio (límite {MIN_FREE_GB} GB).")
+            print(f"[Worker-{worker_id}] Deteniendo crawler ordenadamente para proteger el almacenamiento.")
+            stop_event.set()
+            break
+            
         # If a WAF block is active, wait
         if cooldown_active.is_set():
             print(f"[Worker-{worker_id}] Cooldown activo. Esperando...")

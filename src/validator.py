@@ -78,6 +78,36 @@ PART_DIMENSIONS = {
     "112755.dat": (40.0, 24.0, 40.0),
     "32803.dat": (40.0, 16.0, 40.0),
     "79491.dat": (40.0, 8.0, 40.0),
+
+    # Vehicle & Animal specialized parts (Wheels, Cabin, Slopes, Eyes)
+    "3139.dat": (20.0, 16.0, 20.0),
+    "56902.dat": (20.0, 16.0, 20.0),
+    "30027.dat": (20.0, 16.0, 20.0),
+    "18976.dat": (20.0, 16.0, 20.0),
+    "18977.dat": (20.0, 16.0, 20.0),
+    "55981.dat": (20.0, 16.0, 20.0),
+    "55982.dat": (20.0, 16.0, 20.0),
+    "30285.dat": (20.0, 16.0, 20.0),
+    "30285b.dat": (20.0, 16.0, 20.0),
+    "6014.dat": (20.0, 16.0, 20.0),
+    "6014b.dat": (20.0, 16.0, 20.0),
+    "6015.dat": (20.0, 16.0, 20.0),
+    "56890.dat": (20.0, 16.0, 20.0),
+    "56891.dat": (20.0, 16.0, 20.0),
+    "2926.dat": (40.0, 8.0, 80.0),
+    "4150.dat": (40.0, 8.0, 40.0),
+    "3829.dat": (20.0, 24.0, 20.0),
+    "3829c01.dat": (20.0, 24.0, 40.0),
+    "50745.dat": (40.0, 24.0, 80.0),
+    "98282.dat": (40.0, 24.0, 80.0),
+    "30029.dat": (40.0, 24.0, 80.0),
+    "3823.dat": (40.0, 48.0, 80.0),
+    "3040b.dat": (20.0, 24.0, 40.0),
+    "3039.dat": (40.0, 24.0, 40.0),
+    "3660.dat": (40.0, 24.0, 40.0),
+    "54200.dat": (20.0, 16.0, 20.0),
+    "85984.dat": (20.0, 16.0, 40.0),
+    "98138.dat": (20.0, 8.0, 20.0),
 }
 
 
@@ -158,7 +188,19 @@ def get_studs_and_sockets_world(part: ParsedPart) -> tuple[np.ndarray, np.ndarra
     return studs_world, sockets_world
 
 def check_connection(part_a: ParsedPart, part_b: ParsedPart) -> bool:
-    """Determines if there is a stud-to-socket connection between part_a and part_b."""
+    """
+    Determines if there is a valid physical connection between part_a and part_b,
+    evaluating port types (studs, antistuds, clips, bars, pins, axles, hinges)
+    and falling back to geometric stud alignment.
+    """
+    try:
+        from src.connectivity_db import check_parts_connected_ports
+        connected, _ = check_parts_connected_ports(part_a, part_b)
+        if connected:
+            return True
+    except Exception:
+        pass
+
     studs_a, sockets_a = get_studs_and_sockets_world(part_a)
     studs_b, sockets_b = get_studs_and_sockets_world(part_b)
     
@@ -180,7 +222,18 @@ def check_connection(part_a: ParsedPart, part_b: ParsedPart) -> bool:
     return False
 
 def check_connection_optimized(part_a: ParsedPart, part_b: ParsedPart) -> bool:
-    """Optimized connection check with vertical adjacency filter first."""
+    """
+    Optimized connection check. Prioritizes port coupling (including lateral SNOT,
+    clips, and pins), followed by vertical bounding-box adjacency check.
+    """
+    try:
+        from src.connectivity_db import check_parts_connected_ports
+        connected, _ = check_parts_connected_ports(part_a, part_b)
+        if connected:
+            return True
+    except Exception:
+        pass
+
     corners_a = get_part_corners_world(part_a)
     corners_b = get_part_corners_world(part_b)
     

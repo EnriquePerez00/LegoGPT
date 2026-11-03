@@ -4,6 +4,7 @@ import time
 import random
 import argparse
 from playwright.sync_api import sync_playwright
+from src.storage_guard import assert_disk_space_or_exit, get_disk_status
 
 USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -39,6 +40,9 @@ def simulate_scroll(page):
     human_delay(1.0, 2.5)
 
 def download_bricklink_model(model_id: str, output_dir: str = "data/bricklink_raw", fast: bool = False) -> tuple:
+    # Monitor disk space: Stop immediately if <= 10 GB free space remain
+    assert_disk_space_or_exit(min_free_gb=10.0)
+    
     os.makedirs(output_dir, exist_ok=True)
     
     url = f"https://www.bricklink.com/v3/studio/design.page?idModel={model_id}"

@@ -107,6 +107,17 @@ class ManualParserPipeline:
         print(f"Parsed {len(self.instruction_pages)} pages with build metadata.")
         return self.instruction_pages
 
+    def extract_manual_inventory_and_steps(self, set_num: str = None, db_path: str = "data/catalog/models_catalog.db") -> dict:
+        """
+        Runs the complete inventory template extraction (final pages) and step-by-step
+        part reference identification across all pages of the manual.
+        """
+        from src.inventory_matcher import LegoInventoryMatcher
+        matcher = LegoInventoryMatcher(self.pdf_path)
+        matcher.detect_inventory_pages()
+        matcher.extract_templates()
+        return matcher.extract_and_match_all_steps(db_path=db_path, set_num=set_num)
+
     def generate_build_sequence(self, inventory_path: str = None) -> list[ParsedPart]:
         """
         Processes the parsed pages and builds a valid physical 3D assembly sequence

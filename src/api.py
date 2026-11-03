@@ -153,9 +153,27 @@ class LegoDataset(torch.utils.data.Dataset):
         return graph_data, torch.tensor(part_idx, dtype=torch.long), torch.tensor(color_idx, dtype=torch.long), target_transform
 
 def pyg_collate(batch):
-    from torch_geometric.data import Batch
     graphs, parts, colors, transforms = zip(*batch)
-    return Batch.from_data_list(graphs), torch.stack(parts), torch.stack(colors), torch.stack(transforms)
+    try:
+        from torch_geometric.data import Batch
+        batched_graph = Batch.from_data_list(graphs)
+    except ImportError:
+        from src.parser import Data
+        xs, edges, batch_idx = [], [], []
+        node_offset = 0
+        for g_idx, g in enumerate(graphs):
+            n = g.x.size(0)
+            xs.append(g.x)
+            if g.edge_index is not None and g.edge_index.numel() > 0:
+                edges.append(g.edge_index + node_offset)
+            batch_idx.append(torch.full((n,), g_idx, dtype=torch.long))
+            node_offset += n
+        x_cat = torch.cat(xs, dim=0) if xs else torch.empty((0, 0))
+        e_cat = torch.cat(edges, dim=1) if edges else torch.empty((2, 0), dtype=torch.long)
+        b_cat = torch.cat(batch_idx, dim=0) if batch_idx else torch.empty((0,), dtype=torch.long)
+        batched_graph = Data(x=x_cat, edge_index=e_cat, batch=b_cat)
+    return batched_graph, torch.stack(parts), torch.stack(colors), torch.stack(transforms)
+
 
 async def training_loop(config: TrainConfig):
     global training_active
@@ -494,18 +512,127 @@ class PromptGenerateRequest(BaseModel):
     prompt: str
     num_pieces: int = 12
 
+class BatchGenerateRequest(BaseModel):
+    prompt: str
+    num_pieces: int = 14
+    num_sets: int = 6
+    category: str | None = None
+
+class FeedbackRequest(BaseModel):
+    candidate_id: str
+    prompt: str
+    category: str = "general"
+    approved: bool
+    rating: int = 5
+    parts: list
+
+class RefineRequest(BaseModel):
+    epochs: int = 8
+
+@app.post("/generate-batch")
+async def generate_batch_sets(req: BatchGenerateRequest):
+    try:
+        from src.batch_generator import generate_candidate_sets_parallel
+        res = await asyncio.to_thread(
+            generate_candidate_sets_parallel,
+            prompt=req.prompt,
+            target_num_pieces=req.num_pieces,
+            num_sets=req.num_sets,
+            explicit_category=req.category,
+            output_dir="outputs/batch",
+        )
+        hw = res.get("hardware", {})
+        await manager.broadcast(json.dumps({
+            "type": "info",
+            "message": (
+                f"[M4 Paralelo + {hw.get('device', 'mps').upper()}] Generados {res['num_sets']} sets "
+                f"de '{req.prompt}' ({req.num_pieces} piezas) en {hw.get('elapsed_ms')} ms "
+                f"usando {hw.get('workers_used')} workers (RAM libre: {hw.get('memory', {}).get('available_gb')} GB)."
+            )
+        }))
+        return res
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/feedback")
+async def submit_feedback(req: FeedbackRequest):
+    try:
+        from src.batch_generator import record_human_feedback
+        res = record_human_feedback(
+            candidate_id=req.candidate_id,
+            prompt=req.prompt,
+            category=req.category,
+            approved=req.approved,
+            rating=req.rating,
+            parts=req.parts,
+        )
+        verdict = "APROBADO 👍" if req.approved else "RECHAZADO 👎"
+        await manager.broadcast(json.dumps({
+            "type": "info",
+            "message": f"[Validación Humana] Set {req.candidate_id} marcado como {verdict} (Total validados: {res['total_feedback']})."
+        }))
+        return res
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.post("/feedback/refine")
+async def refine_from_feedback(req: RefineRequest):
+    try:
+        from src.batch_generator import refine_model_from_feedback
+        await manager.broadcast(json.dumps({
+            "type": "info",
+            "message": f"[RLHF en MPS] Iniciando refinamiento creativo del modelo por {req.epochs} épocas..."
+        }))
+        res = await asyncio.to_thread(refine_model_from_feedback, epochs=req.epochs)
+        if res.get("status") == "success":
+            for idx, l_val in enumerate(res.get("loss_history", []), start=1):
+                await manager.broadcast(json.dumps({
+                    "type": "log",
+                    "epoch": idx,
+                    "loss": l_val
+                }))
+            await manager.broadcast(json.dumps({
+                "type": "info",
+                "message": (
+                    f"[RLHF Completado] Modelo '{res['model_name']}' refinado en {res['elapsed_ms']} ms "
+                    f"({res['device'].upper()}) | Loss: {res['initial_loss']} -> {res['final_loss']}. Training finished."
+                )
+            }))
+        return res
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/feedback/stats")
+async def get_feedback_stats():
+    from src.batch_generator import FEEDBACK_FILE_PATH
+    if not os.path.exists(FEEDBACK_FILE_PATH):
+        return {"total_feedback": 0, "approved_count": 0, "rejected_count": 0}
+    try:
+        with open(FEEDBACK_FILE_PATH, "r", encoding="utf-8") as f:
+            records = json.load(f)
+        approved = sum(1 for r in records if r.get("approved"))
+        return {
+            "total_feedback": len(records),
+            "approved_count": approved,
+            "rejected_count": len(records) - approved,
+        }
+    except Exception:
+        return {"total_feedback": 0, "approved_count": 0, "rejected_count": 0}
+
 @app.post("/generate-prompt")
 async def generate_prompt(req: PromptGenerateRequest):
     try:
+        import sys
         # Run generate_build.py CLI as a subprocess to keep generation clean
         output_dir = "outputs"
         os.makedirs(output_dir, exist_ok=True)
         
         # Clean prompt for file name
         safe_name = req.prompt.lower().replace(" ", "_")
+        python_bin = "./legogpt_env/bin/python" if os.path.exists("./legogpt_env/bin/python") else sys.executable
         
         cmd = [
-            "./legogpt_env/bin/python",
+            python_bin,
             "generate_build.py",
             "--prompt", req.prompt,
             "--output_dir", output_dir,
@@ -588,4 +715,5 @@ import subprocess
 os.makedirs("outputs", exist_ok=True)
 app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
 app.mount("/", StaticFiles(directory="public", html=True), name="public")
+
 

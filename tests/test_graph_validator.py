@@ -80,3 +80,69 @@ def test_connectivity_tolerance():
     # 3. Shifted by 6.0 LDU horizontally (> 5.0 LDU tolerance) -> Invalid
     shifted_invalid = create_brick("3001.dat", 2, 6.0, -24.0, 0.0)
     assert validator.can_place_brick(shifted_invalid) is False
+
+
+def test_manual_connection_graph_ldraw_physics():
+    from src.inventory_matcher import LegoInventoryMatcher
+    from src.manual_connection_graph import ManualConnectionGraphBuilder
+    import os
+
+    pdf_path = "data/manuals/75295-1_Millennium_Falcon_Microfighter.pdf"
+    if not os.path.exists(pdf_path):
+        import pytest
+        pytest.skip("PDF not found")
+
+    matcher = LegoInventoryMatcher(pdf_path, temp_dir="scratch/test_graph_templates")
+    res_steps = matcher.extract_and_match_all_steps(db_path="data/catalog/models_catalog.db", set_num="75295-1")
+
+    builder = ManualConnectionGraphBuilder(pdf_path)
+    graph = builder.build_connection_graph(res_steps["step_pages"])
+
+    assert graph["total_nodes"] > 50
+    assert 28 in graph["flip_steps_detected"]
+    assert 29 in graph["flip_steps_detected"]
+
+    # Verify Page 4 Minifig subassembly
+    minifig_nodes = [n for n in graph["nodes"] if n["page_num"] == 4]
+    assert len(minifig_nodes) == 5
+    blaster_node = next(n for n in minifig_nodes if "92738" in n["part_id"])
+    assert len(blaster_node["connections"]) == 1
+    assert blaster_node["connections"][0]["child_anchor"] == "handle_bar"
+
+    # Verify Page 5 base & corner connection
+    p5_nodes = [n for n in graph["nodes"] if n["page_num"] == 5]
+    assert len(p5_nodes) == 2
+    assert p5_nodes[0]["part_id"] == "11213.dat"
+    assert p5_nodes[0]["y_bottom_ldu"] == 0
+    assert p5_nodes[1]["part_id"] == "30565.dat"
+    assert p5_nodes[1]["y_bottom_ldu"] == -8
+
+    # Verify Page 28 flipped state
+    p28_nodes = [n for n in graph["nodes"] if n["page_num"] == 28]
+    assert len(p28_nodes) == 4
+    for n in p28_nodes:
+        assert n["view_flipped"] is True
+        assert n["part_id"] == "2654.dat"
+
+
+def test_generalized_part_resolution():
+    """Validates that non-native/printed/variant LEGO parts resolve automatically to valid LDraw files."""
+    from src.ldraw_geometry import LDrawGeometryResolver
+
+    resolver = LDrawGeometryResolver()
+    
+    # Printed pieces -> base mold resolution
+    assert resolver.resolve_compatible_part_id("3626cpr1368") == "3626c.dat"
+    assert resolver.resolve_compatible_part_id("3001pr0001") == "3001.dat"
+    assert resolver.resolve_compatible_part_id("3069bpr0002") == "3069b.dat"
+    
+    # Minifigure assemblies
+    assert resolver.resolve_compatible_part_id("970c05pr0625") == "970c00.dat"
+    assert resolver.resolve_compatible_part_id("973c26h02pr2301") == "973.dat"
+    
+    # Standard official parts
+    assert resolver.resolve_compatible_part_id("26139") == "26139.dat"
+    assert resolver.resolve_compatible_part_id("92738") == "92738.dat"
+    assert resolver.resolve_compatible_part_id("3024") == "3024.dat"
+
+
