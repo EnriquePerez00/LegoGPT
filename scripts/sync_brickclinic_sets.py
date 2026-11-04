@@ -8,8 +8,18 @@ import time
 import psutil
 
 DB_PATH = "data/catalog/models_catalog.db"
-BRICKCLINIC_URL = "http://127.0.0.1:54341/rest/v1/sets"
-SERVICE_ROLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZV9yb2xlIiwiaXNzIjoic3VwYWJhc2UiLCJpYXQiOjE3OTE2NDIyODEsImV4cCI6MjEwNzAwMjI4MX0.bBrd8EDwtckS8I7Rgz7N0CTcTV5DG3P711hfxU6_HU8"
+BRICKCLINIC_URL = os.getenv("BRICKCLINIC_URL", "http://127.0.0.1:54341/rest/v1/sets")
+
+def get_service_role_key() -> str:
+    key = os.getenv("BRICKCLINIC_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+    if not key and os.path.exists(".env"):
+        with open(".env", "r") as f:
+            for line in f:
+                if line.startswith("BRICKCLINIC_SERVICE_ROLE_KEY=") or line.startswith("SUPABASE_SERVICE_ROLE_KEY="):
+                    key = line.strip().split("=", 1)[1].strip().strip('"').strip("'")
+                    if key:
+                        break
+    return key
 
 def sync_brickclinic_sets(batch_size: int = 1000):
     if not os.path.exists(DB_PATH):
@@ -23,6 +33,7 @@ def sync_brickclinic_sets(batch_size: int = 1000):
     theme_map = {row[0]: row[1] for row in cursor.fetchall()}
     
     print(f"[Brickclinic Sync] Conectando a {BRICKCLINIC_URL}...")
+    service_role_key = get_service_role_key()
     
     offset = 0
     total_synced = 0
@@ -37,12 +48,15 @@ def sync_brickclinic_sets(batch_size: int = 1000):
             time.sleep(1.0)
             
         url = f"{BRICKCLINIC_URL}?year=gte.2004&num_parts=gt.10&order=set_num.asc"
-        req = urllib.request.Request(url, headers={
-            "apikey": SERVICE_ROLE_KEY,
-            "Authorization": f"Bearer {SERVICE_ROLE_KEY}",
+        headers = {
             "Range": f"{offset}-{offset + batch_size - 1}",
             "Prefer": "count=exact"
-        })
+        }
+        if service_role_key:
+            headers["apikey"] = service_role_key
+            headers["Authorization"] = f"Bearer {service_role_key}"
+
+        req = urllib.request.Request(url, headers=headers)
         
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:

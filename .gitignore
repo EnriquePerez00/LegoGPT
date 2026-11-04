@@ -43,6 +43,11 @@ data/standardized/
 data/catalog.json
 scratch/
 
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+
 # Generated Outputs & Renders
 outputs/
 temp_uploaded.mpd
