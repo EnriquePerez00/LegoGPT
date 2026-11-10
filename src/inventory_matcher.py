@@ -7,8 +7,10 @@ import cv2
 import numpy as np
 import torch
 import torchvision.models as models
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image
 from src.yolo_part_detector import refine_tight_bbox_cv
+from src.apple_silicon import workers_for, P_CORES
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -86,13 +88,18 @@ class LegoInventoryMatcher:
         Image.fromarray(comp).save(out_path)
         return rgba_tight
 
-    def _compute_multimodal_features(self, rgba: np.ndarray, bbox_pt: tuple[float, float, float, float]) -> dict:
+    def _compute_raw_features_no_embed(self, rgba: np.ndarray, bbox_pt: tuple) -> dict:
         """
-        Extracts multi-feature representation on MPS:
-          - ResNet-18 L2-normalized embedding (512-d)
-          - Foreground CIE LAB color histogram + mean color (51-d)
-          - 48x48 normalized RGB thumbnail for direct structural correlation
-          - Physical PDF bounding box dimensions (pt_w, pt_h)
+        Mejora #1 — parte thread-safe del pipeline de features.
+        Extrae todas las características excepto el embedding ResNet (que requiere MPS/GPU
+        y no es thread-safe). El embedding se añade posteriormente en batch via _embed_batch_mps.
+
+        Devuelve un dict con:
+          - 'thumb'     : np.ndarray (48, 48, 3) float32 normalizado
+          - 'color_feat': np.ndarray (51,) float32
+          - 'pt_w', 'pt_h', 'px_w', 'px_h': dimensiones físicas y en píxeles
+          - '_comp_48'  : imagen uint8 (48,48,3) para el batch de embeddings posterior
+          - 'embedding' : None (relleno por _embed_batch_mps)
         """
         h, w, c = rgba.shape
         if c == 4:
@@ -123,12 +130,7 @@ class LegoInventoryMatcher:
         else:
             comp = rgba_tight[:, :, :3]
 
-        pil_img = Image.fromarray(comp)
-        img_t = self.preprocess(pil_img).unsqueeze(0).to(self.device)
-        with torch.no_grad():
-            emb = self.feature_extractor(img_t).squeeze().cpu().numpy()
-        emb_norm = emb / (np.linalg.norm(emb) + 1e-8)
-
+        # Color histogram (51-d)
         lab = cv2.cvtColor(rgb, cv2.COLOR_RGB2LAB)
         fg_lab = lab[mask]
         hist_l = np.histogram(fg_lab[:, 0], bins=16, range=(0, 256), density=True)[0]
@@ -137,19 +139,50 @@ class LegoInventoryMatcher:
         color_vec = np.concatenate([hist_l, hist_a, hist_b, fg_lab.mean(axis=0) / 255.0])
         color_norm = color_vec / (np.linalg.norm(color_vec) + 1e-8)
 
-        thumb = cv2.resize(comp, (48, 48), interpolation=cv2.INTER_AREA).astype(np.float32) / 255.0
-        pt_w = float(bbox_pt[2] - bbox_pt[0])
-        pt_h = float(bbox_pt[3] - bbox_pt[1])
+        # Thumbnail
+        comp_48 = cv2.resize(comp, (48, 48), interpolation=cv2.INTER_AREA)
+        thumb = comp_48.astype(np.float32) / 255.0
 
         return {
-            "embedding": emb_norm,
+            "embedding": None,                      # se rellena en _embed_batch_mps
             "color_feat": color_norm,
             "thumb": thumb,
-            "pt_w": pt_w,
-            "pt_h": pt_h,
+            "pt_w": float(bbox_pt[2] - bbox_pt[0]),
+            "pt_h": float(bbox_pt[3] - bbox_pt[1]),
             "px_w": tw,
-            "px_h": th
+            "px_h": th,
+            "_comp_48": comp_48,                    # buffer temporal para batch de embeddings
         }
+
+    def _embed_batch_mps(self, feat_list: list[dict]) -> None:
+        """
+        Mejora #1 — batch de embeddings ResNet-18 en MPS de una sola pasada.
+        Rellena in-place el campo 'embedding' de cada dict en feat_list y elimina '_comp_48'.
+
+        Llamar DESPUÉS de recopilar todos los feat_list de todas las páginas.
+        """
+        if not feat_list:
+            return
+        imgs = [f["_comp_48"] for f in feat_list]          # list de np.ndarray (48,48,3) uint8
+        tensors = torch.stack([
+            self.preprocess(Image.fromarray(img)) for img in imgs
+        ]).to(self.device)                                   # (N, 3, 224, 224)
+        with torch.no_grad():
+            embs = self.feature_extractor(tensors)           # (N, 512, 1, 1)
+        embs_np = embs.squeeze(-1).squeeze(-1).cpu().numpy() # (N, 512)
+        norms = np.linalg.norm(embs_np, axis=1, keepdims=True) + 1e-8
+        embs_norm = embs_np / norms                         # L2 normalizado
+        for feat, emb in zip(feat_list, embs_norm):
+            feat["embedding"] = emb
+            feat.pop("_comp_48", None)                      # liberar buffer temporal
+    def _compute_multimodal_features(self, rgba: np.ndarray, bbox_pt: tuple) -> dict:
+        """
+        Extracts multi-feature representation on MPS (embedding + color + thumbnail + dims).
+        Backward-compatible wrapper: llama a _compute_raw_features_no_embed + _embed_batch_mps([feat]).
+        """
+        feat = self._compute_raw_features_no_embed(rgba, bbox_pt)
+        self._embed_batch_mps([feat])   # añade embedding in-place para el ítem individual
+        return feat
 
     def _compute_embedding(self, image_path: str) -> np.ndarray:
         """Helper to load image and extract ResNet-18 features on MPS."""
@@ -273,6 +306,55 @@ class LegoInventoryMatcher:
 
         return float(0.40 * pix_sim + 0.25 * size_sim + 0.20 * col_sim + 0.15 * emb_sim)
 
+    @staticmethod
+    def compute_similarity_matrix_vectorized(step_feats: list[dict], tmpl_feats: list[dict]) -> np.ndarray:
+        """
+        Vectorized visual similarity computation across all (N_steps, M_templates) pairs.
+        Leverages Apple Silicon M4 unified memory with matrix multiplications (BLAS/Metal-accelerated).
+        Returns matrix S of shape (N, M) with identical mathematical values to score_visual_similarity.
+        """
+        N = len(step_feats)
+        M = len(tmpl_feats)
+        if N == 0 or M == 0:
+            return np.zeros((N, M), dtype=np.float32)
+
+        # 1. Embeddings: (N, 512) @ (512, M) -> (N, M)
+        step_emb = np.stack([sf["embedding"] for sf in step_feats], axis=0).astype(np.float32)
+        tmpl_emb = np.stack([tf["embedding"] for tf in tmpl_feats], axis=0).astype(np.float32)
+        emb_sim = step_emb @ tmpl_emb.T
+
+        # 2. Color features: (N, 51) @ (51, M) -> (N, M)
+        step_col = np.stack([sf["color_feat"] for sf in step_feats], axis=0).astype(np.float32)
+        tmpl_col = np.stack([tf["color_feat"] for tf in tmpl_feats], axis=0).astype(np.float32)
+        col_sim = step_col @ tmpl_col.T
+
+        # 3. Size similarity: broadcasting across dimensions
+        step_w = np.array([sf["pt_w"] for sf in step_feats], dtype=np.float32)[:, None]
+        tmpl_w = np.array([tf["pt_w"] for tf in tmpl_feats], dtype=np.float32)[None, :]
+        max_w = np.maximum(np.maximum(step_w, tmpl_w), 1e-3)
+        dw = np.abs(step_w - tmpl_w) / max_w
+
+        step_h = np.array([sf["pt_h"] for sf in step_feats], dtype=np.float32)[:, None]
+        tmpl_h = np.array([tf["pt_h"] for tf in tmpl_feats], dtype=np.float32)[None, :]
+        max_h = np.maximum(np.maximum(step_h, tmpl_h), 1e-3)
+        dh = np.abs(step_h - tmpl_h) / max_h
+
+        size_sim = np.maximum(0.0, 1.0 - 0.8 * (dw + dh))
+
+        # 4. Thumbnail pixel MSE: (N, 48*48*3)
+        step_thumb = np.stack([sf["thumb"].reshape(-1) for sf in step_feats], axis=0).astype(np.float32)
+        tmpl_thumb = np.stack([tf["thumb"].reshape(-1) for tf in tmpl_feats], axis=0).astype(np.float32)
+        # ||A - B||^2 = ||A||^2 + ||B||^2 - 2 * A @ B^T
+        a2 = np.sum(step_thumb ** 2, axis=1, keepdims=True)
+        b2 = np.sum(tmpl_thumb ** 2, axis=1, keepdims=True).T
+        ab = step_thumb @ tmpl_thumb.T
+        pix_mse = np.maximum(0.0, (a2 + b2 - 2.0 * ab) / step_thumb.shape[1])
+        pix_sim = np.maximum(0.0, 1.0 - pix_mse * 12.0)
+
+        # Total combined score
+        total_sim = 0.40 * pix_sim + 0.25 * size_sim + 0.20 * col_sim + 0.15 * emb_sim
+        return total_sim
+
     def match_part(self, query_image_path: str, remaining_inventory: list[dict]) -> dict:
         """
         Finds the closest matching part in remaining_inventory for a single query image path.
@@ -376,160 +458,149 @@ class LegoInventoryMatcher:
             info = db_enrichment.get(t["element_id"], {})
             t.update(info)
 
-        # Scan instruction pages (all pages before the first inventory page)
-        doc = fitz.open(self.pdf_path)
-        first_inv_page = min(self.inventory_pages) if self.inventory_pages else len(doc)
+        # ── Mejora #1: Extraer páginas en paralelo con ThreadPoolExecutor ──
+        # MuPDF libera el GIL → threads reales escalan en la parte I/O+CPU-C++.
+        # Cada worker abre su propia instancia del PDF (fitz es thread-safe así).
+        pdf_path_snap = self.pdf_path
+        minifig_ids_snap = minifig_element_ids
 
-        step_pages_data = []
-        all_step_occurrences = []  # flat list for global stock-constrained assignment
-
-        for p_idx in range(first_inv_page):
-            page = doc[p_idx]
+        def _extract_single_page(p_idx: int) -> dict:
+            ld = fitz.open(pdf_path_snap)
+            page = ld[p_idx]
             page_num = p_idx + 1
+            ph, pw = page.rect.height, page.rect.width
             words = page.get_text("words")
             imgs = page.get_image_info(xrefs=True)
             drawings = page.get_drawings()
 
-            # Check for step callout quantities (in upper half of page, excluding subassembly multipliers near bottom)
-            step_qtys = [
-                w for w in words
-                if re.match(r"^\d+x$", w[4].strip(), re.IGNORECASE) and w[1] < page.rect.height * 0.48
-            ]
-            # Sort left-to-right, top-to-bottom
+            step_qtys = [w for w in words
+                         if re.match(r"^\d+x$", w[4].strip(), re.IGNORECASE) and w[1] < ph * 0.48]
             step_qtys.sort(key=lambda w: (round(w[1] / 25.0), w[0]))
+            step_nums = [int(w[4].strip()) for w in words
+                         if w[4].strip().isdigit() and w[1] < ph - 35 and (w[3] - w[1]) >= 18]
 
-            # Find main step number(s)
-            step_nums = []
-            for w in words:
-                txt = w[4].strip()
-                if txt.isdigit() and w[1] < page.rect.height - 35:
-                    # Exclude small sub-step numbers 1, 2, 3 inside callouts if main step number exists
-                    if (w[3] - w[1]) >= 18:
-                        step_nums.append(int(txt))
-
-            # Detect callout container rect
             callout_rect = None
             for draw in drawings:
-                r = draw.get("rect")
-                fill = draw.get("fill")
-                if r and 20 < r.width < page.rect.width * 0.85 and 20 < r.height < page.rect.height * 0.65:
+                r, fill = draw.get("rect"), draw.get("fill")
+                if r and 20 < r.width < pw * 0.85 and 20 < r.height < ph * 0.65:
                     if fill and len(fill) >= 3 and abs(fill[0] - fill[1]) < 0.15:
-                        if any(r.x0 - 5 <= qw[0] <= r.x1 + 5 and r.y0 - 5 <= qw[1] <= r.y1 + 5 for qw in step_qtys):
-                            callout_rect = (r.x0, r.y0, r.x1, r.y1)
-                            break
+                        if any(r.x0-5 <= qw[0] <= r.x1+5 and r.y0-5 <= qw[1] <= r.y1+5 for qw in step_qtys):
+                            callout_rect = (r.x0, r.y0, r.x1, r.y1); break
 
-            # Special handling for Minifigure Assembly page (e.g. Page 4 in 75295-1)
-            if p_idx == 3 and not step_qtys and minifig_element_ids:
-                page_overview_path = os.path.join(steps_crop_dir, f"page_{page_num:02d}_overview.png")
-                page.get_pixmap(dpi=150).save(page_overview_path)
+            is_mf = (p_idx == 3 and not step_qtys and bool(minifig_ids_snap))
+            if is_mf:
+                ov = os.path.join(steps_crop_dir, f"page_{page_num:02d}_overview.png")
+                page.get_pixmap(dpi=150).save(ov)
+                ld.close()
+                return {"p_idx": p_idx, "page_num": page_num, "step_nums": [], "step_qtys": [],
+                        "callout_rect": None, "page_preview_path": ov, "callout_crop_path": ov,
+                        "raw_items": [], "is_minifig_page": True}
 
-                minifig_items = []
-                for t in self.templates:
-                    if t["element_id"] in minifig_element_ids:
-                        minifig_items.append({
-                            "page_num": page_num,
-                            "step_num": 0,
-                            "qty": t["qty"],
-                            "qty_text": f"{t['qty']}x",
-                            "crop_path": t["image_path"],
-                            "matched_element_id": t["element_id"],
-                            "matched_template": t,
-                            "confidence": 1.0,
-                            "match_mode": "minifig_assembly_page",
-                            "top_candidates": [(t["element_id"], 1.0)]
-                        })
-                step_pages_data.append({
-                    "page_num": page_num,
-                    "step_label": "Minifig (Pág. 4)",
-                    "callout_crop_path": page_overview_path,
-                    "page_preview_path": page_overview_path,
-                    "items": minifig_items
-                })
-                continue
-
+            pp = os.path.join(steps_crop_dir, f"page_{page_num:02d}_full.png")
+            page.get_pixmap(dpi=130).save(pp)
             if not step_qtys:
-                continue
+                ld.close()
+                return {"p_idx": p_idx, "page_num": page_num, "step_nums": step_nums, "step_qtys": [],
+                        "callout_rect": None, "page_preview_path": pp, "callout_crop_path": pp,
+                        "raw_items": [], "is_minifig_page": False}
 
-            # Save callout box crop & page preview
-            page_preview_path = os.path.join(steps_crop_dir, f"page_{page_num:02d}_full.png")
-            page.get_pixmap(dpi=130).save(page_preview_path)
+            c_rect = fitz.Rect(*callout_rect) if callout_rect else fitz.Rect(
+                max(0, min(w[0] for w in step_qtys)-15), max(0, min(w[1] for w in step_qtys)-45),
+                min(pw, max(w[2] for w in step_qtys)+35), min(ph, max(w[3] for w in step_qtys)+10))
+            cc = os.path.join(steps_crop_dir, f"page_{page_num:02d}_callout.png")
+            page.get_pixmap(clip=c_rect, dpi=180).save(cc)
 
-            if callout_rect:
-                c_rect = fitz.Rect(
-                    max(0, callout_rect[0] - 4),
-                    max(0, callout_rect[1] - 4),
-                    min(page.rect.width, callout_rect[2] + 4),
-                    min(page.rect.height, callout_rect[3] + 4)
-                )
-            else:
-                min_x = max(0, min(w[0] for w in step_qtys) - 15)
-                max_x = min(page.rect.width, max(w[2] for w in step_qtys) + 35)
-                min_y = max(0, min(w[1] for w in step_qtys) - 45)
-                max_y = min(page.rect.height, max(w[3] for w in step_qtys) + 10)
-                c_rect = fitz.Rect(min_x, min_y, max_x, max_y)
-
-            callout_crop_path = os.path.join(steps_crop_dir, f"page_{page_num:02d}_callout.png")
-            page.get_pixmap(clip=c_rect, dpi=180).save(callout_crop_path)
-
-            page_items = []
-            for item_idx, qw in enumerate(step_qtys):
-                qx0, qy0, qx1, qy1, qtxt = qw[0], qw[1], qw[2], qw[3], qw[4].strip()
+            raw_items = []
+            for ii, qw in enumerate(step_qtys):
+                qx0, qy0, qx1, qy1 = qw[0], qw[1], qw[2], qw[3]
+                qtxt = qw[4].strip()
                 qty_val = int(qtxt[:-1]) if qtxt.lower().endswith("x") else 1
-
-                im_candidates = [
-                    im for im in imgs
-                    if (im["bbox"][2] - im["bbox"][0]) < 150
-                    and (im["bbox"][3] - im["bbox"][1]) < 150
-                    and abs(im["bbox"][0] - qx0) < 22
-                    and -5 <= (qy0 - im["bbox"][3]) < 28
-                ]
-
-                item_crop_path = os.path.join(steps_crop_dir, f"page_{page_num:02d}_item_{item_idx + 1}.png")
-                if im_candidates:
-                    im_best = min(im_candidates, key=lambda im: abs(qy0 - im["bbox"][3]) + abs(im["bbox"][0] - qx0))
-                    bbox_pt = tuple(im_best["bbox"])
-                    rgba = self._extract_rgba_from_xref(doc, im_best["xref"])
-                    self._save_clean_rgba_crop(rgba, item_crop_path)
+                imc = [im for im in imgs
+                       if (im["bbox"][2]-im["bbox"][0]) < 150 and (im["bbox"][3]-im["bbox"][1]) < 150
+                       and abs(im["bbox"][0]-qx0) < 22 and -5 <= (qy0-im["bbox"][3]) < 28]
+                icp = os.path.join(steps_crop_dir, f"page_{page_num:02d}_item_{ii+1}.png")
+                if imc:
+                    ib = min(imc, key=lambda im: abs(qy0-im["bbox"][3])+abs(im["bbox"][0]-qx0))
+                    bbox_pt = tuple(ib["bbox"])
+                    px = fitz.Pixmap(ld, ib["xref"])
+                    if px.n - px.alpha > 3: px = fitz.Pixmap(fitz.csRGB, px)
+                    rgba = np.frombuffer(px.samples, dtype=np.uint8).reshape(px.height, px.width, px.n).copy()
+                    cn = rgba.shape[2]
+                    ach = rgba[:,:,3:4].astype(np.float32)/255.0 if cn==4 else None
+                    comp = (rgba[:,:,:3].astype(np.float32)*ach + 230.0*(1.0-ach)).astype(np.uint8) if cn==4 else rgba[:,:,:3]
+                    Image.fromarray(comp).save(icp)
                 else:
-                    raw_rect = fitz.Rect(max(0, qx0 - 8), max(0, qy0 - 55), min(page.rect.width, qx0 + 65), max(1, qy0 - 1))
-                    pix = page.get_pixmap(clip=raw_rect, dpi=200)
-                    rgb_arr = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)[:, :, :3]
-                    tx0, ty0, tx1, ty1 = refine_tight_bbox_cv(rgb_arr, bg_tol=12.0, pad=2)
-                    scale = 72.0 / 200.0
-                    bbox_pt = (
-                        raw_rect.x0 + tx0 * scale,
-                        raw_rect.y0 + ty0 * scale,
-                        raw_rect.x0 + tx1 * scale,
-                        raw_rect.y0 + ty1 * scale
-                    )
+                    rr = fitz.Rect(max(0,qx0-8), max(0,qy0-55), min(pw,qx0+65), max(1,qy0-1))
+                    p2 = page.get_pixmap(clip=rr, dpi=200)
+                    rgb_arr = np.frombuffer(p2.samples, dtype=np.uint8).reshape(p2.height, p2.width, p2.n)[:,:,:3].copy()
+                    tx0,ty0,tx1,ty1 = refine_tight_bbox_cv(rgb_arr, bg_tol=12.0, pad=2)
+                    sc2 = 72.0/200.0
+                    bbox_pt = (rr.x0+tx0*sc2, rr.y0+ty0*sc2, rr.x0+tx1*sc2, rr.y0+ty1*sc2)
                     rgba = rgb_arr[ty0:ty1, tx0:tx1]
-                    Image.fromarray(rgba).save(item_crop_path)
+                    Image.fromarray(rgba).save(icp)
+                raw_items.append({"page_num": page_num, "step_num": step_nums[0] if step_nums else page_num,
+                                  "qty": qty_val, "qty_text": f"{qty_val}x", "bbox_pt": bbox_pt,
+                                  "qty_bbox_pt": (qx0,qy0,qx1,qy1), "crop_path": icp, "_rgba": rgba})
+            ld.close()
+            return {"p_idx": p_idx, "page_num": page_num, "step_nums": step_nums, "step_qtys": step_qtys,
+                    "callout_rect": callout_rect, "page_preview_path": pp, "callout_crop_path": cc,
+                    "raw_items": raw_items, "is_minifig_page": False}
 
-                feats = self._compute_multimodal_features(rgba, bbox_pt)
-                item_dict = {
-                    "page_num": page_num,
-                    "step_num": step_nums[0] if step_nums else page_num,
-                    "qty": qty_val,
-                    "qty_text": f"{qty_val}x",
-                    "bbox_pt": bbox_pt,
-                    "qty_bbox_pt": (qx0, qy0, qx1, qy1),
-                    "crop_path": item_crop_path,
-                    "features": feats
-                }
+        doc_probe = fitz.open(self.pdf_path)
+        first_inv_page = min(self.inventory_pages) if self.inventory_pages else len(doc_probe)
+        doc_probe.close()
+        n_workers = workers_for(first_inv_page)
+        print(f"[M4 Paralelo] Extrayendo {first_inv_page} páginas con {n_workers} threads (P-cores)…")
+        with ThreadPoolExecutor(max_workers=n_workers) as pool:
+            page_results = sorted(pool.map(_extract_single_page, range(first_inv_page)),
+                                  key=lambda r: r["p_idx"])
+
+        # ── Mejora #3 (batch MPS): un solo forward ResNet-18 para todos los ítems ──
+        all_raw_feats: list[dict] = []
+        feat_back_refs: list[tuple[int, int]] = []
+        for pri, pr in enumerate(page_results):
+            for rii, raw_item in enumerate(pr.get("raw_items", [])):
+                feat = self._compute_raw_features_no_embed(raw_item["_rgba"], raw_item["bbox_pt"])
+                all_raw_feats.append(feat)
+                feat_back_refs.append((pri, rii))
+        if all_raw_feats:
+            self._embed_batch_mps(all_raw_feats)
+        for (pri, rii), feat in zip(feat_back_refs, all_raw_feats):
+            page_results[pri]["raw_items"][rii]["features"] = feat
+            page_results[pri]["raw_items"][rii].pop("_rgba", None)
+
+        # ── Reconstruir step_pages_data y all_step_occurrences ──
+        step_pages_data: list[dict] = []
+        all_step_occurrences: list[dict] = []
+        for pr in page_results:
+            page_num = pr["page_num"]
+            if pr["is_minifig_page"]:
+                minifig_items = [
+                    {"page_num": page_num, "step_num": 0, "qty": t["qty"],
+                     "qty_text": f"{t['qty']}x", "crop_path": t["image_path"],
+                     "matched_element_id": t["element_id"], "matched_template": t,
+                     "confidence": 1.0, "match_mode": "minifig_assembly_page",
+                     "top_candidates": [(t["element_id"], 1.0)]}
+                    for t in self.templates if t["element_id"] in minifig_element_ids
+                ]
+                step_pages_data.append({"page_num": page_num, "step_label": "Minifig (Pág. 4)",
+                                        "callout_crop_path": pr["callout_crop_path"],
+                                        "page_preview_path": pr["page_preview_path"],
+                                        "items": minifig_items})
+                continue
+            step_label = f"Paso {pr['step_nums'][0]}" if pr["step_nums"] else f"Página {page_num}"
+            page_items = []
+            for raw_item in pr["raw_items"]:
+                item_dict = {k: raw_item[k] for k in ("page_num", "step_num", "qty", "qty_text",
+                                                       "bbox_pt", "qty_bbox_pt", "crop_path", "features")}
                 page_items.append(item_dict)
                 all_step_occurrences.append(item_dict)
-
-            step_label = f"Paso {step_nums[0]}" if step_nums else f"Página {page_num}"
-            step_pages_data.append({
-                "page_num": page_num,
-                "step_num": step_nums[0] if step_nums else None,
-                "step_label": step_label,
-                "callout_crop_path": callout_crop_path,
-                "page_preview_path": page_preview_path,
-                "items": page_items
-            })
-
-        doc.close()
+            step_pages_data.append({"page_num": page_num,
+                                    "step_num": pr["step_nums"][0] if pr["step_nums"] else None,
+                                    "step_label": step_label,
+                                    "callout_crop_path": pr["callout_crop_path"],
+                                    "page_preview_path": pr["page_preview_path"],
+                                    "items": page_items})
 
         # Global stock-constrained matching across all step occurrences
         rem_stock = {
@@ -538,24 +609,24 @@ class LegoInventoryMatcher:
         }
         tmpl_by_code = {t["element_id"]: t for t in self.templates}
 
-        # Precompute top-3 visual candidates for every step occurrence
+        valid_templates = [t for t in self.templates if t["element_id"] not in minifig_element_ids]
         all_scored_pairs = []
-        for occ_idx, occ in enumerate(all_step_occurrences):
-            cand_scores = []
-            for t in self.templates:
-                el_id = t["element_id"]
-                if el_id in minifig_element_ids:
-                    continue
-                sc = self.score_visual_similarity(occ["features"], t["features"])
-                cand_scores.append((sc, el_id))
-                if occ["qty"] <= t["qty"]:
-                    all_scored_pairs.append((sc, occ_idx, el_id))
-            cand_scores.sort(reverse=True)
-            occ["top_candidates"] = [(el_id, round(sc, 4)) for sc, el_id in cand_scores[:3]]
+        if all_step_occurrences and valid_templates:
+            step_feats = [occ["features"] for occ in all_step_occurrences]
+            tmpl_feats = [t["features"] for t in valid_templates]
+            sim_matrix = self.compute_similarity_matrix_vectorized(step_feats, tmpl_feats)
+            for occ_idx, occ in enumerate(all_step_occurrences):
+                row_scores = sim_matrix[occ_idx]
+                cand_scores = [(float(row_scores[t_idx]), valid_templates[t_idx]["element_id"])
+                               for t_idx in range(len(valid_templates))]
+                for t_idx, (sc, el_id) in enumerate(cand_scores):
+                    if occ["qty"] <= valid_templates[t_idx]["qty"]:
+                        all_scored_pairs.append((sc, occ_idx, el_id))
+                cand_scores.sort(reverse=True)
+                occ["top_candidates"] = [(el_id, round(sc, 4)) for sc, el_id in cand_scores[:3]]
 
-        # Assign highest-confidence matches first while respecting remaining stock
         all_scored_pairs.sort(reverse=True)
-        assigned_occ = set()
+        assigned_occ: set[int] = set()
         for sc, occ_idx, el_id in all_scored_pairs:
             if occ_idx in assigned_occ:
                 continue
@@ -568,7 +639,6 @@ class LegoInventoryMatcher:
                 rem_stock[el_id] -= occ["qty"]
                 assigned_occ.add(occ_idx)
 
-        # Fallback for any unassigned item (if stock exceeded)
         for occ_idx, occ in enumerate(all_step_occurrences):
             if occ_idx not in assigned_occ:
                 best_el, best_sc = occ["top_candidates"][0]

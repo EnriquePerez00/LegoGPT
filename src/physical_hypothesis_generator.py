@@ -2,6 +2,7 @@ import os
 import math
 import concurrent.futures
 import numpy as np
+from src.apple_silicon import workers_for
 from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Optional, Any
 from scipy.spatial import cKDTree
@@ -193,7 +194,7 @@ class PhysicalHypothesisGenerator:
         try:
             from src.connectivity_db import get_part_ports, PortType
             for cp in get_part_ports(child_part_id):
-                if cp.port_type in (PortType.ANTI_STUD, PortType.PIN_HOLE, PortType.AXLE_HOLE, PortType.CLIP):
+                if cp.port_type in (PortType.ANTISTUD, PortType.PIN_HOLE, PortType.AXLE_HOLE, PortType.CLIP):
                     if not any(np.linalg.norm(cp.local_pos - (cs["pos"] if isinstance(cs, dict) else np.asarray(cs))) < 2.0 for cs in child_sockets):
                         child_sockets.append(cp.local_pos.copy())
         except Exception:
@@ -308,29 +309,17 @@ class PhysicalHypothesisGenerator:
         hypotheses = []
         seen_transforms = set()
         
+        hinge_keywords = ["hinge", "2429", "2430", "4315", "3937", "3938", "3830", "3831", "44301", "44302", "3680", "3679", "2452", "2451"]
         is_technic = any("axle" in child_part_id or "pin" in child_part_id or "beam" in child_part_id for _ in [0])
-        is_hinge = any(k in child_part_id for k in ["hinge", "2429", "2430", "4315", "3937", "3938", "3830", "3831", "44301", "44302", "3680", "3679", "2452", "2451"]) or any(
-            any(k in n["part_id"] for k in ["hinge", "2429", "2430", "4315", "3937", "3938", "3830", "3831", "44301", "44302", "3680", "3679", "2452", "2451"])
-            for n in candidate_parents
-        )
-        has_snot = is_technic or is_hinge or child_meta.get("has_lateral_ports", False) or any(
-            self.geom.get_part_meta(n["part_id"]).get("has_lateral_ports", False) or abs(abs(np.array(n["absolute_transform"]).reshape((4,4))[1,1]) - 1.0) > 0.1
-            for n in candidate_parents
-        )
-        # A brick with lateral studs (like 87087, 4070) connects via its bottom socket with normal yaw (4 rotations),
-        # unless it is attaching sideways to another lateral stud.
+        child_is_hinge = any(k in child_part_id for k in hinge_keywords)
+        child_has_lateral = child_meta.get("has_lateral_ports", False)
         is_snot_brick_upright = ("87087" in child_part_id or "4070" in child_part_id) and not any(
             self.geom.get_part_meta(n["part_id"]).get("has_lateral_ports", False) for n in candidate_parents[:4]
         )
 
-        if is_hinge:
-            canonical_rotations = self.get_hinge_rotations_3d()
-        elif is_snot_brick_upright:
-            canonical_rotations = self.get_canonical_rotations_y()
-        elif has_snot:
-            canonical_rotations = self.get_canonical_rotations_3d()
-        else:
-            canonical_rotations = self.get_canonical_rotations_y()
+        rot_y_4 = self.get_canonical_rotations_y()
+        rot_3d_24 = self.get_canonical_rotations_3d()
+        has_snot = is_technic or child_is_hinge or child_has_lateral
 
         def _process_single_parent(parent_node: Dict[str, Any]) -> List[ConnectionHypothesis]:
             p_idx = parent_node["part_index"]
@@ -338,6 +327,11 @@ class PhysicalHypothesisGenerator:
             p_tf = np.array(parent_node["absolute_transform"], dtype=np.float32).reshape((4, 4))
             p_R = p_tf[:3, :3]
             p_t = p_tf[:3, 3]
+
+            parent_is_hinge = any(k in parent_node["part_id"] for k in hinge_keywords)
+            parent_is_tilted = abs(abs(float(p_R[1, 1])) - 1.0) > 0.1
+            parent_has_snot = p_meta.get("has_lateral_ports", False) or parent_is_tilted or parent_is_hinge
+            pair_has_snot = (is_technic or child_is_hinge or child_has_lateral or parent_has_snot) and not is_snot_brick_upright
 
             # Parent available connection ports (studs, lateral studs, or technic holes/sockets)
             parent_studs = []
@@ -356,7 +350,7 @@ class PhysicalHypothesisGenerator:
                 # Check if stud is facing child insertion direction (or lateral if SNOT)
                 target_norm_y = 1.0 if is_flip else -1.0
                 is_valid_dir = abs(s_world_norm[1] - target_norm_y) < 0.2
-                if has_snot and not is_valid_dir:
+                if pair_has_snot and not is_valid_dir:
                     if abs(s_world_norm[0]) > 0.6 or abs(s_world_norm[2]) > 0.6 or abs(s_world_norm[1]) > 0.6:
                         is_valid_dir = True
 
@@ -386,7 +380,7 @@ class PhysicalHypothesisGenerator:
                         parent_studs.append(pin_w)
 
             # Augment with socket/hole ports when SNOT/Technic/inverted or when parent_studs is empty
-            if (not parent_studs or has_snot) and (p_meta.get("sockets") or p_meta.get("holes")):
+            if (not parent_studs or pair_has_snot) and (p_meta.get("sockets") or p_meta.get("holes")):
                 hole_sources = p_meta.get("holes") or p_meta.get("sockets", [])
                 for s in hole_sources:
                     s_pos = s["pos"].copy() if isinstance(s, dict) else np.array(s, dtype=np.float32)
@@ -398,7 +392,7 @@ class PhysicalHypothesisGenerator:
                             parent_studs.append(s_world_pos)
 
             # Always augment with lateral/special ports from connectivity_db when SNOT or empty
-            if not parent_studs or has_snot:
+            if not parent_studs or pair_has_snot:
                 try:
                     from src.connectivity_db import get_part_ports
                     for cp in get_part_ports(parent_node["part_id"]):
@@ -432,9 +426,7 @@ class PhysicalHypothesisGenerator:
                         np.array([0.0, 0.0, sgn * 10.0], dtype=np.float32),
                     ])
 
-            active_rotations = canonical_rotations
-            if (is_hinge or has_snot) and len(canonical_rotations) > 24:
-                active_rotations = canonical_rotations[:24]
+            active_rotations = rot_3d_24 if pair_has_snot else rot_y_4
 
             local_hyps = []
             local_seen = set()
@@ -464,7 +456,7 @@ class PhysicalHypothesisGenerator:
                                     matched_here = False
                                     for ps in parent_studs:
                                         d_stud = float(np.linalg.norm(s_other_world - ps))
-                                        if d_stud < 3.0 or (has_snot and (abs(d_stud - 4.0) < 1.2 or abs(d_stud - 10.0) < 1.2)):
+                                        if d_stud < 3.0 or (pair_has_snot and (abs(d_stud - 4.0) < 1.2 or abs(d_stud - 10.0) < 1.2)):
                                             matched_studs.append([float(ps[0]), float(ps[1]), float(ps[2])])
                                             matched_here = True
                                             break
@@ -530,7 +522,7 @@ class PhysicalHypothesisGenerator:
                     parent_bot_sockets.append(sw)
 
             if child_top_studs and parent_bot_sockets:
-                under_rotations = active_rotations if has_snot else active_rotations[:4]
+                under_rotations = active_rotations if pair_has_snot else active_rotations[:4]
                 for deg, R in under_rotations:
                     rot_top_studs = [R @ cst for cst in child_top_studs]
                     for c_st_rot in rot_top_studs:
@@ -627,12 +619,22 @@ class PhysicalHypothesisGenerator:
         existing_nodes: List[Dict[str, Any]],
         max_keep: int = 80,
         penetration_threshold: float = 1.5,
+        inside_pool: bool = False,          # ← NEW: evitar oversubscription
     ) -> List[ConnectionHypothesis]:
-        """Level 1 Hard Physical Validation (Lazy 3D SAT Collision)."""
+        """Level 1 Hard Physical Validation (Lazy 3D SAT Collision).
+
+        Args:
+            inside_pool: Pasar True cuando este método se invoca desde dentro de un
+                         ThreadPoolExecutor/ProcessPoolExecutor externo (beam search branches,
+                         scoring paralelo…), para evitar oversubscription en M4 Pro.
+        """
         if not hypotheses or not existing_nodes:
             return hypotheses[:max_keep]
 
-        max_workers = min(len(hypotheses), max(1, (os.cpu_count() or 12) - 2))
+        # Mejora #2: respetar presupuesto de P-cores; si ya estamos en un pool externo
+        # degradamos a secuencial (inside_pool=True → workers=1).
+        max_workers = workers_for(len(hypotheses), inside_pool=inside_pool)
+
         if len(hypotheses) <= 2 or max_workers <= 1:
             valid_list = []
             for h in hypotheses:
@@ -840,70 +842,53 @@ class PhysicalHypothesisGenerator:
         color_id: int = 16,
         lazy_collision_check: bool = True,
         max_candidates: int = 128,
+        connector_2d_filter: Optional[Dict[str, Any]] = None,
     ) -> List[ConnectionHypothesis]:
         """
-        Connector-Compatibility Gating (Paso 3).
-        ==========================================
+        Connector-Compatibility Gating + Geographic 2D ROI + Multi-Port Engagement (Paso 3).
+        ====================================================================================
         Generates physically valid placement hypotheses by matching typed ports
         of *child_part_id* against FREE typed ports of the current assembly graph
-        (from *occupancy_map*), using the COMPATIBLE_PORT_PAIRS ontology.
-
-        This replaces the blind canonical-rotation sweep of
-        ``generate_candidate_hypotheses`` with a targeted port-to-port alignment
-        strategy:
-
-          1. Retrieve typed child ports via ``LDrawGeometryResolver.get_part_ports``.
-          2. Query ``ConnectorOccupancyMap.get_free_ports(filter_compatible_with=child_ports)``
-             to obtain only FREE graph ports compatible with the child's ports.
-             This eliminates physically impossible connections without any
-             hardcoded per-set logic.
-          3. For each (graph_port, child_port) compatible pair:
-             a. Compute the rotation R that aligns the child's port normal
-                anti-parallel to the graph port's normal (so the faces mate).
-             b. For STUD/ANTISTUD and symmetric ports: enumerate the symmetry
-                yaw rotations (0/90/180/270 deg) around the mating axis.
-             c. Compute the translation t = pos_graph_port - R @ pos_child_port.
-             d. Optionally snap to 10 LDU grid (standard stud pitch).
-             e. Fast AABB collision rejection; then optionally solid validation.
-          4. Deduplicate by (translation, rotation) key.
-          5. Sort by stud_count desc, then parent recency.
-
-        Falls back to an empty list (not a crash) if the child has no typed ports
-        or the graph has no compatible FREE ports.  The caller should then fall
-        back to ``generate_candidate_hypotheses`` for the blind sweep.
-
-        Parameters
-        ----------
-        child_part_id      : e.g. '3001.dat'
-        child_element_id   : BrickLink element ID string
-        occupancy_map      : live ``ConnectorOccupancyMap`` for the current assembly
-        existing_nodes     : flat list of already-placed part dicts
-        is_flip            : True when the assembly is in an inverted / flip step
-        color_id           : LDraw colour code for the child part
-        lazy_collision_check : skip full solid validation (AABB only) when True
-        max_candidates     : upper bound on returned hypotheses
-
-        Returns
-        -------
-        List[ConnectionHypothesis]
-            Deduplicated, sorted candidates; may be empty.
+        (from *occupancy_map*), using the COMPATIBLE_PORT_PAIRS ontology and optional
+        2D geographic ROI filtering (`connector_2d_filter`), and counts all child ports
+        that simultaneously engage free compatible ports (`matched_studs`, `stud_count`,
+        `bridged_parents`).
         """
-        from src.connectivity_db import COMPATIBLE_PORT_PAIRS
+        from src.connectivity_db import PortType, COMPATIBLE_PORT_PAIRS
+
+        _STUD_TYPES = {PortType.STUD, PortType.STUD_HOLLOW}
+        _ANTISTUD_TYPES = {PortType.ANTISTUD}
 
         # --- 1. Get child typed ports ------------------------------------
         child_ports = self.geom.get_part_ports(child_part_id)
         if not child_ports:
             return []
 
-        # --- 2. Get compatible FREE graph ports --------------------------
+        child_meta = self.geom.get_part_meta(child_part_id)
+        child_bbox = child_meta["bbox"]
+        part_span_ldu = max(
+            abs(child_bbox[3] - child_bbox[0]),
+            abs(child_bbox[5] - child_bbox[2]),
+            40.0,
+        )
+
+        # --- 2. Get compatible FREE graph ports (with optional 2D ROI filter) ---
         free_graph_ports = occupancy_map.get_free_ports(
+            filter_compatible_with=child_ports,
+            connector_2d_filter=connector_2d_filter,
+            part_max_span_ldu=part_span_ldu,
+        )
+        all_free_graph_ports = occupancy_map.get_free_ports(
             filter_compatible_with=child_ports
         )
         if not free_graph_ports:
+            free_graph_ports = all_free_graph_ports
+        if not free_graph_ports:
             return []
 
-        child_meta = self.geom.get_part_meta(child_part_id)
-        child_bbox = child_meta["bbox"]
+        # Build fast spatial index over all free graph ports for multi-port simultaneous counting
+        all_free_positions = np.array([gp.pos_world for gp in all_free_graph_ports], dtype=np.float32)
+        free_kdtree = cKDTree(all_free_positions) if len(all_free_positions) > 0 else None
 
         # Pre-compute existing world AABBs for fast collision rejection
         existing_world_bboxes: List[List[float]] = []
@@ -914,147 +899,172 @@ class PhysicalHypothesisGenerator:
                 self.compute_world_bbox(n_meta["bbox"], n_tf[:3, :3], n_tf[:3, 3])
             )
 
-        # Index existing nodes by part_index for parent look-up
-        node_by_idx: Dict[int, Dict] = {n["part_index"]: n for n in existing_nodes}
+        sym_order = child_meta.get("symmetry_order", 1)
+        sym_group = child_meta.get("symmetry_group", "C1")
+        is_sym = bool(child_meta.get("is_symmetric", sym_order > 1))
 
-        hypotheses: List[ConnectionHypothesis] = []
-        seen_keys: set = set()
+        def _sweep_ports(port_list: List[Any]) -> List[ConnectionHypothesis]:
+            hyps: List[ConnectionHypothesis] = []
+            seen_keys: set = set()
 
-        # --- 3. For each compatible (graph_port, child_port) pair ---------
-        for graph_crec in free_graph_ports:
-            g_pos_w = graph_crec.pos_world          # world-frame graph port position
-            g_norm_w = graph_crec.normal_world      # world-frame graph port normal
-            g_pt = graph_crec.port_type
-            parent_idx = graph_crec.owner_part_index
+            for graph_crec in port_list:
+                g_pos_w = graph_crec.pos_world
+                g_norm_w = graph_crec.normal_world
+                g_pt = graph_crec.port_type
+                parent_idx = graph_crec.owner_part_index
 
-            for child_cp in child_ports:
-                c_pt = child_cp.port_type
-                if (g_pt, c_pt) not in COMPATIBLE_PORT_PAIRS:
-                    continue
+                for child_cp in child_ports:
+                    c_pt = child_cp.port_type
+                    if (g_pt, c_pt) not in COMPATIBLE_PORT_PAIRS:
+                        continue
 
-                # We want child_port normal to point ANTI-PARALLEL to graph_port normal
-                # (mating faces point toward each other)
-                c_norm_local = child_cp.local_normal
-                c_norm_len = float(np.linalg.norm(c_norm_local))
-                if c_norm_len < 1e-5:
-                    continue
-                c_norm_local = c_norm_local / c_norm_len
+                    c_norm_local = child_cp.local_normal
+                    c_norm_len = float(np.linalg.norm(c_norm_local))
+                    if c_norm_len < 1e-5:
+                        continue
+                    c_norm_local = c_norm_local / c_norm_len
 
-                target_child_norm_w = -g_norm_w  # anti-parallel in world frame
+                    target_child_norm_w = -g_norm_w
+                    R_base = self._align_vectors(c_norm_local, target_child_norm_w)
 
-                # Build rotation R that maps c_norm_local -> target_child_norm_w
-                R_base = self._align_vectors(c_norm_local, target_child_norm_w)
-
-                # Symmetry yaw sweeps around the mating axis (g_norm_w)
-                sym_order = child_meta.get("symmetry_order", 1)
-                if g_pt in (self._STUD_TYPES) or c_pt in (self._STUD_TYPES):
-                    # Standard stud-socket: 4 yaw steps for C4 symmetry,
-                    # 2 for C2, 1 for C1
-                    yaw_steps = {4: [0.0, 90.0, 180.0, 270.0],
-                                 2: [0.0, 180.0],
-                                 1: [0.0]}.get(sym_order, [0.0, 90.0, 180.0, 270.0])
-                else:
-                    # Non-stud connectors (pin, axle, clip): 2 orientations
-                    yaw_steps = [0.0, 180.0]
-
-                for yaw_deg in yaw_steps:
-                    if abs(yaw_deg) > 0.1:
-                        rad = math.radians(yaw_deg)
-                        ca, sa = math.cos(rad), math.sin(rad)
-                        # Rotation around mating axis (g_norm_w)
-                        axis = g_norm_w / (float(np.linalg.norm(g_norm_w)) + 1e-9)
-                        ux, uy, uz = float(axis[0]), float(axis[1]), float(axis[2])
-                        R_axis = np.array([
-                            [ca + ux*ux*(1-ca),    ux*uy*(1-ca)-uz*sa, ux*uz*(1-ca)+uy*sa],
-                            [uy*ux*(1-ca)+uz*sa,   ca + uy*uy*(1-ca),  uy*uz*(1-ca)-ux*sa],
-                            [uz*ux*(1-ca)-uy*sa,   uz*uy*(1-ca)+ux*sa, ca + uz*uz*(1-ca)],
-                        ], dtype=np.float32)
-                        R = R_axis @ R_base
+                    # Symmetry canonicalization:
+                    # C4 symmetric piece needs only [0.0] (all 4 rotations are identical in 3D);
+                    # C2 symmetric piece needs [0.0, 90.0];
+                    # C1 asymmetric piece needs [0.0, 90.0, 180.0, 270.0].
+                    if g_pt in _STUD_TYPES or c_pt in _STUD_TYPES or g_pt in _ANTISTUD_TYPES or c_pt in _ANTISTUD_TYPES:
+                        yaw_steps = {
+                            4: [0.0],
+                            2: [0.0, 90.0],
+                            1: [0.0, 90.0, 180.0, 270.0],
+                        }.get(sym_order, [0.0, 90.0, 180.0, 270.0])
                     else:
-                        R = R_base.copy()
+                        yaw_steps = [0.0, 90.0, 180.0, 270.0] if sym_order == 1 else [0.0, 180.0]
 
-                    # Translation: place child so its port aligns with graph port
-                    c_pos_w = R @ child_cp.local_pos    # child port in world after rotation
-                    t = g_pos_w - c_pos_w
+                    for yaw_deg in yaw_steps:
+                        if abs(yaw_deg) > 0.1:
+                            rad = math.radians(yaw_deg)
+                            ca, sa = math.cos(rad), math.sin(rad)
+                            axis = g_norm_w / (float(np.linalg.norm(g_norm_w)) + 1e-9)
+                            ux, uy, uz = float(axis[0]), float(axis[1]), float(axis[2])
+                            R_axis = np.array([
+                                [ca + ux*ux*(1-ca),    ux*uy*(1-ca)-uz*sa, ux*uz*(1-ca)+uy*sa],
+                                [uy*ux*(1-ca)+uz*sa,   ca + uy*uy*(1-ca),  uy*uz*(1-ca)-ux*sa],
+                                [uz*ux*(1-ca)-uy*sa,   uz*uy*(1-ca)+ux*sa, ca + uz*uz*(1-ca)],
+                            ], dtype=np.float32)
+                            R = R_axis @ R_base
+                        else:
+                            R = R_base.copy()
 
-                    # Snap to 10 LDU grid for stud-based connections
-                    if g_pt in self._STUD_TYPES or c_pt in self._ANTISTUD_TYPES:
-                        t = np.round(t / 10.0) * 10.0
+                        c_pos_w = R @ child_cp.local_pos
+                        t = g_pos_w - c_pos_w
 
-                    # Deduplication key
-                    rot_key = tuple(int(round(x * 10)) for x in R.flatten())
-                    key = (round(float(t[0]), 1), round(float(t[1]), 1),
-                           round(float(t[2]), 1), rot_key)
-                    if key in seen_keys:
-                        continue
-                    seen_keys.add(key)
+                        if g_pt in _STUD_TYPES or c_pt in _ANTISTUD_TYPES or g_pt in _ANTISTUD_TYPES or c_pt in _STUD_TYPES:
+                            if abs(float(g_norm_w[1])) > 0.8:
+                                t[0] = round(float(t[0]) / 10.0) * 10.0
+                                t[1] = round(float(t[1]) / 4.0) * 4.0
+                                t[2] = round(float(t[2]) / 10.0) * 10.0
+                            else:
+                                t = np.round(t / 2.0) * 2.0
 
-                    # AABB collision rejection
-                    child_w_bbox = self.compute_world_bbox(child_bbox, R, t)
-                    core_collision = any(
-                        self.check_bbox_overlap(child_w_bbox, eb, margin=4.2)
-                        for eb in existing_world_bboxes
-                    )
-                    if core_collision and lazy_collision_check:
-                        continue
+                        rot_key = tuple(int(round(x * 10)) for x in R.flatten())
+                        key = (round(float(t[0]), 1), round(float(t[1]), 1),
+                               round(float(t[2]), 1), rot_key)
+                        if key in seen_keys:
+                            continue
+                        seen_keys.add(key)
 
-                    # Build 4x4 transform
-                    tf = np.eye(4, dtype=np.float32)
-                    tf[:3, :3] = R
-                    tf[:3, 3] = t
-
-                    if not lazy_collision_check:
-                        is_valid, _ = self.solid_validator.validate_new_part_placement(
-                            child_part_id, tf, existing_nodes, penetration_threshold=1.5
+                        child_w_bbox = self.compute_world_bbox(child_bbox, R, t)
+                        core_collision = any(
+                            self.check_bbox_overlap(child_w_bbox, eb, margin=4.2)
+                            for eb in existing_world_bboxes
                         )
-                        if not is_valid:
+                        if core_collision and lazy_collision_check:
                             continue
 
-                    # Connector family from port types
-                    conn_family = self._port_pair_to_family(g_pt, c_pt)
+                        tf = np.eye(4, dtype=np.float32)
+                        tf[:3, :3] = R
+                        tf[:3, 3] = t
 
-                    hypotheses.append(ConnectionHypothesis(
-                        child_part_id=child_part_id,
-                        child_element_id=child_element_id,
-                        rotation_matrix=R,
-                        translation=t,
-                        absolute_transform=tf,
-                        parent_part_index=parent_idx,
-                        matched_studs=[[float(g_pos_w[0]), float(g_pos_w[1]), float(g_pos_w[2])]],
-                        stud_count=1,
-                        world_bbox=child_w_bbox,
-                        connector_family=conn_family,
-                        primary_parent_port=None,
-                        primary_child_port=None,
-                        yaw_deg=yaw_deg,
-                        color_id=int(color_id),
-                        bridged_parents=1,
-                    ))
+                        if not lazy_collision_check:
+                            is_valid, _ = self.solid_validator.validate_new_part_placement(
+                                child_part_id, tf, existing_nodes, penetration_threshold=1.5
+                            )
+                            if not is_valid:
+                                continue
 
-                    if len(hypotheses) >= max_candidates:
-                        break
-                if len(hypotheses) >= max_candidates:
-                    break
-            if len(hypotheses) >= max_candidates:
-                break
+                        # Multi-port simultaneous engagement counting across all compatible child ports
+                        matched_pts = []
+                        engaged_parents = {parent_idx}
+                        if free_kdtree is not None:
+                            same_family_child_ports = [
+                                cp_other for cp_other in child_ports
+                                if cp_other.port_type == c_pt
+                                and float(np.dot(cp_other.local_normal, child_cp.local_normal)) > 0.85
+                            ]
+                            if same_family_child_ports:
+                                local_pts = np.array([cp_o.local_pos for cp_o in same_family_child_ports], dtype=np.float32)
+                                world_pts = (local_pts @ R.T) + t
+                                dists, idxs = free_kdtree.query(world_pts, distance_upper_bound=3.5)
+                                for d_val, g_idx in zip(dists, idxs):
+                                    if d_val <= 3.5 and 0 <= g_idx < len(all_free_graph_ports):
+                                        gp_match = all_free_graph_ports[int(g_idx)]
+                                        if (gp_match.port_type, c_pt) in COMPATIBLE_PORT_PAIRS:
+                                            if float(np.dot(gp_match.normal_world, g_norm_w)) > 0.85:
+                                                mp = [float(gp_match.pos_world[0]), float(gp_match.pos_world[1]), float(gp_match.pos_world[2])]
+                                                if mp not in matched_pts:
+                                                    matched_pts.append(mp)
+                                                engaged_parents.add(gp_match.owner_part_index)
 
-        # Sort: most stud contacts first, then most recent parent
+                        if not matched_pts:
+                            matched_pts = [[float(g_pos_w[0]), float(g_pos_w[1]), float(g_pos_w[2])]]
+
+                        conn_family = self._port_pair_to_family(g_pt, c_pt)
+                        equiv_degs = (
+                            [0.0, 90.0, 180.0, 270.0] if sym_order == 4
+                            else ([yaw_deg, (yaw_deg + 180.0) % 360.0] if sym_order == 2 else [yaw_deg])
+                        )
+
+                        hyps.append(ConnectionHypothesis(
+                            child_part_id=child_part_id,
+                            child_element_id=child_element_id,
+                            rotation_matrix=R,
+                            translation=t,
+                            absolute_transform=tf,
+                            parent_part_index=parent_idx,
+                            matched_studs=matched_pts,
+                            stud_count=len(matched_pts),
+                            world_bbox=child_w_bbox,
+                            connector_family=conn_family,
+                            primary_parent_port=None,
+                            primary_child_port=None,
+                            yaw_deg=yaw_deg,
+                            is_symmetric=is_sym,
+                            symmetry_group=sym_group,
+                            symmetry_order=sym_order,
+                            equivalent_rotations_deg=equiv_degs,
+                            color_id=int(color_id),
+                            bridged_parents=len(engaged_parents),
+                        ))
+            return hyps
+
+        hypotheses = _sweep_ports(free_graph_ports)
+        if not hypotheses and len(free_graph_ports) < len(all_free_graph_ports):
+            hypotheses = _sweep_ports(all_free_graph_ports)
+
+        # Sort: multi-parent bridging + most port contacts first, then most recent parent
         hypotheses.sort(
-            key=lambda h: (h.stud_count, h.parent_part_index), reverse=True
+            key=lambda h: (h.bridged_parents, h.stud_count, h.parent_part_index), reverse=True
         )
-        return hypotheses
+        return hypotheses[:max_candidates]
 
     # -----------------------------------------------------------------------
     # Helpers for generate_candidates_from_port_matching
     # -----------------------------------------------------------------------
 
-    _STUD_TYPES: frozenset = frozenset()
-    _ANTISTUD_TYPES: frozenset = frozenset()
-
     @staticmethod
     def _align_vectors(v_from: np.ndarray, v_to: np.ndarray) -> np.ndarray:
         """
-        Returns a 3x3 rotation matrix R such that R @ v_from \u2248 v_to.
+        Returns a 3x3 rotation matrix R such that R @ v_from ≈ v_to.
         Uses Rodrigues' rotation formula; falls back to identity when vectors
         are parallel or anti-parallel.
         """
@@ -1065,13 +1075,11 @@ class PhysicalHypothesisGenerator:
         if dot >= 0.9999:
             return np.eye(3, dtype=np.float32)
         if dot <= -0.9999:
-            # 180-degree flip: find an orthogonal axis
             perp = np.array([1.0, 0.0, 0.0], dtype=np.float32)
             if abs(float(np.dot(v_from, perp))) > 0.9:
                 perp = np.array([0.0, 1.0, 0.0], dtype=np.float32)
             axis = np.cross(v_from, perp)
             axis = axis / (float(np.linalg.norm(axis)) + 1e-9)
-            # Rodrigues for 180 deg: R = 2*(axis x axis^T) - I
             R = 2.0 * np.outer(axis, axis).astype(np.float32) - np.eye(3, dtype=np.float32)
             return R
 
@@ -1105,222 +1113,3 @@ class PhysicalHypothesisGenerator:
         if g_pt == PortType.BALL_SOCKET and c_pt == PortType.BALL:
             return "BALL_JOINT"
         return f"{g_pt.value}_to_{c_pt.value}"
-
-
-def generate_candidates_from_port_matching(
-    self,
-    child_part_id: str,
-    child_element_id: str,
-    occupancy_map,
-    existing_nodes: List[Dict[str, Any]],
-    is_flip: bool = False,
-    color_id: int = 16,
-    lazy_collision_check: bool = True,
-    max_candidates: int = 128,
-) -> List[ConnectionHypothesis]:
-    """
-    Connector-Compatibility Gating (Paso 3).
-
-    Generates physically valid placement hypotheses by matching typed ports
-    of *child_part_id* against FREE typed ports of the current assembly
-    (from *occupancy_map*), using the COMPATIBLE_PORT_PAIRS ontology.
-    Zero hardcoded per-set logic; all decisions emerge from port types.
-
-    Steps
-    -----
-    1. Get typed child ports via get_part_ports().
-    2. Query occupancy_map.get_free_ports(filter_compatible_with=child_ports)
-       -> only physically compatible FREE graph ports.
-    3. For each compatible (graph_port, child_port) pair:
-       a. Compute rotation R aligning child-port normal anti-parallel to
-          graph-port normal (mating faces face each other).
-       b. Sweep yaw rotations matching the part symmetry order.
-       c. Compute translation t = pos_graph - R @ pos_child_local.
-       d. Snap to 10 LDU grid for stud-type ports.
-       e. AABB collision rejection; optional solid validation.
-    4. Deduplicate, sort by stud_count desc.
-
-    Falls back to empty list when no compatible ports exist (caller
-    should then fall back to generate_candidate_hypotheses).
-    """
-    from src.connectivity_db import PortType, COMPATIBLE_PORT_PAIRS
-
-    _STUD_T = {PortType.STUD, PortType.STUD_HOLLOW}
-    _ANTI_T = {PortType.ANTISTUD}
-
-    child_ports = self.geom.get_part_ports(child_part_id)
-    if not child_ports:
-        return []
-
-    free_graph_ports = occupancy_map.get_free_ports(
-        filter_compatible_with=child_ports
-    )
-    if not free_graph_ports:
-        return []
-
-    child_meta = self.geom.get_part_meta(child_part_id)
-    child_bbox = child_meta["bbox"]
-    sym_order = child_meta.get("symmetry_order", 1)
-
-    existing_world_bboxes: List[List[float]] = []
-    for n in existing_nodes:
-        n_meta = self.geom.get_part_meta(n["part_id"])
-        n_tf = np.array(n["absolute_transform"], dtype=np.float32).reshape(4, 4)
-        existing_world_bboxes.append(
-            self.compute_world_bbox(n_meta["bbox"], n_tf[:3, :3], n_tf[:3, 3])
-        )
-
-    hypotheses: List[ConnectionHypothesis] = []
-    seen_keys: set = set()
-
-    for graph_crec in free_graph_ports:
-        g_pos_w = graph_crec.pos_world
-        g_norm_w = graph_crec.normal_world
-        g_pt = graph_crec.port_type
-        parent_idx = graph_crec.owner_part_index
-
-        for child_cp in child_ports:
-            c_pt = child_cp.port_type
-            if (g_pt, c_pt) not in COMPATIBLE_PORT_PAIRS:
-                continue
-
-            c_norm_local = child_cp.local_normal
-            c_len = float(np.linalg.norm(c_norm_local))
-            if c_len < 1e-5:
-                continue
-            c_norm_local = c_norm_local / c_len
-
-            target_norm_w = -g_norm_w
-            R_base = self._align_vectors(c_norm_local, target_norm_w)
-
-            if g_pt in _STUD_T or c_pt in _STUD_T:
-                yaw_steps = {4: [0.0, 90.0, 180.0, 270.0],
-                             2: [0.0, 180.0],
-                             1: [0.0]}.get(sym_order, [0.0, 90.0, 180.0, 270.0])
-            else:
-                yaw_steps = [0.0, 180.0]
-
-            for yaw_deg in yaw_steps:
-                if abs(yaw_deg) > 0.1:
-                    rad = math.radians(yaw_deg)
-                    ca, sa = math.cos(rad), math.sin(rad)
-                    nrm = float(np.linalg.norm(g_norm_w))
-                    axis = g_norm_w / (nrm + 1e-9)
-                    ux, uy, uz = float(axis[0]), float(axis[1]), float(axis[2])
-                    R_ax = np.array([
-                        [ca+ux*ux*(1-ca),    ux*uy*(1-ca)-uz*sa, ux*uz*(1-ca)+uy*sa],
-                        [uy*ux*(1-ca)+uz*sa, ca+uy*uy*(1-ca),    uy*uz*(1-ca)-ux*sa],
-                        [uz*ux*(1-ca)-uy*sa, uz*uy*(1-ca)+ux*sa, ca+uz*uz*(1-ca)],
-                    ], dtype=np.float32)
-                    R = R_ax @ R_base
-                else:
-                    R = R_base.copy()
-
-                c_pos_w = R @ child_cp.local_pos
-                t = g_pos_w - c_pos_w
-
-                if g_pt in _STUD_T or c_pt in _ANTI_T:
-                    t = np.round(t / 10.0) * 10.0
-
-                rot_key = tuple(int(round(x * 10)) for x in R.flatten())
-                key = (round(float(t[0]), 1), round(float(t[1]), 1),
-                       round(float(t[2]), 1), rot_key)
-                if key in seen_keys:
-                    continue
-                seen_keys.add(key)
-
-                child_w_bbox = self.compute_world_bbox(child_bbox, R, t)
-                if lazy_collision_check and any(
-                    self.check_bbox_overlap(child_w_bbox, eb, margin=4.2)
-                    for eb in existing_world_bboxes
-                ):
-                    continue
-
-                tf = np.eye(4, dtype=np.float32)
-                tf[:3, :3] = R
-                tf[:3, 3] = t
-
-                if not lazy_collision_check:
-                    is_valid, _ = self.solid_validator.validate_new_part_placement(
-                        child_part_id, tf, existing_nodes, penetration_threshold=1.5
-                    )
-                    if not is_valid:
-                        continue
-
-                conn_family = self._port_pair_to_family(g_pt, c_pt)
-                hypotheses.append(ConnectionHypothesis(
-                    child_part_id=child_part_id,
-                    child_element_id=child_element_id,
-                    rotation_matrix=R,
-                    translation=t,
-                    absolute_transform=tf,
-                    parent_part_index=parent_idx,
-                    matched_studs=[
-                        [float(g_pos_w[0]), float(g_pos_w[1]), float(g_pos_w[2])]
-                    ],
-                    stud_count=1,
-                    world_bbox=child_w_bbox,
-                    connector_family=conn_family,
-                    yaw_deg=yaw_deg,
-                    color_id=int(color_id),
-                    bridged_parents=1,
-                ))
-
-                if len(hypotheses) >= max_candidates:
-                    break
-            if len(hypotheses) >= max_candidates:
-                break
-        if len(hypotheses) >= max_candidates:
-            break
-
-    hypotheses.sort(
-        key=lambda h: (h.stud_count, h.parent_part_index), reverse=True
-    )
-    return hypotheses
-
-@staticmethod
-def _align_vectors(v_from: np.ndarray, v_to: np.ndarray) -> np.ndarray:
-    """
-    Returns rotation matrix R such that R @ v_from ~= v_to.
-    Uses Rodrigues' rotation formula.
-    """
-    v_from = v_from / (float(np.linalg.norm(v_from)) + 1e-9)
-    v_to   = v_to   / (float(np.linalg.norm(v_to))   + 1e-9)
-    dot = float(np.dot(v_from, v_to))
-    if dot >= 0.9999:
-        return np.eye(3, dtype=np.float32)
-    if dot <= -0.9999:
-        perp = np.array([1.0, 0.0, 0.0], dtype=np.float32)
-        if abs(float(np.dot(v_from, perp))) > 0.9:
-            perp = np.array([0.0, 1.0, 0.0], dtype=np.float32)
-        axis = np.cross(v_from, perp)
-        axis = axis / (float(np.linalg.norm(axis)) + 1e-9)
-        return (2.0 * np.outer(axis, axis) - np.eye(3)).astype(np.float32)
-    axis = np.cross(v_from, v_to).astype(np.float32)
-    axis = axis / (float(np.linalg.norm(axis)) + 1e-9)
-    angle = math.acos(max(-1.0, min(1.0, dot)))
-    c, s = math.cos(angle), math.sin(angle)
-    ux, uy, uz = float(axis[0]), float(axis[1]), float(axis[2])
-    return np.array([
-        [c+ux*ux*(1-c),    ux*uy*(1-c)-uz*s, ux*uz*(1-c)+uy*s],
-        [uy*ux*(1-c)+uz*s, c+uy*uy*(1-c),    uy*uz*(1-c)-ux*s],
-        [uz*ux*(1-c)-uy*s, uz*uy*(1-c)+ux*s, c+uz*uz*(1-c)],
-    ], dtype=np.float32)
-
-@staticmethod
-def _port_pair_to_family(g_pt, c_pt) -> str:
-    """Maps (graph PortType, child PortType) -> connector family string."""
-    from src.connectivity_db import PortType
-    if g_pt in (PortType.STUD, PortType.STUD_HOLLOW) and c_pt == PortType.ANTISTUD:
-        return "STUD"
-    if g_pt == PortType.ANTISTUD and c_pt in (PortType.STUD, PortType.STUD_HOLLOW):
-        return "UNDERSIDE_STUD_SOCKET"
-    if g_pt == PortType.PIN_HOLE and c_pt == PortType.PIN:
-        return "TECHNIC_PIN"
-    if g_pt == PortType.AXLE_HOLE and c_pt == PortType.AXLE:
-        return "TECHNIC_AXLE"
-    if g_pt == PortType.CLIP and c_pt == PortType.BAR:
-        return "CLIP_BAR"
-    if g_pt == PortType.BALL_SOCKET and c_pt == PortType.BALL:
-        return "BALL_JOINT"
-    return f"{g_pt.value}_to_{c_pt.value}"

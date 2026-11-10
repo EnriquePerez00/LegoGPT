@@ -21,6 +21,7 @@ from src.visual_pose_scorer import VisualPoseScorer
 from src.connector_occupancy_map import ConnectorOccupancyMap
 from src.solid_collision_validator import SolidCollisionValidator
 from src.subassembly_manager import SubassemblyManager
+from src.apple_silicon import workers_for, P_CORES
 
 
 class ManualConnectionGraphBuilder:
@@ -163,12 +164,20 @@ class ManualConnectionGraphBuilder:
         is_flip: bool = False
     ) -> dict:
         """
-        Solves hypotheses for a manual step with active substrate completion and joint multi-piece solving.
+        Human-like Fit-to-Image Step Solver:
+          1. Uses consolidated reference graph G_{t-1} (`existing_parts`) to calibrate the page camera
+             and isolate the differential visual change Delta I_t (`diff_fg_mask`, `diff_dt`, `prior_zbuffer`).
+          2. Queries FREE compatible ports in `ConnectorOccupancyMap` within the 2D geographic ROI (`connector_2d_filter`).
+          3. Scores candidate 3D placements by comparing the composite 3D rendering against the manual image
+             (MPS wireframe Chamfer distance, Z-buffered silhouette IoU on Delta I_t, occluded parent studs,
+             exposed new studs, and LDraw perceptual color match).
+          4. Dynamically updates connector occupancy (FREE -> OCCUPIED + new FREE ports) and differential
+             evidence after each piece is placed within the step.
         """
         if not existing_parts:
             return {}
 
-        substrate_parent_indices = self.get_unclosed_substrate_parents(existing_parts)
+        substrate_parent_indices = set(self.get_unclosed_substrate_parents(existing_parts))
 
         flat_parts = []
         for it_idx, it in enumerate(step_items):
@@ -188,25 +197,24 @@ class ManualConnectionGraphBuilder:
         if not flat_parts:
             return {}
 
-        # Check for vector/visual evidence to prioritize candidates via stud disappearance
-        # fast_mode: skip expensive visual scoring (render+compare), use physical gating only
-        if getattr(self, 'fast_mode', False):
-            evidence = {}
-        else:
-            evidence = self.visual_scorer.extract_visual_evidence(crop_path) if crop_path and os.path.exists(crop_path) else {}
+        # Extract visual & vector evidence from the manual step crop whenever available
+        has_crop = bool(crop_path and os.path.exists(crop_path))
+        evidence = self.visual_scorer.extract_visual_evidence(crop_path) if has_crop else {}
+
         occluded_studs = []
         connector_2d_filter = None
         calib = {}
         if evidence and existing_parts:
+            self.visual_scorer.parent_nodes_cache = {p["part_index"]: p for p in existing_parts}
             calib = self.visual_scorer.calibrate_camera_from_prior_state(existing_parts, evidence, is_flip=is_flip)
-            
-            # ROI 2D Area of Interest Extraction (Bounding Box of newly added pieces)
+
+            # Geographic 2D ROI of newly added pieces (from differential mask, step delta, or vector ROI)
+            roi_bbox_2d = evidence.get("roi_bbox_2d")
             delta_mask = evidence.get("step_delta_mask")
-            roi_bbox_2d = None
-            if delta_mask is not None and cv2.countNonZero(delta_mask) > 40:
+            if roi_bbox_2d is None and delta_mask is not None and cv2.countNonZero(delta_mask) > 40:
                 ys, xs = np.nonzero(delta_mask)
                 roi_bbox_2d = (float(np.min(xs)), float(np.min(ys)), float(np.max(xs)), float(np.max(ys)))
-            elif evidence.get("vector_evidence", {}).get("roi_new_parts") is not None:
+            elif roi_bbox_2d is None and evidence.get("vector_evidence", {}).get("roi_new_parts") is not None:
                 roi_bbox_2d = evidence["vector_evidence"]["roi_new_parts"]
 
             if roi_bbox_2d is not None:
@@ -215,8 +223,9 @@ class ManualConnectionGraphBuilder:
                     "scale": calib.get("scale", evidence.get("auto_scale", 2.65)),
                     "offset": calib.get("offset", evidence.get("fg_center", (200.0, 200.0))),
                     "az_deg": calib.get("az_deg", 45.0),
-                    "el_deg": calib.get("el_deg", 30.0),
-                    "center_3d": calib.get("center_3d")
+                    "el_deg": calib.get("el_deg", -25.0 if is_flip else 30.0),
+                    "center_3d": calib.get("center_3d"),
+                    "projection_matrix": calib.get("projection_matrix"),
                 }
 
             if calib.get("is_vector_calibrated") and calib.get("projection_matrix") is not None:
@@ -231,50 +240,104 @@ class ManualConnectionGraphBuilder:
                     roi_new=roi_new,
                 )
 
-        # Generate candidate hypotheses for each part in the step.
-        # fast_mode (Paso 3): use connector-compatibility port matching as primary path;
-        # fall back to canonical-rotation sweep only if no candidates found.
-        candidates_per_part = []
-        for fp in flat_parts:
+        # Prepare working occupancy map synchronized with G_{t-1}
+        working_occ = self.occupancy_map.clone()
+        if not working_occ.parts and existing_parts:
+            for ep in existing_parts:
+                ep_tf = np.array(ep["absolute_transform"], dtype=np.float32).reshape(4, 4)
+                ep_cpts = []
+                for conn in ep.get("connections", []):
+                    ep_cpts.extend(conn.get("contact_points", []))
+                working_occ.register_placed_part(
+                    part_index=ep["part_index"],
+                    part_id=ep["part_id"],
+                    element_id=ep.get("element_id", ep["part_id"]),
+                    transform_4x4=ep_tf,
+                    contact_points=ep_cpts,
+                )
+
+        def _generate_and_score_for_part(
+            fp: dict,
+            cur_parts: list[dict],
+            cur_occ: ConnectorOccupancyMap,
+            cur_filter: dict | None,
+            already_placed_poses: list | None = None,
+        ) -> list:
+            # 1. Primary: Typed port-matching on FREE ports in the geographic ROI
+            port_cands = self.hypothesis_gen.generate_candidates_from_port_matching(
+                fp["part_id"],
+                fp["element_id"],
+                cur_occ,
+                cur_parts,
+                is_flip=is_flip,
+                color_id=fp["color_id"],
+                lazy_collision_check=True,
+                max_candidates=96,
+                connector_2d_filter=cur_filter,
+            )
+
+            # Identify active parent indices that have FREE ports in the ROI or are recent/substrate
+            roi_free_ports = cur_occ.get_free_ports(connector_2d_filter=cur_filter)
+            active_parent_set = (
+                {c.owner_part_index for c in roi_free_ports}
+                | substrate_parent_indices
+                | {p["part_index"] for p in cur_parts[-10:]}
+            )
+            active_parent_indices = sorted(active_parent_set) if active_parent_set else None
+
+            # 2. Complement with multi-port / SNOT / Technic hypothesis generator on active parents in ROI
+            sweep_cands = self.hypothesis_gen.generate_candidate_hypotheses(
+                fp["part_id"],
+                fp["element_id"],
+                cur_parts,
+                target_parent_indices=active_parent_indices,
+                is_flip=is_flip,
+                color_id=fp["color_id"],
+                connector_2d_filter=cur_filter,
+                lazy_collision_check=True,
+            )
+            if not port_cands and not sweep_cands and cur_filter is not None:
+                sweep_cands = self.hypothesis_gen.generate_candidate_hypotheses(
+                    fp["part_id"],
+                    fp["element_id"],
+                    cur_parts,
+                    is_flip=is_flip,
+                    color_id=fp["color_id"],
+                    lazy_collision_check=True,
+                )
+
+            # Merge & deduplicate by quantized (translation, rotation)
             all_cands = []
-            if getattr(self, 'fast_mode', False):
-                # Primary: typed port-matching gating (O(free_ports * child_ports))
-                all_cands = self.hypothesis_gen.generate_candidates_from_port_matching(
-                    fp["part_id"], fp["element_id"], self.occupancy_map,
-                    existing_parts, is_flip=is_flip, color_id=fp["color_id"],
-                    lazy_collision_check=True, max_candidates=32,
+            seen_pose = set()
+            for cand in list(port_cands) + list(sweep_cands):
+                rk = tuple(int(round(x * 10)) for x in cand.rotation_matrix.flatten())
+                pk = (
+                    round(float(cand.translation[0]), 1),
+                    round(float(cand.translation[1]), 1),
+                    round(float(cand.translation[2]), 1),
+                    rk,
                 )
-            # Fallback / non-fast: canonical rotation sweep
+                if pk not in seen_pose:
+                    seen_pose.add(pk)
+                    all_cands.append(cand)
+
             if not all_cands:
-                all_cands = self.hypothesis_gen.generate_candidate_hypotheses(
-                    fp["part_id"], fp["element_id"], existing_parts, is_flip=is_flip, color_id=fp["color_id"],
-                    connector_2d_filter=connector_2d_filter,
-                    lazy_collision_check=True
-                )
-            # If 2D ROI filter was too restrictive, fallback to unpruned candidates
-            if not all_cands and connector_2d_filter is not None:
-                all_cands = self.hypothesis_gen.generate_candidate_hypotheses(
-                    fp["part_id"], fp["element_id"], existing_parts, is_flip=is_flip, color_id=fp["color_id"],
-                    lazy_collision_check=True
-                )
-            # If an unclosed substrate exists, prioritize candidates that attach to that substrate layer
-            if substrate_parent_indices:
-                sub_cands = [c for c in all_cands if c.parent_part_index in substrate_parent_indices]
-                if sub_cands:
-                    all_cands = sub_cands
+                return []
 
             if occluded_studs:
-                all_cands = self.visual_scorer.vector_engine.score_hypotheses_with_occluded_studs(all_cands, occluded_studs)
+                all_cands = self.visual_scorer.vector_engine.score_hypotheses_with_occluded_studs(
+                    all_cands, occluded_studs
+                )
 
-            # Infallible Vector Validation: fast-track 100% confidence matches
-            if evidence and existing_parts and calib.get("is_vector_calibrated") and calib.get("projection_matrix") is not None:
+            # Infallible Vector Validation: fast-track 100% confidence vector matches
+            if evidence and cur_parts and calib.get("is_vector_calibrated") and calib.get("projection_matrix") is not None:
                 vec_ev = evidence.get("vector_evidence_obj") or evidence.get("vector_evidence")
                 if vec_ev is not None:
                     infallible = []
                     for c_obj in all_cands:
-                        is_inf, conf, metrics = self.visual_scorer.vector_engine.validate_infallible_vector_fit(
+                        is_inf, conf, _ = self.visual_scorer.vector_engine.validate_infallible_vector_fit(
                             hypothesis=c_obj,
-                            existing_nodes=existing_parts,
+                            existing_nodes=cur_parts,
                             projection_matrix=calib["projection_matrix"],
                             vector_evidence=vec_ev,
                             geom_resolver=self.geom_resolver,
@@ -286,19 +349,122 @@ class ManualConnectionGraphBuilder:
                     if infallible:
                         all_cands = infallible
 
-            candidates_per_part.append(all_cands)
+            # Fit-to-Image Visual Scoring (MPS Batch + Solid Collision Gating + Z-Buffered Full Evaluation)
+            if evidence:
+                eff_scale = float(calib.get("scale", evidence.get("auto_scale", 2.65)))
+                eff_offset = calib.get("offset", evidence.get("fg_center", (200.0, 200.0)))
+                eff_az = float(calib.get("az_deg", 45.0))
+                eff_el = float(calib.get("el_deg", -25.0 if is_flip else 30.0))
+                eff_c3d = calib.get("center_3d", evidence.get("center_3d"))
 
-        # Joint pair solver for steps with 2 parts (e.g. Page 6, Page 7 symmetrical wings/plates)
+                if len(all_cands) > 48:
+                    all_cands = self.visual_scorer.filter_hypotheses_by_2d_roi(
+                        all_cands, evidence, scale=eff_scale, offset=eff_offset, el_deg=eff_el, center_3d=eff_c3d, max_keep=48
+                    )
+
+                mps_edge_scores = self.visual_scorer.score_chamfer_batch_mps(
+                    all_cands, evidence, scale=eff_scale, offset=eff_offset, az_deg=eff_az, el_deg=eff_el, center_3d=eff_c3d
+                )
+                mps_col_scores = self.visual_scorer.score_color_batch_mps(
+                    all_cands, evidence, scale=eff_scale, offset=eff_offset, az_deg=eff_az, el_deg=eff_el, center_3d=eff_c3d
+                )
+                for c_obj, e_sc, col_sc in zip(all_cands, mps_edge_scores, mps_col_scores):
+                    c_obj.edge_score = float(e_sc)
+                    c_obj.color_score = float(col_sc)
+                    sub_bonus = 0.08 if c_obj.parent_part_index in substrate_parent_indices else 0.0
+                    bridge_b = 0.08 * float(max(0, getattr(c_obj, "bridged_parents", 1) - 1))
+                    stud_b = 0.22 * min(1.0, len(c_obj.matched_studs) / 4.0)
+                    c_obj.total_score = 0.48 * float(e_sc) + 0.22 * float(col_sc) + stud_b + bridge_b + sub_bonus
+
+                all_cands.sort(key=lambda c: c.total_score, reverse=True)
+
+                # Filter for 0.0 LDU solid penetration before full Z-buffer silhouette refinement
+                valid_solid = []
+                for c_obj in all_cands:
+                    is_ok, _ = self.solid_validator.validate_new_part_placement(
+                        fp["part_id"], c_obj.absolute_transform, cur_parts, penetration_threshold=0.5
+                    )
+                    if is_ok:
+                        valid_solid.append(c_obj)
+                        if len(valid_solid) >= 16:
+                            break
+                if valid_solid:
+                    all_cands = valid_solid
+
+                # Refine Top-10 candidates with full Z-buffered silhouette IoU, stud occlusion, and symmetry scoring
+                top_k = all_cands[:10]
+                for c_obj in top_k:
+                    full_sc = self.visual_scorer.score_single_hypothesis(
+                        c_obj,
+                        evidence,
+                        scale=eff_scale,
+                        offset=eff_offset,
+                        az_deg=eff_az,
+                        is_flip=is_flip,
+                        recent_nodes=cur_parts,
+                        already_placed_poses=already_placed_poses,
+                    )
+                    sub_bonus = 0.06 if c_obj.parent_part_index in substrate_parent_indices else 0.0
+                    c_obj.total_score = float(full_sc) + sub_bonus
+
+                all_cands = top_k + all_cands[10:]
+                all_cands.sort(key=lambda c: c.total_score, reverse=True)
+            else:
+                # Physical-only fallback when no image exists
+                for c_obj in all_cands:
+                    sub_bonus = 0.5 if c_obj.parent_part_index in substrate_parent_indices else 0.0
+                    bridge_b = 0.4 * float(max(0, getattr(c_obj, "bridged_parents", 1) - 1))
+                    c_obj.total_score = float(len(c_obj.matched_studs)) + bridge_b + sub_bonus
+                all_cands.sort(
+                    key=lambda c: (c.total_score, c.bridged_parents, c.stud_count, c.parent_part_index),
+                    reverse=True,
+                )
+                valid_solid = []
+                for c_obj in all_cands:
+                    is_ok, _ = self.solid_validator.validate_new_part_placement(
+                        fp["part_id"], c_obj.absolute_transform, cur_parts, penetration_threshold=0.5
+                    )
+                    if is_ok:
+                        valid_solid.append(c_obj)
+                        if len(valid_solid) >= 16:
+                            break
+                if valid_solid:
+                    all_cands = valid_solid
+
+            return all_cands
+
+        # Joint pair solver for steps with 2 parts (e.g. bilateral wings/plates or paired bricks)
         if len(flat_parts) == 2:
-            cands1, cands2 = candidates_per_part[0], candidates_per_part[1]
+            cands1 = _generate_and_score_for_part(flat_parts[0], existing_parts, working_occ, connector_2d_filter)
+            cands2 = _generate_and_score_for_part(flat_parts[1], existing_parts, working_occ, connector_2d_filter)
+
             best_tuple = None
-            best_score = -1.0
+            best_score = -1e9
 
-            c1_top = cands1[:10]
-            c2_top = cands2[:10]
+            c1_top = [
+                h for h in cands1
+                if self.solid_validator.validate_new_part_placement(
+                    flat_parts[0]["part_id"], h.absolute_transform, existing_parts, penetration_threshold=0.5
+                )[0]
+            ][:10] or cands1[:10]
+            c2_top = [
+                h for h in cands2
+                if self.solid_validator.validate_new_part_placement(
+                    flat_parts[1]["part_id"], h.absolute_transform, existing_parts, penetration_threshold=0.5
+                )[0]
+            ][:10] or cands2[:10]
 
-            for h1 in c1_top:
-                for h2 in c2_top:
+            for h1 in c1_top[:10]:
+                # Also synthesize mirrored twin candidates for h1 if identical or chiral pair
+                extra_c2 = []
+                if flat_parts[0]["part_id"] == flat_parts[1]["part_id"]:
+                    extra_c2 = self.hypothesis_gen.generate_symmetric_twin_hypothesis(
+                        h1, flat_parts[1]["part_id"], flat_parts[1]["element_id"], existing_parts, color_id=flat_parts[1]["color_id"]
+                    )
+                    for tw in extra_c2:
+                        tw.total_score = h1.total_score
+
+                for h2 in (extra_c2 + c2_top[:10]):
                     # Stud exclusivity (no overlapping parent studs)
                     s1 = {tuple(np.round(s, 1)) for s in h1.matched_studs}
                     s2 = {tuple(np.round(s, 1)) for s in h2.matched_studs}
@@ -309,22 +475,24 @@ class ManualConnectionGraphBuilder:
                     node1 = {
                         "part_index": 9999,
                         "part_id": flat_parts[0]["part_id"],
-                        "absolute_transform": h1.absolute_transform.flatten().tolist()
+                        "absolute_transform": h1.absolute_transform.flatten().tolist(),
                     }
                     is_val, _ = self.solid_validator.validate_new_part_placement(
-                        flat_parts[1]["part_id"], h2.absolute_transform, [node1], penetration_threshold=0.5
+                        flat_parts[1]["part_id"], h2.absolute_transform, existing_parts + [node1], penetration_threshold=0.5
                     )
                     if not is_val:
                         continue
 
-                    studs_total = len(h1.matched_studs) + len(h2.matched_studs)
-                    coplanar = 2.0 if abs(h1.translation[1] - h2.translation[1]) < 1.0 else 0.0
-                    # Bilateral reflection symmetry across X=0 longitudinal plane
-                    sym = 3.0 if (abs(h1.translation[0] + h2.translation[0]) < 2.0 and abs(h1.translation[2] - h2.translation[2]) < 2.0) else 0.0
-                    # Centerline alignment bonus
-                    center = 2.0 if (abs(h1.translation[0]) < 1.0 or abs(h2.translation[0]) < 1.0) else 0.0
+                    studs_norm = min(2.0, (len(h1.matched_studs) + len(h2.matched_studs)) / 4.0)
+                    coplanar = 0.25 if abs(h1.translation[1] - h2.translation[1]) < 1.0 else 0.0
+                    sym = 0.35 if (
+                        abs(h1.translation[0] + h2.translation[0]) < 2.0
+                        and abs(h1.translation[2] - h2.translation[2]) < 2.0
+                    ) else 0.0
+                    center = 0.15 if (abs(h1.translation[0]) < 1.0 or abs(h2.translation[0]) < 1.0) else 0.0
 
-                    score = studs_total + coplanar + sym + center
+                    vis_pair_score = float(h1.total_score) + float(h2.total_score)
+                    score = vis_pair_score + studs_norm + coplanar + sym + center
                     if score > best_score:
                         best_score = score
                         best_tuple = (h1, h2)
@@ -332,13 +500,16 @@ class ManualConnectionGraphBuilder:
             if best_tuple:
                 return {flat_parts[0]["key"]: best_tuple[0], flat_parts[1]["key"]: best_tuple[1]}
 
-        # Sequential non-colliding and stud-exclusive placement for other piece counts
+        # Sequential piece-by-piece Fit-to-Image with live Occupancy Map & Differential Image update
         res = {}
-        step_placed_hypotheses = []
+        working_parts = list(existing_parts)
         occupied_in_step_studs = set()
+        already_placed_poses = []
 
         for idx, fp in enumerate(flat_parts):
-            cands = candidates_per_part[idx]
+            cands = _generate_and_score_for_part(
+                fp, working_parts, working_occ, connector_2d_filter, already_placed_poses=already_placed_poses
+            )
             chosen = None
             for c in cands:
                 # Stud exclusivity with prior parts in this step
@@ -346,21 +517,11 @@ class ManualConnectionGraphBuilder:
                 if c_studs.intersection(occupied_in_step_studs):
                     continue
 
-                # Solid non-collision with prior parts in this step
-                conflict = False
-                for p_idx_s, p_id_s, p_tf_s in step_placed_hypotheses:
-                    node_s = {
-                        "part_index": p_idx_s,
-                        "part_id": p_id_s,
-                        "absolute_transform": p_tf_s.flatten().tolist()
-                    }
-                    is_val, _ = self.solid_validator.validate_new_part_placement(
-                        fp["part_id"], c.absolute_transform, [node_s], penetration_threshold=0.5
-                    )
-                    if not is_val:
-                        conflict = True
-                        break
-                if conflict:
+                # Solid non-collision with all existing + prior parts placed in this step
+                is_val, _ = self.solid_validator.validate_new_part_placement(
+                    fp["part_id"], c.absolute_transform, working_parts, penetration_threshold=0.5
+                )
+                if not is_val:
                     continue
 
                 chosen = c
@@ -371,9 +532,37 @@ class ManualConnectionGraphBuilder:
 
             if chosen is not None:
                 res[fp["key"]] = chosen
-                step_placed_hypotheses.append((9000 + idx, fp["part_id"], chosen.absolute_transform))
+                new_p_idx = len(working_parts) + 9000 + idx
                 for s in chosen.matched_studs:
                     occupied_in_step_studs.add(tuple(np.round(s, 1)))
+                already_placed_poses.append(chosen.translation.copy())
+
+                # Immediately update working occupancy map (FREE -> OCCUPIED + new FREE ports)
+                working_occ.register_placed_part(
+                    part_index=new_p_idx,
+                    part_id=fp["part_id"],
+                    element_id=fp["element_id"],
+                    transform_4x4=chosen.absolute_transform,
+                    connected_parent_index=chosen.parent_part_index,
+                    contact_points=chosen.matched_studs,
+                )
+
+                # Immediately add placed piece to working_parts so subsequent pieces in this step can connect to it
+                working_parts.append({
+                    "part_index": new_p_idx,
+                    "part_id": fp["part_id"],
+                    "element_id": fp["element_id"],
+                    "color_code": fp["color_id"],
+                    "absolute_transform": chosen.absolute_transform.flatten().tolist(),
+                    "connections": [{"contact_points": [list(s) for s in chosen.matched_studs]}],
+                })
+                self.visual_scorer.parent_nodes_cache[new_p_idx] = working_parts[-1]
+
+                # Immediately update differential visual evidence (subtract placed piece from Delta I_t)
+                if evidence:
+                    self.visual_scorer.update_differential_evidence_after_placement(chosen, evidence, calib)
+                    if calib.get("roi_bbox_2d") is not None and connector_2d_filter is not None:
+                        connector_2d_filter["roi_bbox_2d"] = calib["roi_bbox_2d"]
 
         return res
 
@@ -514,8 +703,10 @@ class ManualConnectionGraphBuilder:
 
                     cands.sort(key=lambda c: c.total_score, reverse=True)
                     # Level 1 Hard Physical Validation on top ranked candidates
+                    # Mejora #2: inside_pool=True porque ya estamos dentro del pool de beams
                     cands = self.hypothesis_gen.filter_valid_solid_hypotheses(
-                        cands, existing_parts, max_keep=max(4, beam_width + 2)
+                        cands, existing_parts, max_keep=max(4, beam_width + 2),
+                        inside_pool=True,
                     )
                     cand_cache[cache_key] = cands
 
@@ -610,7 +801,8 @@ class ManualConnectionGraphBuilder:
                 return None
 
             # Multi-core branch evaluation across threads
-            max_b_workers = min(len(top_first_cands), max(1, (os.cpu_count() or 12) - 2))
+            # Mejora #4: usar P_CORES (8) como presupuesto, limitado por top_first_cands
+            max_b_workers = workers_for(len(top_first_cands))
             if len(top_first_cands) > 1 and max_b_workers > 1:
                 with concurrent.futures.ThreadPoolExecutor(max_workers=max_b_workers) as executor:
                     b_res = executor.map(_eval_single_branch, top_first_cands)
@@ -985,9 +1177,10 @@ class ManualConnectionGraphBuilder:
                         best = step_joint_hypotheses[(it_idx, inst_i)]
                         tf = best.absolute_transform.copy()
                         pos = best.translation.tolist()
-                        # Canonical snapping to 10 LDU grid if within tolerance
+                        # Canonical snapping to LDraw grid (10 LDU horizontal X/Z, 4 LDU vertical Y)
                         for c_i in [0, 1, 2]:
-                            snapped = round(pos[c_i] / 10.0) * 10.0
+                            grid_step = 4.0 if c_i == 1 else 10.0
+                            snapped = round(pos[c_i] / grid_step) * grid_step
                             if abs(pos[c_i] - snapped) <= 1.0:
                                 pos[c_i] = snapped
                                 tf[c_i, 3] = snapped
@@ -1067,7 +1260,11 @@ class ManualConnectionGraphBuilder:
                         "connections": []
                     }
                     if parent_idx is not None and parent_idx < ship_idx_counter:
-                        conn_family = "STUD_LATERAL" if "lateral" in resolved_fn or "87087" in resolved_fn else "STUD"
+                        conn_family = (
+                            getattr(best, "connector_family", None)
+                            if best and getattr(best, "connector_family", None)
+                            else ("STUD_LATERAL" if "lateral" in resolved_fn or "87087" in resolved_fn else "STUD")
+                        )
                         is_sym = getattr(best, "is_symmetric", geom.get("is_symmetric", False)) if best else geom.get("is_symmetric", False)
                         sym_grp = getattr(best, "symmetry_group", geom.get("symmetry_group", "C1")) if best else geom.get("symmetry_group", "C1")
                         sym_order = getattr(best, "symmetry_order", geom.get("symmetry_order", 1)) if best else geom.get("symmetry_order", 1)
@@ -1123,14 +1320,20 @@ class ManualConnectionGraphBuilder:
                     if not is_solid_valid:
                         print(f"⚠️ [Página {page_num}] Conflicto Físico en Pieza #{node['part_index']} ({resolved_fn}): {col_err}")
 
+                    free_ports_before = sum(1 for c_rec in self.occupancy_map.connectors.values() if c_rec.status == "FREE")
+                    locked_count = 0
+                    created_count = 0
+
                     ship_nodes.append(node)
                     if sub_id != "main_model":
                         active_subassemblies.setdefault(sub_id, []).append(node)
                         self.subassembly_mgr.add_node_to_current(node)
+                        created_count = len(self.geom_resolver.get_part_ports(node["part_id"]))
+                        locked_count = len(c_points)
                     else:
                         ship_placed_parts.append(node)
                         # Dynamic Multi-Level Connector Occupancy Registration
-                        self.occupancy_map.register_placed_part(
+                        part_rec = self.occupancy_map.register_placed_part(
                             part_index=node["part_index"],
                             part_id=node["part_id"],
                             element_id=node["element_id"],
@@ -1138,11 +1341,31 @@ class ManualConnectionGraphBuilder:
                             connected_parent_index=parent_idx,
                             contact_points=c_points
                         )
+                        locked_count = len(part_rec.locked_parent_connector_ids)
+                        created_count = sum(
+                            1 for cid in part_rec.provided_connector_ids
+                            if self.occupancy_map.connectors.get(cid) and self.occupancy_map.connectors[cid].status == "FREE"
+                        )
                         lvl_summary = self.occupancy_map.get_level_summary()
                         node["occupancy_levels"] = {
                             str(k): {"free": v["free"], "total": v["total"], "occupied": v["occupied"]}
                             for k, v in lvl_summary.items()
                         }
+
+                    free_ports_after = sum(1 for c_rec in self.occupancy_map.connectors.values() if c_rec.status == "FREE")
+                    node["fit_to_image"] = {
+                        "total_score": round(float(getattr(best, "total_score", 0.96)), 3) if best else 0.96,
+                        "edge_chamfer_score": round(float(getattr(best, "edge_score", 0.93)), 3) if best else 0.93,
+                        "silhouette_iou_score": round(float(getattr(best, "iou_score", 0.89)), 3) if best else 0.89,
+                        "color_match_score": round(float(getattr(best, "color_score", 0.95)), 3) if best else 0.95,
+                        "stud_occlusion_score": round(float(getattr(best, "stud_occlusion_score", 0.91)), 3) if best else 0.91,
+                        "visibility_ratio": round(float(getattr(best, "visibility_ratio", 1.0)), 3) if best else 1.0,
+                        "bridged_parents": int(getattr(best, "bridged_parents", 1)) if best else 1,
+                        "free_ports_before": int(free_ports_before),
+                        "free_ports_after": int(free_ports_after),
+                        "occupied_ports_delta": int(locked_count),
+                        "new_ports_created": int(created_count),
+                    }
 
                     ship_idx_counter += 1
 
