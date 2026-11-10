@@ -3,6 +3,7 @@ import sys
 import glob
 import sqlite3
 import time
+import psutil
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from src.storage_guard import assert_disk_space_or_exit, get_disk_status, MIN_FREE_GB
 from scripts.build_sequence_graph import process_model_to_sequence_graph
@@ -10,10 +11,17 @@ from scripts.build_sequence_graph import process_model_to_sequence_graph
 DB_PATH = "data/catalog/models_catalog.db"
 OUTPUT_DIR = "data/sequences"
 
+def check_memory_headroom(max_ram_percent: float = 80.0) -> bool:
+    """Monitors Apple Silicon Unified Memory (48 GB) to maintain a 75-80% safety buffer."""
+    vm = psutil.virtual_memory()
+    return vm.percent < max_ram_percent
+
 def process_worker(file_path: str):
-    # Check disk space limit
+    # Check disk space limit and RAM safety headroom
     if not get_disk_status()["is_safe"]:
         return None, "DISK_LIMIT_REACHED"
+    if not check_memory_headroom(85.0):
+        return {"model": os.path.basename(file_path), "error": "Memory threshold (>85%) exceeded", "success": False}, "MEMORY_PRESSURE"
     try:
         res = process_model_to_sequence_graph(file_path, output_pt_dir=OUTPUT_DIR)
         return res, "OK"
@@ -26,9 +34,15 @@ def run_batch_graph_extraction(max_workers: int = None):
     
     if max_workers is None:
         # User hardware rules: Apple Silicon M4 with 12 cores, reserve 2-4 cores
-        max_workers = max(1, os.cpu_count() - 2)
+        max_workers = max(1, (os.cpu_count() or 12) - 2)
         
-    files = sorted(glob.glob("data/omr_raw/*.mpd") + glob.glob("data/mocs/*.mpd") + glob.glob("data/*.ldr"))
+    files = sorted(
+        glob.glob("data/omr_raw/*.mpd")
+        + glob.glob("data/mocs/*.mpd")
+        + glob.glob("data/mocs/*.io")
+        + glob.glob("data/*.ldr")
+        + glob.glob("data/*.mbx")
+    )
     # Filter only relevant sequence files
     valid_files = [f for f in files if not f.endswith("_sequence_vlm.ldr")]
     

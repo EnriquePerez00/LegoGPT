@@ -28,9 +28,44 @@ class LDrawGeometryResolver:
         self.faces_cache = {}
         self.part_resolution_cache = {}
 
+        # M4 Hardware Optimization: In-Memory File Indexing (O(1) memory lookup, zero disk exists checks)
+        self._file_index: dict[str, str] = {}
+        self._build_in_memory_file_index()
+
+    def _build_in_memory_file_index(self):
+        """Scans LDraw libraries once at startup and caches full filepaths in memory."""
+        scan_dirs = [self.ldraw_base_dir]
+        if self.studio_ldraw_dir and os.path.exists(self.studio_ldraw_dir):
+            scan_dirs.append(self.studio_ldraw_dir)
+
+        for base_d in scan_dirs:
+            if not os.path.exists(base_d):
+                continue
+            for root, _, files in os.walk(base_d):
+                for f in files:
+                    fl = f.lower()
+                    full_p = os.path.join(root, f)
+                    rel_p = os.path.relpath(full_p, base_d).replace("\\", "/").lower()
+                    if rel_p not in self._file_index:
+                        self._file_index[rel_p] = full_p
+                    if fl not in self._file_index:
+                        self._file_index[fl] = full_p
+
     def _resolve_file(self, filename: str) -> str:
-        """Finds file in parts/, p/, or subdirectories (e.g. s/ or 8/) across local and Studio libraries."""
-        fn_clean = filename.replace("\\", "/")
+        """Finds file via in-memory O(1) index, falling back to disk checks only if unindexed."""
+        if not filename:
+            return None
+        fn_clean = filename.replace("\\", "/").strip().lower()
+
+        # 1. Fast O(1) memory lookup
+        if fn_clean in self._file_index:
+            return self._file_index[fn_clean]
+
+        base_name = os.path.basename(fn_clean)
+        if base_name in self._file_index:
+            return self._file_index[base_name]
+
+        # 2. Disk fallback (rarely needed)
         candidates = [
             os.path.join(self.parts_dir, fn_clean),
             os.path.join(self.p_dir, fn_clean),
@@ -47,6 +82,7 @@ class LDrawGeometryResolver:
 
         for c in candidates:
             if os.path.exists(c):
+                self._file_index[fn_clean] = c
                 return c
         return None
 
@@ -426,7 +462,6 @@ class LDrawGeometryResolver:
                 if not has_parsed_lateral_studs:
                     if not any(np.linalg.norm(s["pos"] - lat_pos) < 4.0 for s in unique_studs):
                         unique_studs.append({"pos": lat_pos, "normal": lat_norm})
-                inferred_sockets.append(lat_pos)
 
         if not inferred_sockets:
             inferred_sockets.append(np.array([0.0, float(ymax), 0.0], dtype=np.float32))
@@ -672,10 +707,19 @@ class LDrawGeometryResolver:
             ))
 
         # ── 2. Anti-stud sockets (female) ─────────────────────────────────
+        bbox = meta.get("bbox", [-10, 0, -10, 10, 8, 10])
+        ymax_b = float(bbox[4])
         for s_pos in meta.get("sockets", []):
             pos = np.array(s_pos, dtype=np.float32)
-            # Sockets face downward (+Y in LDraw = toward ground when upright)
-            norm = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+            # Bottom sockets lie on the bottom face (y ~= ymax) and face downward (+Y in LDraw).
+            # Lateral sockets on SNOT parts lie at mid_y and face outward along X or Z.
+            if abs(float(pos[1]) - ymax_b) <= 2.5:
+                norm = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+            else:
+                if abs(float(pos[0])) >= abs(float(pos[2])):
+                    norm = np.array([1.0 if float(pos[0]) >= 0.0 else -1.0, 0.0, 0.0], dtype=np.float32)
+                else:
+                    norm = np.array([0.0, 0.0, 1.0 if float(pos[2]) >= 0.0 else -1.0], dtype=np.float32)
             ports.append(ConnectionPort(
                 id=_next_id("antistud"),
                 port_type=PortType.ANTISTUD,

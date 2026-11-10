@@ -65,7 +65,7 @@ def create_studio_io(out_path: str, nodes: list, model_title: str) -> str:
 
 
 def generate_io_and_graph(
-    pdf_path: str = "data/manuals/75295-1_Millennium_Falcon_Microfighter.pdf",
+    pdf_path: str = "data/manual/official/75295-1_Millennium_Falcon_Microfighter.pdf",
     set_num: str = "75295-1",
     db_path: str = "data/catalog/models_catalog.db",
     downloads_dir: str = "/Users/I764690/Downloads"
@@ -83,8 +83,18 @@ def generate_io_and_graph(
     # Save JSON graph locally in outputs/ and data/
     os.makedirs("outputs", exist_ok=True)
     json_path = f"outputs/{set_num}_construction_graph.json"
+
+    def default_converter(o):
+        if isinstance(o, np.ndarray):
+            return o.tolist()
+        if isinstance(o, (np.floating, np.float32, np.float64)):
+            return float(o)
+        if isinstance(o, (np.integer, np.int32, np.int64)):
+            return int(o)
+        raise TypeError(f"Object of type {o.__class__.__name__} is not JSON serializable")
+
     with open(json_path, "w", encoding="utf-8") as f:
-        json.dump(graph, f, indent=2)
+        json.dump(graph, f, indent=2, default=default_converter)
     print(f"Grafo de construcción guardado en: {json_path}")
 
     # Reference without version suffix (e.g. '75295')

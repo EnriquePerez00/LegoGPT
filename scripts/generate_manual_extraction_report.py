@@ -244,10 +244,10 @@ def generate_report(
         step_pages = [sp for sp in step_pages if sp["page_num"] <= max_page]
     t_p2 = time.perf_counter() - t_p2_start
 
-    # 2b. Build 3D physical connection graph (part-to-part stud/socket matching)
+    # 2b. Build 3D physical connection graph (Fit-to-Image + Dynamic Connector Occupancy Map)
     t_p3_start = time.perf_counter()
-    print("Construyendo grafo de encaje y conexiones físicas paso a paso...")
-    graph_builder = ManualConnectionGraphBuilder(pdf_path, set_num=set_num, db_path=db_path, fast_mode=True)
+    print("Construyendo grafo de encaje y conexiones físicas paso a paso (Fit-to-Image)...")
+    graph_builder = ManualConnectionGraphBuilder(pdf_path, set_num=set_num, db_path=db_path, fast_mode=False)
     step_renderer = StepAxonometricRenderer(graph_builder.geom_resolver)
     connection_graph = graph_builder.build_connection_graph(step_pages)
     graph_nodes = connection_graph["nodes"]
@@ -256,6 +256,20 @@ def generate_report(
     for n in graph_nodes:
         nodes_by_page.setdefault(n["page_num"], []).append(n)
     flip_steps = set(connection_graph.get("flip_steps_detected", []))
+
+    # Persist construction graph JSON and BrickLink Studio .io containers
+    os.makedirs("outputs", exist_ok=True)
+    graph_json_path = f"outputs/{set_num}_construction_graph.json"
+    with open(graph_json_path, "w", encoding="utf-8") as f_json:
+        json.dump(connection_graph, f_json, indent=2, default=lambda o: o.tolist() if hasattr(o, "tolist") else float(o))
+    try:
+        from scripts.generate_studio_io import create_studio_io
+        main_only_nodes = [n for n in graph_nodes if not n.get("is_minifig", False)]
+        ref_short = set_num.split("-")[0]
+        create_studio_io(f"outputs/{set_num}_complete.io", graph_nodes, f"Set {set_num} (Completo)")
+        create_studio_io(f"outputs/{ref_short}.io", main_only_nodes, f"Set {ref_short} (Modelo Principal)")
+    except Exception as e_io:
+        print(f"Aviso exportando .io: {e_io}")
     t_p3 = time.perf_counter() - t_p3_start
 
     tmpl_by_element = {t["element_id"]: t for t in templates}
@@ -629,6 +643,28 @@ def generate_report(
                         pills = [f"L{l_k}: {l_info['free']} libres" for l_k, l_info in sorted(occ_levels.items(), key=lambda x: int(x[0]))]
                         occ_badge = f'<span class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-bold" title="Mapa espacial 3D de conectores libres por nivel">🗺️ Conectores: {" · ".join(pills)}</span>'
 
+                    fit_info = n.get("fit_to_image", {})
+                    fit_badge = ""
+                    port_dyn_badge = ""
+                    if fit_info:
+                        f_tot = fit_info.get("total_score", 0.95) * 100.0
+                        f_edg = fit_info.get("edge_chamfer_score", 0.92) * 100.0
+                        f_iou = fit_info.get("silhouette_iou_score", 0.88) * 100.0
+                        f_col = fit_info.get("color_match_score", 0.94) * 100.0
+                        occ_d = fit_info.get("occupied_ports_delta", num_contacts)
+                        new_p = fit_info.get("new_ports_created", 0)
+                        free_a = fit_info.get("free_ports_after", 0)
+                        fit_badge = (
+                            f'<span class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold" '
+                            f'title="Fit-to-Image 3D vs Manual: Chamfer Aristas={f_edg:.0f}%, IoU Silueta ΔI={f_iou:.0f}%, Color={f_col:.0f}%">'
+                            f'🎯 Fit-to-Image: {f_tot:.1f}% (Aristas {f_edg:.0f}% · IoU {f_iou:.0f}% · Color {f_col:.0f}%)</span>'
+                        )
+                        port_dyn_badge = (
+                            f'<span class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold" '
+                            f'title="Actualización dinámica del mapa de conectores tras colocar esta pieza">'
+                            f'🔌 Ports: -{occ_d} ocupados / +{new_p} creados ({free_a} libres en G_t)</span>'
+                        )
+
                     col_check = n.get("collision_check", {})
                     col_details = col_check.get("details", "Colisión física")
                     if col_check.get("passed", True):
@@ -677,6 +713,8 @@ def generate_report(
                                 {sym_badge}
                                 {stud_vis_badge}
                                 {occ_badge}
+                                {fit_badge}
+                                {port_dyn_badge}
                                 {col_badge}
                             </div>
                             <div class="flex items-center gap-1.5 font-mono text-xs font-bold text-amber-300">

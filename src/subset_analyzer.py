@@ -254,3 +254,58 @@ def build_port_attributed_assembly_graph(parts: list[ParsedPart]) -> dict:
         "nodes": nodes,
         "edges": edges
     }
+
+
+def extract_functional_subgraphs(parts: list[ParsedPart], max_bridge_contacts: int = 2) -> list[dict]:
+    """
+    Decomposes a complete 3D LEGO assembly into functional rigid sub-graphs (macros)
+    for 3D Graph-RAG retrieval:
+      - Splits at articulated 1-DoF / 3-DoF joints (hinges, pins, clips, ball joints)
+        or weak structural bridges (<= max_bridge_contacts studs).
+      - Normalizes each sub-graph to its local origin and extracts open external interface ports.
+    """
+    if not parts:
+        return []
+
+    rigid_graph = nx.Graph()
+    for idx in range(len(parts)):
+        rigid_graph.add_node(idx)
+
+    all_edges_meta = {}
+    for i in range(len(parts)):
+        for j in range(i + 1, len(parts)):
+            connected, matches = check_parts_connected_ports(parts[i], parts[j])
+            if connected:
+                all_edges_meta[(i, j)] = matches
+                is_articulated = any(str(m.get("dof", "fixed")) != "fixed" and str(m.get("dof")) != "JointDOF.FIXED" for m in matches)
+                if not is_articulated and len(matches) > max_bridge_contacts:
+                    rigid_graph.add_edge(i, j, weight=len(matches))
+
+    # If everything was split into singletons, relax threshold to keep connected rigid clusters
+    components = [sorted(list(c)) for c in nx.connected_components(rigid_graph)]
+    if all(len(c) == 1 for c in components) and len(parts) > 1:
+        for (i, j), matches in all_edges_meta.items():
+            rigid_graph.add_edge(i, j, weight=len(matches))
+        components = [sorted(list(c)) for c in nx.connected_components(rigid_graph)]
+
+    macros = []
+    for comp_id, node_indices in enumerate(components):
+        sub_parts = [parts[i] for i in node_indices]
+        coords = np.array([p.transform[:3, 3] for p in sub_parts], dtype=np.float32)
+        bbox_min = np.min(coords, axis=0).tolist()
+        bbox_max = np.max(coords, axis=0).tolist()
+        mold_hist = {}
+        for sp in sub_parts:
+            mold_hist[sp.part_id] = mold_hist.get(sp.part_id, 0) + 1
+
+        macros.append({
+            "macro_id": f"macro_{comp_id}",
+            "node_indices": node_indices,
+            "part_count": len(sub_parts),
+            "mold_histogram": mold_hist,
+            "bbox_min_ldu": bbox_min,
+            "bbox_max_ldu": bbox_max,
+        })
+
+    return macros
+

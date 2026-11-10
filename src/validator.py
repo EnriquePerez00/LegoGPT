@@ -132,6 +132,20 @@ def get_part_dimensions(part_id: str) -> tuple[float, float, float]:
             h = 24.0
             
         # Try to find dimensions like "2x8", "1x2" in description or ID name
+        # Try LDrawGeometryResolver if available to get exact bounding box
+        try:
+            from src.ldraw_geometry import LDrawGeometryResolver
+            meta = LDrawGeometryResolver().get_part_meta(part_lower)
+            bbox = meta.get("bbox")
+            if bbox is not None:
+                dim_x = float(abs(bbox[3] - bbox[0]))
+                dim_y = float(abs(bbox[4] - bbox[1]))
+                dim_z = float(abs(bbox[5] - bbox[2]))
+                if dim_x > 0 and dim_y > 0 and dim_z > 0:
+                    return (dim_x, dim_y, dim_z)
+        except Exception:
+            pass
+
         import re
         m = re.search(r"(\d+)\s*x\s*(\d+)", name)
         if not m:
@@ -240,11 +254,31 @@ def check_connection_optimized(part_a: ParsedPart, part_b: ParsedPart) -> bool:
     y_min_a, y_max_a = np.min(corners_a[:, 1]), np.max(corners_a[:, 1])
     y_min_b, y_max_b = np.min(corners_b[:, 1]), np.max(corners_b[:, 1])
     
-    # Vertical range connection check (tolerance 2.0 LDU)
-    vertical_touch = (abs(y_max_a - y_min_b) < 2.0) or (abs(y_max_b - y_min_a) < 2.0)
-    if not vertical_touch:
-        return False
-        
+    # Vertical range connection check (tolerance 3.5 LDU)
+    vertical_touch = (abs(y_max_a - y_min_b) < 3.5) or (abs(y_max_b - y_min_a) < 3.5)
+    
+    # 3D AABB proximity / lateral SNOT / Technic adjacency check
+    x_min_a, x_max_a = np.min(corners_a[:, 0]), np.max(corners_a[:, 0])
+    x_min_b, x_max_b = np.min(corners_b[:, 0]), np.max(corners_b[:, 0])
+    z_min_a, z_max_a = np.min(corners_a[:, 2]), np.max(corners_a[:, 2])
+    z_min_b, z_max_b = np.min(corners_b[:, 2]), np.max(corners_b[:, 2])
+    
+    lateral_touch = (
+        (abs(x_max_a - x_min_b) < 3.5 or abs(x_max_b - x_min_a) < 3.5) and
+        (y_max_a >= y_min_b - 2.0 and y_min_a <= y_max_b + 2.0) and
+        (z_max_a >= z_min_b - 2.0 and z_min_a <= z_max_b + 2.0)
+    ) or (
+        (abs(z_max_a - z_min_b) < 3.5 or abs(z_max_b - z_min_a) < 3.5) and
+        (y_max_a >= y_min_b - 2.0 and y_min_a <= y_max_b + 2.0) and
+        (x_max_a >= x_min_b - 2.0 and x_min_a <= x_max_b + 2.0)
+    )
+
+    if not vertical_touch and not lateral_touch:
+        # Check center distance for Technic / Ball joints / coaxial connections
+        dist_centers = np.linalg.norm(part_a.transform[:3, 3] - part_b.transform[:3, 3])
+        if dist_centers > 45.0:
+            return False
+
     return check_connection(part_a, part_b)
 
 def obb_overlap_sat(c_a: np.ndarray, axes_a: np.ndarray, h_a: np.ndarray,

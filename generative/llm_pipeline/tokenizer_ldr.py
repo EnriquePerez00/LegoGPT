@@ -88,3 +88,7 @@ class LdrTokenizer:
         if curr_line:
             reconstructed.append(" ".join(curr_line))
         return "\n".join(reconstructed)
+
+
+from generative.llm_pipeline.brick_graph_tokenizer import BrickGraphTokenizer  # noqa: E402,F401
+

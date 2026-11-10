@@ -73,22 +73,35 @@ def parse_single_page(pdf_path, page_num):
     }
 
 class ManualParserPipeline:
-    def __init__(self, pdf_path: str, max_workers: int = 10):
+    def __init__(self, pdf_path: str, max_workers: int = None):
         self.pdf_path = pdf_path
-        self.max_workers = max_workers
+        if max_workers is None:
+            # Dynamically detect cores on Apple Silicon M4 and reserve 2 cores for OS responsiveness
+            self.max_workers = max(1, (os.cpu_count() or 12) - 2)
+        else:
+            self.max_workers = max_workers
         self.parsed_pages = []
         
     def parse_pdf_layout(self):
-        """Parses PDF pages sequentially to avoid multiprocessing deadlocks on macOS."""
+        """
+        Parses PDF pages leveraging multi-core parallel processing (ThreadPoolExecutor)
+        to bypass C-extension GIL restrictions in PyMuPDF while avoiding macOS process fork deadlocks.
+        """
+        from concurrent.futures import ThreadPoolExecutor
+
         print(f"Opening PDF for parsing layout: {self.pdf_path}")
         doc = fitz.open(self.pdf_path)
         num_pages = len(doc)
         doc.close()
         
-        print(f"Parsing {num_pages} pages sequentially...")
-        self.parsed_pages = []
-        for p in range(num_pages):
-            self.parsed_pages.append(parse_single_page(self.pdf_path, p))
+        workers = min(self.max_workers, num_pages) if num_pages > 0 else 1
+        print(f"Parsing {num_pages} pages in parallel using {workers} worker threads (M4 optimized)...")
+        
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            # Map preserves page order index 0..N-1
+            results = list(executor.map(lambda p: parse_single_page(self.pdf_path, p), range(num_pages)))
+            
+        self.parsed_pages = results
             
         # Filter pages that have instruction metadata
         self.instruction_pages = []

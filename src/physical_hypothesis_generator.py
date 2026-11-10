@@ -176,6 +176,7 @@ class PhysicalHypothesisGenerator:
         color_id: int = 16,
         connector_2d_filter: Optional[Dict[str, Any]] = None,
         lazy_collision_check: bool = False,
+        force_3d_rotations: bool = False,
     ) -> List[ConnectionHypothesis]:
         """
         Generates all non-colliding, mechanically aligned placement hypotheses
@@ -331,7 +332,7 @@ class PhysicalHypothesisGenerator:
             parent_is_hinge = any(k in parent_node["part_id"] for k in hinge_keywords)
             parent_is_tilted = abs(abs(float(p_R[1, 1])) - 1.0) > 0.1
             parent_has_snot = p_meta.get("has_lateral_ports", False) or parent_is_tilted or parent_is_hinge
-            pair_has_snot = (is_technic or child_is_hinge or child_has_lateral or parent_has_snot) and not is_snot_brick_upright
+            pair_has_snot = (is_technic or child_is_hinge or child_has_lateral or parent_has_snot or force_3d_rotations) and not is_snot_brick_upright
 
             # Parent available connection ports (studs, lateral studs, or technic holes/sockets)
             parent_studs = []

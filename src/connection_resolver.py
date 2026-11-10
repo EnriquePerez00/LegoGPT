@@ -18,6 +18,7 @@ import numpy as np
 from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Optional, Any
 from src.ldraw_geometry import LDrawGeometryResolver
+from src.step_axonometric_renderer import StepAxonometricRenderer
 
 
 @dataclass
@@ -44,6 +45,7 @@ class LegoConnectionResolver:
 
     def __init__(self, ldraw_base_dir: str = "data/ldraw/ldraw"):
         self.geom_resolver = LDrawGeometryResolver(ldraw_base_dir=ldraw_base_dir)
+        self.mesh_renderer = StepAxonometricRenderer(self.geom_resolver)
 
     @staticmethod
     def get_rotation_matrix_y(deg: float) -> np.ndarray:
@@ -269,26 +271,31 @@ class LegoConnectionResolver:
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Renders composite 2D binary silhouette, edge points, and visible stud centers
-        for parent + child assembly under candidate configuration.
+        for parent + child assembly using real 3D solid faces and side walls.
         """
         h_img, w_img = target_shape[:2]
         mask = np.zeros((h_img, w_img), dtype=np.uint8)
 
-        p_parent = self.geom_resolver.get_part_meta(parent_part_id)
-        p_child = self.geom_resolver.get_part_meta(child_part_id)
+        # Extract real 3D solid geometry (top, bottom, and side faces)
+        parent_faces, _ = self.mesh_renderer.get_part_faces_and_studs(parent_part_id)
+        child_faces, _ = self.mesh_renderer.get_part_faces_and_studs(child_part_id)
 
-        parent_poly_3d = self._get_part_perimeter_polygon(p_parent)
-        child_poly_3d = self._get_part_perimeter_polygon(p_child)
-
-        # Transform child polygon into world space
         R = candidate.transform_matrix[:3, :3]
         t = candidate.transform_matrix[:3, 3]
-        child_poly_world = (child_poly_3d @ R.T) + t
 
-        all_3d = np.vstack([parent_poly_3d, child_poly_world])
+        all_3d = []
+        for f in parent_faces:
+            all_3d.append(f["pts"])
+        for f in child_faces:
+            all_3d.append((f["pts"] @ R.T) + t)
+
+        if not all_3d:
+            return mask, mask, np.empty((0, 2), dtype=np.float32)
+
+        all_3d_np = np.vstack(all_3d)
 
         # Global bounding projection to estimate scale & center
-        proj_unscaled = self.project_points_axonometric(all_3d, azimuth_deg, elevation_deg, scale=1.0)
+        proj_unscaled = self.project_points_axonometric(all_3d_np, azimuth_deg, elevation_deg, scale=1.0)
         min_u, min_v = proj_unscaled.min(axis=0)
         max_u, max_v = proj_unscaled.max(axis=0)
         span_w = max(1.0, max_u - min_u)
@@ -297,19 +304,18 @@ class LegoConnectionResolver:
         scale = min((w_img * 0.75) / span_w, (h_img * 0.75) / span_h)
         offset_u = (w_img - (max_u + min_u) * scale) / 2.0
         offset_v = (h_img - (max_v + min_v) * scale) / 2.0
+        offset = (offset_u, offset_v)
 
-        # Project polygons
-        parent_2d = self.project_points_axonometric(
-            parent_poly_3d, azimuth_deg, elevation_deg, scale=scale, offset_2d=(offset_u, offset_v)
-        ).astype(np.int32)
+        # Draw parent 3D solid faces
+        for f in parent_faces:
+            p2d = self.project_points_axonometric(f["pts"], azimuth_deg, elevation_deg, scale=scale, offset_2d=offset).astype(np.int32)
+            cv2.fillPoly(mask, [p2d], 255)
 
-        child_2d = self.project_points_axonometric(
-            child_poly_world, azimuth_deg, elevation_deg, scale=scale, offset_2d=(offset_u, offset_v)
-        ).astype(np.int32)
-
-        # Draw parent layer then child layer
-        cv2.fillPoly(mask, [parent_2d], 255)
-        cv2.fillPoly(mask, [child_2d], 255)
+        # Draw child 3D solid faces
+        for f in child_faces:
+            pts_world = (f["pts"] @ R.T) + t
+            c2d = self.project_points_axonometric(pts_world, azimuth_deg, elevation_deg, scale=scale, offset_2d=offset).astype(np.int32)
+            cv2.fillPoly(mask, [c2d], 255)
 
         # Stud projections
         free_parent_studs_3d = np.array([[x, 0.0, z] for x, z in candidate.free_parent_studs], dtype=np.float32)
@@ -324,7 +330,7 @@ class LegoConnectionResolver:
         if studs_3d_all:
             studs_3d_combined = np.vstack(studs_3d_all)
             studs_2d = self.project_points_axonometric(
-                studs_3d_combined, azimuth_deg, elevation_deg, scale=scale, offset_2d=(offset_u, offset_v)
+                studs_3d_combined, azimuth_deg, elevation_deg, scale=scale, offset_2d=offset
             )
         else:
             studs_2d = np.empty((0, 2), dtype=np.float32)

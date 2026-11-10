@@ -115,10 +115,128 @@ def find_ldraw_part_file(part_id: str, ldraw_root: str | None = None) -> str | N
             return c
     return None
 
+def _parse_ldcad_shadow_line(line_str: str, current_transform: np.ndarray, port_idx: int) -> ConnectionPort | None:
+    """
+    Parses an LDCad Shadow Library meta-command (used by LTRON / LDCad):
+      0 !LDCAD SNAP_CYL [gender=M|F] [caps=...] [pos=x y z] [ori=a b c d e f g h i] [grid=...]
+      0 !LDCAD SNAP_CLP [pos=x y z] [ori=...]
+      0 !LDCAD SNAP_FGR / SNAP_SPH / SNAP_GEN
+    and converts it into a native LegoGPT ConnectionPort in the part's local frame.
+    """
+    if "!LDCAD" not in line_str.upper():
+        return None
+    upper = line_str.upper()
+    if not any(cmd in upper for cmd in ("SNAP_CYL", "SNAP_CLP", "SNAP_FGR", "SNAP_SPH", "SNAP_GEN")):
+        return None
+
+    # Extract [key=val] blocks
+    props: dict[str, str] = {}
+    for m in re.finditer(r"\[([a-zA-Z0-9_]+)=([^\]]+)\]", line_str):
+        props[m.group(1).lower()] = m.group(2).strip()
+
+    pos_local = np.array([0.0, 0.0, 0.0], dtype=np.float32)
+    if "pos" in props:
+        try:
+            vals = [float(v) for v in props["pos"].split()]
+            if len(vals) == 3:
+                pos_local = np.array(vals, dtype=np.float32)
+        except ValueError:
+            pass
+
+    ori_local = np.eye(3, dtype=np.float32)
+    if "ori" in props:
+        try:
+            vals = [float(v) for v in props["ori"].split()]
+            if len(vals) == 9:
+                ori_local = np.array(vals, dtype=np.float32).reshape(3, 3)
+        except ValueError:
+            pass
+
+    local_t = np.eye(4, dtype=np.float32)
+    local_t[:3, :3] = ori_local
+    local_t[:3, 3] = pos_local
+    accum_t = current_transform @ local_t
+
+    pos = accum_t[:3, 3]
+    normal = accum_t[:3, :3] @ np.array([0.0, -1.0, 0.0], dtype=np.float32)
+    norm_mag = np.linalg.norm(normal)
+    normal = (normal / norm_mag) if norm_mag > 1e-4 else np.array([0.0, -1.0, 0.0], dtype=np.float32)
+
+    gender_raw = props.get("gender", "m").lower()
+    gender = "female" if gender_raw.startswith("f") else "male"
+    sec = props.get("secs", "").lower()
+
+    if "SNAP_CLP" in upper:
+        return ConnectionPort(
+            id=f"ldcad_clip_{port_idx}",
+            port_type=PortType.CLIP,
+            gender="female",
+            local_pos=pos,
+            local_normal=normal,
+            dof=JointDOF.REVOLUTE,
+            symmetry=1,
+            clutch_power=1.8,
+        )
+    if "SNAP_SPH" in upper:
+        p_type = PortType.BALL_SOCKET if gender == "female" else PortType.BALL
+        return ConnectionPort(
+            id=f"ldcad_ball_{port_idx}",
+            port_type=p_type,
+            gender=gender,
+            local_pos=pos,
+            local_normal=normal if gender == "male" else -normal,
+            dof=JointDOF.SPHERICAL,
+            symmetry=1,
+            clutch_power=2.5,
+        )
+    if "SNAP_FGR" in upper:
+        p_type = PortType.HINGE_FEMALE if gender == "female" else PortType.HINGE_MALE
+        return ConnectionPort(
+            id=f"ldcad_hinge_{port_idx}",
+            port_type=p_type,
+            gender=gender,
+            local_pos=pos,
+            local_normal=normal,
+            dof=JointDOF.REVOLUTE,
+            symmetry=1,
+            clutch_power=2.2,
+        )
+
+    # SNAP_CYL or SNAP_GEN
+    if "axle" in sec or "X" in props.get("secs", ""):
+        p_type = PortType.AXLE_HOLE if gender == "female" else PortType.AXLE
+        dof = JointDOF.PRISMATIC
+        sym = 4
+    elif "pin" in sec:
+        p_type = PortType.PIN_HOLE if gender == "female" else PortType.PIN
+        dof = JointDOF.REVOLUTE
+        sym = 1
+    elif "bar" in sec:
+        p_type = PortType.STUD_HOLLOW if gender == "female" else PortType.BAR
+        dof = JointDOF.REVOLUTE
+        sym = 1
+    else:
+        p_type = PortType.ANTISTUD if gender == "female" else PortType.STUD
+        dof = JointDOF.FIXED
+        sym = 4
+
+    return ConnectionPort(
+        id=f"ldcad_{p_type.value}_{port_idx}",
+        port_type=p_type,
+        gender=gender,
+        local_pos=pos,
+        local_normal=-normal if p_type == PortType.ANTISTUD else normal,
+        dof=dof,
+        symmetry=sym,
+        clutch_power=2.0,
+    )
+
+
 def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -> list[ConnectionPort]:
     """
-    Recursively scans an LDraw part .dat file and identifies connector primitives
-    (stud.dat, stud4.dat, axle.dat, pin.dat, clip*.dat, etc.) with their exact local poses.
+    Recursively scans an LDraw part .dat file (and optional LDCad Shadow !LDCAD SNAP_* directives)
+    and identifies connector primitives (stud.dat, stud4.dat, axle.dat, pin.dat, clip*.dat, etc.)
+    with their exact local poses.
     """
     if not ldraw_root:
         ldraw_root = get_ldraw_root()
@@ -144,7 +262,16 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
 
         for line in lines:
             line_str = line.strip()
-            if not line_str or not line_str.startswith("1 "):
+            if not line_str:
+                continue
+
+            if line_str.startswith("0 ") and "!LDCAD" in line_str.upper():
+                shadow_port = _parse_ldcad_shadow_line(line_str, current_transform, len(ports))
+                if shadow_port is not None:
+                    ports.append(shadow_port)
+                continue
+
+            if not line_str.startswith("1 "):
                 continue
 
             tokens = line_str.split()
@@ -351,21 +478,65 @@ def _generate_parametric_ports(part_id: str) -> list[ConnectionPort]:
                 clutch_power=2.0
             ))
 
-    # SNOT lateral stud for headlight brick 4070
-    if is_headlight:
+    # SNOT lateral stud for headlight brick 4070, SNOT bricks (87087, 11211, 30414, 32952, 22885, 4733, 47905), brackets (44728, 99780, 99781, 36840, 36841, 2436, 99207)
+    snot_prefixes = (
+        "4070", "87087", "11211", "11212", "30414", "32952", "22885", "4733", "47905",
+        "44728", "99780", "99781", "36840", "36841", "2436", "99207", "10247", "11458",
+        "11476", "61252", "26604", "3023b", "73825"
+    )
+    if any(clean_id.startswith(sp) for sp in snot_prefixes):
+        for side_id, lpos, lnorm in [
+            ("side_stud_front", np.array([0.0, -H / 2.0, -D / 2.0], dtype=np.float32), np.array([0.0, 0.0, -1.0], dtype=np.float32)),
+            ("side_stud_back", np.array([0.0, -H / 2.0, D / 2.0], dtype=np.float32), np.array([0.0, 0.0, 1.0], dtype=np.float32)),
+            ("side_stud_left", np.array([-W / 2.0, -H / 2.0, 0.0], dtype=np.float32), np.array([-1.0, 0.0, 0.0], dtype=np.float32)),
+            ("side_stud_right", np.array([W / 2.0, -H / 2.0, 0.0], dtype=np.float32), np.array([1.0, 0.0, 0.0], dtype=np.float32)),
+        ]:
+            ports.append(ConnectionPort(
+                id=side_id,
+                port_type=PortType.STUD_HOLLOW,
+                gender="male",
+                local_pos=lpos,
+                local_normal=lnorm,
+                dof=JointDOF.REVOLUTE,
+                symmetry=1,
+                clutch_power=2.0
+            ))
+            ports.append(ConnectionPort(
+                id=f"{side_id}_antistud",
+                port_type=PortType.ANTISTUD,
+                gender="female",
+                local_pos=lpos,
+                local_normal=-lnorm,
+                dof=JointDOF.FIXED,
+                symmetry=4,
+                clutch_power=2.0
+            ))
+
+    # Jumper plate 1x2 / 2x2 (15573 / 3794 / 34103 / 88646): central hollow stud at (0, -H, 0) + central tube antistud at (0, 0, 0)
+    if any(clean_id.startswith(jp) for jp in ("15573", "3794", "34103", "88646")):
         ports.append(ConnectionPort(
-            id="side_stud_front",
+            id="center_jumper_stud",
             port_type=PortType.STUD_HOLLOW,
             gender="male",
-            local_pos=np.array([0.0, -10.0, -10.0], dtype=np.float32),
-            local_normal=np.array([0.0, 0.0, -1.0], dtype=np.float32),
-            dof=JointDOF.REVOLUTE,
-            symmetry=1,
+            local_pos=np.array([0.0, -H, 0.0], dtype=np.float32),
+            local_normal=np.array([0.0, -1.0, 0.0], dtype=np.float32),
+            dof=JointDOF.FIXED,
+            symmetry=4,
+            clutch_power=2.0
+        ))
+        ports.append(ConnectionPort(
+            id="center_jumper_socket",
+            port_type=PortType.ANTISTUD,
+            gender="female",
+            local_pos=np.array([0.0, 0.0, 0.0], dtype=np.float32),
+            local_normal=np.array([0.0, 1.0, 0.0], dtype=np.float32),
+            dof=JointDOF.FIXED,
+            symmetry=4,
             clutch_power=2.0
         ))
 
-    # Clip for 4081b
-    if is_clip:
+    # Clip for 4081b / 61252 / 11476 / 2540 / 48336
+    if is_clip or any(clean_id.startswith(cp) for cp in ("61252", "11476", "60470", "48729", "30237")):
         ports.append(ConnectionPort(
             id="clip_jaw",
             port_type=PortType.CLIP,
@@ -392,16 +563,13 @@ def get_part_ports(part_id: str) -> list[ConnectionPort]:
     # y = 0 is the bottom face, y = -H is the top face (studs), -Y is UP.
     ports = _generate_parametric_ports(clean_id)
 
-    # For specialized parts with clips/pines/bars not covered by basic box geometry,
-    # augment with primitives extracted from LDraw file if available
-    if any(k in clean_id for k in ["pin", "axle", "clip", "bar", "hinge", "ball"]):
-        ldraw_ports = _extract_ports_from_ldraw_dat(clean_id)
-        if ldraw_ports:
-            # Add unique non-stud ports from LDraw
-            existing_types = {p.port_type for p in ports}
-            for lp in ldraw_ports:
-                if lp.port_type not in (PortType.STUD, PortType.ANTISTUD) or lp.port_type not in existing_types:
-                    ports.append(lp)
+    # Always augment with primitives extracted from LDraw .dat file if available
+    ldraw_ports = _extract_ports_from_ldraw_dat(clean_id)
+    if ldraw_ports:
+        existing_types = {p.port_type for p in ports}
+        for lp in ldraw_ports:
+            if lp.port_type not in (PortType.STUD, PortType.ANTISTUD) or lp.port_type not in existing_types:
+                ports.append(lp)
 
     _PORT_CACHE[clean_id] = ports
     return ports

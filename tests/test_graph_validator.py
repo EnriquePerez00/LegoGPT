@@ -136,9 +136,9 @@ def test_generalized_part_resolution():
     assert resolver.resolve_compatible_part_id("3001pr0001") == "3001.dat"
     assert resolver.resolve_compatible_part_id("3069bpr0002") == "3069b.dat"
     
-    # Minifigure assemblies
+    # Minifigure assemblies (must resolve to assembled torso with arms 973c01.dat)
     assert resolver.resolve_compatible_part_id("970c05pr0625") == "970c00.dat"
-    assert resolver.resolve_compatible_part_id("973c26h02pr2301") == "973.dat"
+    assert resolver.resolve_compatible_part_id("973c26h02pr2301") == "973c01.dat"
     
     # Standard official parts
     assert resolver.resolve_compatible_part_id("26139") == "26139.dat"

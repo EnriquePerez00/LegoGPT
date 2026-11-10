@@ -128,6 +128,37 @@ class ConnectorOccupancyMap:
         self.parts.clear()
         self._next_conn_id = 0
 
+    def clone(self) -> "ConnectorOccupancyMap":
+        """Creates a lightweight deep copy of the occupancy map for intra-step/branch simulation."""
+        copy_map = ConnectorOccupancyMap(self.geom)
+        copy_map._next_conn_id = self._next_conn_id
+        for cid, crec in self.connectors.items():
+            copy_map.connectors[cid] = ConnectorRecord(
+                connector_id=crec.connector_id,
+                owner_part_index=crec.owner_part_index,
+                owner_part_id=crec.owner_part_id,
+                owner_element_id=crec.owner_element_id,
+                port_type=crec.port_type,
+                pos_world=crec.pos_world.copy(),
+                normal_world=crec.normal_world.copy(),
+                height_level=crec.height_level,
+                status=crec.status,
+                occupied_by_part_index=crec.occupied_by_part_index,
+                connected_to_connector_id=crec.connected_to_connector_id,
+            )
+        for pidx, prec in self.parts.items():
+            copy_map.parts[pidx] = PartOccupancyRecord(
+                part_index=prec.part_index,
+                part_id=prec.part_id,
+                element_id=prec.element_id,
+                world_bbox=list(prec.world_bbox),
+                level_plates=prec.level_plates,
+                y_bottom_ldu=prec.y_bottom_ldu,
+                provided_connector_ids=list(prec.provided_connector_ids),
+                locked_parent_connector_ids=list(prec.locked_parent_connector_ids),
+            )
+        return copy_map
+
     # ------------------------------------------------------------------
     # Registration
     # ------------------------------------------------------------------
@@ -191,10 +222,26 @@ class ConnectorOccupancyMap:
         )
 
         # --- Step 2: mark covered ports as OCCUPIED ----------------------
+        contact_pts_arr = []
+        if contact_points:
+            for cp in contact_points:
+                if isinstance(cp, dict) and "pos" in cp:
+                    contact_pts_arr.append(np.asarray(cp["pos"], dtype=np.float32))
+                elif isinstance(cp, (list, tuple, np.ndarray)) and len(cp) == 3:
+                    contact_pts_arr.append(np.asarray(cp, dtype=np.float32))
+
         for cid, conn in self.connectors.items():
             if conn.status != "FREE":
                 continue
             c_pos = conn.pos_world
+
+            # Explicit contact point match (handles top studs, lateral SNOT studs, pins, axles, underside sockets)
+            if contact_pts_arr and any(float(np.linalg.norm(c_pos - cp_w)) <= 4.5 for cp_w in contact_pts_arr):
+                conn.status = "OCCUPIED"
+                conn.occupied_by_part_index = part_index
+                if cid not in part_rec.locked_parent_connector_ids:
+                    part_rec.locked_parent_connector_ids.append(cid)
+                continue
 
             # Only stud-like upward-facing ports can be covered by a
             # normally-placed part from above.  Lateral/PIN ports are NOT
@@ -235,6 +282,12 @@ class ConnectorOccupancyMap:
             )
             self._next_conn_id += 1
 
+            # Check if this child port (e.g. ANTISTUD or PIN_HOLE) is already engaged with a parent port
+            is_engaged_child_port = False
+            if port.port_type in (PortType.ANTISTUD, PortType.PIN, PortType.PIN_HOLE, PortType.AXLE, PortType.AXLE_HOLE):
+                if contact_pts_arr and any(float(np.linalg.norm(pos_w - cp_w)) <= 4.5 for cp_w in contact_pts_arr):
+                    is_engaged_child_port = True
+
             crec = ConnectorRecord(
                 connector_id=cid,
                 owner_part_index=part_index,
@@ -244,7 +297,8 @@ class ConnectorOccupancyMap:
                 pos_world=pos_w,
                 normal_world=norm_w,
                 height_level=conn_lvl,
-                status="FREE",
+                status="OCCUPIED" if is_engaged_child_port else "FREE",
+                occupied_by_part_index=connected_parent_index if is_engaged_child_port else None,
             )
             self.connectors[cid] = crec
             part_rec.provided_connector_ids.append(cid)
@@ -253,36 +307,20 @@ class ConnectorOccupancyMap:
         return part_rec
 
     # ------------------------------------------------------------------
-    # Typed query API (Paso 2 — generalised gating)
+    # Typed query API (Paso 2 — generalised gating + 2D geographic ROI)
     # ------------------------------------------------------------------
 
     def get_free_ports(
         self,
         filter_compatible_with: Optional[List[ConnectionPort]] = None,
         level: Optional[int] = None,
+        connector_2d_filter: Optional[Dict[str, Any]] = None,
+        part_max_span_ldu: float = 80.0,
     ) -> List[ConnectorRecord]:
         """
         Returns all FREE ``ConnectorRecord`` objects in the current graph,
-        optionally restricted to those compatible with *filter_compatible_with*.
-
-        This is the core API for connector-compatibility gating (Paso 3):
-        the hypothesis generator calls this with the typed ports of the
-        incoming child part to obtain only the attachment points that are
-        physically legal under ``COMPATIBLE_PORT_PAIRS``.
-
-        Parameters
-        ----------
-        filter_compatible_with : list of ``ConnectionPort`` (child ports)
-            When provided, only graph ports whose ``port_type`` is compatible
-            with at least one port in this list are returned.
-            When None, all FREE ports are returned.
-        level : int or None
-            When set, restricts results to a specific discrete height level.
-
-        Returns
-        -------
-        List[ConnectorRecord]
-            Filtered list of FREE graph ports ordered by height_level.
+        optionally restricted to those compatible with *filter_compatible_with*
+        and located within the 2D geographic ROI of the manual step image.
         """
         # Build the set of PortTypes we need on the graph side
         compatible_graph_types: Optional[set] = None
@@ -304,8 +342,44 @@ class ConnectorOccupancyMap:
                     continue
             result.append(conn)
 
-        # Sort by height level (lowest physical level first = closest to ground)
-        result.sort(key=lambda c: c.height_level)
+        # Sort by most recent owner part first, then lowest height level
+        result.sort(key=lambda c: (-c.owner_part_index, c.height_level))
+
+        # Optional 2D geographic ROI filter (human visual focus on target region)
+        if connector_2d_filter and result and connector_2d_filter.get("roi_bbox_2d") is not None:
+            import math
+            rx0, ry0, rx1, ry1 = connector_2d_filter["roi_bbox_2d"]
+            scale = float(connector_2d_filter.get("scale", 2.65))
+            offset = connector_2d_filter.get("offset", (200.0, 200.0))
+            az_deg = float(connector_2d_filter.get("az_deg", 45.0))
+            el_deg = float(connector_2d_filter.get("el_deg", 30.0))
+            center_3d = connector_2d_filter.get("center_3d")
+            proj_mat = connector_2d_filter.get("projection_matrix")
+            margin_px = max(48.0, part_max_span_ldu * scale * 0.85)
+
+            c3d = np.zeros(3, dtype=np.float32) if center_3d is None else np.asarray(center_3d, dtype=np.float32)
+            az_r = math.radians(az_deg)
+            el_r = math.radians(el_deg)
+            ca, sa = math.cos(az_r), math.sin(az_r)
+            ce, se = math.cos(el_r), math.sin(el_r)
+
+            roi_filtered: List[ConnectorRecord] = []
+            for conn in result:
+                if proj_mat is not None and np.asarray(proj_mat).shape == (2, 4):
+                    pm = np.asarray(proj_mat, dtype=np.float32)
+                    p4 = np.array([conn.pos_world[0], conn.pos_world[1], conn.pos_world[2], 1.0], dtype=np.float32)
+                    uv = pm @ p4
+                    u, v = float(uv[0]), float(uv[1])
+                else:
+                    p = conn.pos_world - c3d
+                    u = float((p[0] * ca - p[2] * sa) * scale + offset[0])
+                    v = float((p[0] * sa * se + p[1] * ce + p[2] * ca * se) * scale + offset[1])
+                if (rx0 - margin_px <= u <= rx1 + margin_px) and (ry0 - margin_px <= v <= ry1 + margin_px):
+                    roi_filtered.append(conn)
+
+            if roi_filtered:
+                return roi_filtered
+
         return result
 
     # ------------------------------------------------------------------
