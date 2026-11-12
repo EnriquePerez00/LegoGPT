@@ -2,663 +2,1489 @@
   "dataset_name": "eval_micro_CLEAN",
   "tier": "MICRO",
   "parts_range": [
-    5,
+    2,
     50
   ],
-  "description": "MICRO tier validation: only valid/parseable .io files",
-  "total_mocs": 65,
+  "description": "MICRO tier validation (2-50 parts): all 927 files readable with extended loader",
+  "total_mocs": 164,
   "timestamp": "2026-11-12",
-  "corpus_status": "Valid only (225/927 files, rest corrupted in Fase 1)",
+  "corpus_status": "All 927 valid (Nivel 1 + 2 loader fixes applied)",
   "samples": [
     {
-      "pair_id": "RB-MOC-42598",
-      "model_name": "31087 Arcade Machine",
-      "designer_name": "Leibowitz92",
-      "parts_count": 5,
-      "steps_count": 7,
+      "pair_id": "OMR-10885-1",
+      "model_name": "LDraw.org Official Model Repository - My First Fun Puzzle",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
       "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "parts_count": 47,
+      "steps_count": 1
     },
     {
-      "pair_id": "RB-MOC-132835",
-      "model_name": "31058 emus",
-      "designer_name": "maratus",
-      "parts_count": 6,
-      "steps_count": 6,
+      "pair_id": "OMR-30023-1",
+      "model_name": "LDraw.org Official Model Repository - Lighthouse",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
       "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-113683",
-      "model_name": "31124 Dreadnought (WH40k)",
-      "designer_name": "Leibowitz92",
-      "parts_count": 12,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-125267",
-      "model_name": "31112 farm animals",
-      "designer_name": "maratus",
-      "parts_count": 15,
-      "steps_count": 14,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-208578",
-      "model_name": "31040 excavator",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-209084",
-      "model_name": "31040 hovercraft",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-210023",
-      "model_name": "31040 grader",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-210826",
-      "model_name": "31040 mobile crane",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-211383",
-      "model_name": "31040 forklift",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-218791",
-      "model_name": "31040 snowmobile",
-      "designer_name": "maratus",
-      "parts_count": 16,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-101033",
-      "model_name": "Mustang Alternate",
-      "designer_name": "LegoBuilder98",
-      "parts_count": 17,
-      "steps_count": 14,
-      "category": "N/A",
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-116132",
-      "model_name": "31130 Jellyfish Excavator",
-      "designer_name": "drosse",
-      "parts_count": 19,
-      "steps_count": 12,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-209916",
-      "model_name": "31040 dragster",
-      "designer_name": "maratus",
-      "parts_count": 19,
-      "steps_count": 17,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-45860",
-      "model_name": "Jaguar Car, Go Kart +",
-      "designer_name": "LegoBuilder98",
-      "parts_count": 19,
-      "steps_count": 1,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-77601",
-      "model_name": "31107 Jungle Mech vs Triffid",
-      "designer_name": "Leibowitz92",
-      "parts_count": 19,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-134596",
-      "model_name": "31124 Sphinx",
-      "designer_name": "noamu",
-      "parts_count": 21,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-88068",
-      "model_name": "31088 sea creatures",
-      "designer_name": "maratus",
-      "parts_count": 21,
-      "steps_count": 16,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-145264",
-      "model_name": "30655 Excavator",
-      "designer_name": "jorah",
-      "parts_count": 23,
-      "steps_count": 10,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-173700",
-      "model_name": "42163 Tracked Cherry Picker",
-      "designer_name": "Larsagri",
-      "parts_count": 24,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-39608",
-      "model_name": "31058 - Sorcerer",
-      "designer_name": "InfernalQuack",
-      "parts_count": 24,
-      "steps_count": 16,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-140083",
-      "model_name": "42148 alt - Long reach excavator",
-      "designer_name": "richidello",
-      "parts_count": 25,
-      "steps_count": 14,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-99910",
-      "model_name": "Hammerhead Shark",
-      "designer_name": "LegoBuilder98",
-      "parts_count": 25,
-      "steps_count": 12,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-145411",
-      "model_name": "30655 Race Car",
-      "designer_name": "jorah",
       "parts_count": 26,
-      "steps_count": 15,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-30051-1",
+      "model_name": "LDraw.org Official Model Repository - X-wing Fighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
       "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "parts_count": 50,
+      "steps_count": 20
     },
     {
-      "pair_id": "RB-MOC-164407",
-      "model_name": "Spaceship Stand",
-      "designer_name": "tneller",
-      "parts_count": 27,
-      "steps_count": 7,
+      "pair_id": "OMR-30055-1",
+      "model_name": "LDraw.org Official Model Repository - Vulture Droid - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
       "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-20500",
-      "model_name": "31079 alt: Imperial Flagship",
-      "designer_name": "ericlego321",
-      "parts_count": 27,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-39498",
-      "model_name": "31079 alt: Seaside Castle",
-      "designer_name": "ericlego321",
-      "parts_count": 27,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-39584",
-      "model_name": "31079 alt: Fishing Boat",
-      "designer_name": "ericlego321",
-      "parts_count": 27,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-146978",
-      "model_name": "31128 Hippo",
-      "designer_name": "noamu",
-      "parts_count": 28,
-      "steps_count": 15,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-159684",
-      "model_name": "31112 crayfish",
-      "designer_name": "maratus",
-      "parts_count": 28,
-      "steps_count": 19,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-167887",
-      "model_name": "42163 Mini Excavator",
-      "designer_name": "Larsagri",
-      "parts_count": 28,
-      "steps_count": 15,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-210073",
-      "model_name": "31040 golf cart",
-      "designer_name": "maratus",
-      "parts_count": 28,
-      "steps_count": 18,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-91123",
-      "model_name": "31112 Spot Robot",
-      "designer_name": "BrickMan7",
-      "parts_count": 28,
-      "steps_count": 19,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-30377",
-      "model_name": "31087 Articulated wheel dozer",
-      "designer_name": "fosamax",
-      "parts_count": 30,
-      "steps_count": 15,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-68840",
-      "model_name": "31090 Crab surveyor",
-      "designer_name": "drosse",
-      "parts_count": 30,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-21519",
-      "model_name": "Snowmobile - 42060 Alternate Build",
-      "designer_name": "simorike",
-      "parts_count": 31,
-      "steps_count": 14,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-100132",
-      "model_name": "31112 sloth",
-      "designer_name": "maratus",
-      "parts_count": 32,
-      "steps_count": 20,
-      "category": "Animal",
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-146049",
-      "model_name": "30655 Flatbed Truck",
-      "designer_name": "jorah",
-      "parts_count": 32,
-      "steps_count": 13,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-144988",
-      "model_name": "30655 Rally Truck",
-      "designer_name": "jorah",
-      "parts_count": 33,
-      "steps_count": 18,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-152856",
-      "model_name": "31124 Manta Ray",
-      "designer_name": "noamu",
-      "parts_count": 33,
-      "steps_count": 18,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-34977",
-      "model_name": "31057 - Brushcutter robot",
-      "designer_name": "InfernalQuack",
-      "parts_count": 34,
-      "steps_count": 17,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-80113",
-      "model_name": "31099 Duck",
-      "designer_name": "Menno_Coehoorn",
-      "parts_count": 34,
-      "steps_count": 17,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-144914",
-      "model_name": "30655 Tow Truck",
-      "designer_name": "jorah",
-      "parts_count": 35,
-      "steps_count": 16,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-39607",
-      "model_name": "31058 - Moustached Cat",
-      "designer_name": "InfernalQuack",
       "parts_count": 36,
-      "steps_count": 17,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "steps_count": 20
     },
     {
-      "pair_id": "RB-MOC-104234",
-      "model_name": "31123 Kakapo",
-      "designer_name": "noamu",
+      "pair_id": "OMR-30101-1",
+      "model_name": "LDraw.org Official Model Repository - Skate Boarder",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 32,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-30102-1",
+      "model_name": "LDraw.org Official Model Repository - Desk",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 29,
+      "steps_count": 2
+    },
+    {
+      "pair_id": "OMR-30103-1",
+      "model_name": "LDraw.org Official Model Repository - Car",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
       "parts_count": 37,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "steps_count": 1
     },
     {
-      "pair_id": "RB-MOC-143700",
-      "model_name": "30655 Van",
-      "designer_name": "jorah",
-      "parts_count": 37,
-      "steps_count": 15,
+      "pair_id": "OMR-30105-1",
+      "model_name": "LDraw.org Official Model Repository - Stephanie and Mailbox",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
       "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-26636",
-      "model_name": "31057 Alien flyer",
-      "designer_name": "drosse",
-      "parts_count": 37,
-      "steps_count": 14,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-161115",
-      "model_name": "42136 Mini Dumpers",
-      "designer_name": "Larsagri",
-      "parts_count": 38,
-      "steps_count": 14,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-162883",
-      "model_name": "42107 Three Wheel Tractor with Cutter Bar, Three Share Plow, and Grubber",
-      "designer_name": "Larsagri",
-      "parts_count": 40,
-      "steps_count": 11,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-30451",
-      "model_name": "31087 Blue squadron resistance X-Wing",
-      "designer_name": "fosamax",
-      "parts_count": 41,
-      "steps_count": 25,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-46716",
-      "model_name": "31087 Deep Sea Explorers",
-      "designer_name": "fosamax",
-      "parts_count": 41,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-137269",
-      "model_name": "Anakin's Z-95 Headhunter (75214 Alternate Build)",
-      "designer_name": "theonlytelemachus",
-      "parts_count": 42,
-      "steps_count": 33,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-30818",
-      "model_name": "31087 Touring Scooter",
-      "designer_name": "fosamax",
-      "parts_count": 42,
-      "steps_count": 29,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-32952",
-      "model_name": "31057 - Seaplane Biplane",
-      "designer_name": "InfernalQuack",
-      "parts_count": 42,
-      "steps_count": 22,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-104711",
-      "model_name": "31123 Speederbike",
-      "designer_name": "noamu",
-      "parts_count": 43,
-      "steps_count": 20,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-87500",
-      "model_name": "31088 pelican and fish",
-      "designer_name": "maratus",
-      "parts_count": 43,
-      "steps_count": 31,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-88005",
-      "model_name": "31088 cuttlefish",
-      "designer_name": "maratus",
-      "parts_count": 43,
-      "steps_count": 32,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-137059",
-      "model_name": "Obi-Wan Kenobi's Clone Command Station -  Accessory for Z-95 Headhunter 75333 Alt Build",
-      "designer_name": "theonlytelemachus",
       "parts_count": 44,
-      "steps_count": 21,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "steps_count": 4
     },
     {
-      "pair_id": "RB-MOC-90397",
-      "model_name": "31102 Spaceship",
-      "designer_name": "ace209",
+      "pair_id": "OMR-30161-1",
+      "model_name": "LDraw.org Official Model Repository - Batmobile",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
       "parts_count": 45,
-      "steps_count": 18,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "steps_count": 9
     },
     {
-      "pair_id": "RB-MOC-121496",
-      "model_name": "31112 seahorse",
-      "designer_name": "maratus",
+      "pair_id": "OMR-30472-1",
+      "model_name": "LDraw.org Official Model Repository - Parrot",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 22
+    },
+    {
+      "pair_id": "OMR-3931-1",
+      "model_name": "LDraw.org Official Model Repository - Emma&amp;#039;s Splash Pool",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4347-1",
+      "model_name": "LDraw.org Official Model Repository - Auto Pod",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 18
+    },
+    {
+      "pair_id": "OMR-4348-1",
+      "model_name": "LDraw.org Official Model Repository - Aero Pod",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 20,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "OMR-4349-1",
+      "model_name": "LDraw.org Official Model Repository - Wild Pod",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "OMR-4641-1",
+      "model_name": "LDraw.org Official Model Repository - Speed Boat",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 43,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4888-1",
+      "model_name": "LDraw.org Official Model Repository - Ocean Odyssey",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4903-1",
+      "model_name": "LDraw.org Official Model Repository - Lion",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4904-1",
+      "model_name": "LDraw.org Official Model Repository - Elephant (Life cereal promotion)",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 32,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4905-1",
+      "model_name": "LDraw.org Official Model Repository - Giraffe",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-4947-1",
+      "model_name": "LDraw.org Official Model Repository - Yellow and Black Racer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 29,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-4948-1",
+      "model_name": "LDraw.org Official Model Repository - Black and Red Racer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 23,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "OMR-4991-1",
+      "model_name": "LDraw.org Official Model Repository - Police Helicopter",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 6
+    },
+    {
+      "pair_id": "OMR-5610-1",
+      "model_name": "LDraw.org Official Model Repository - Builder",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "OMR-5864-1",
+      "model_name": "LDraw.org Official Model Repository - Mini Helicopter",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "OMR-5969-1",
+      "model_name": "LDraw.org Official Model Repository - Squidman Escape",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 14
+    },
+    {
+      "pair_id": "OMR-6966-1",
+      "model_name": "LDraw.org Official Model Repository - Jedi Starfighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 43,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "OMR-6967-1",
+      "model_name": "LDraw.org Official Model Repository - ARC-170 Starfighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "OMR-7209-1",
+      "model_name": "LDraw.org Official Model Repository - Pteranodon",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 31,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7235-1",
+      "model_name": "LDraw.org Official Model Repository - Police Motorcycle (Black Sticker Version)",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7246-1",
+      "model_name": "LDraw.org Official Model Repository - Mini Digger",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "OMR-7268-1",
+      "model_name": "LDraw.org Official Model Repository - Crab",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 35,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7269-1",
+      "model_name": "LDraw.org Official Model Repository - Scorpion",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 37,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7270-1",
+      "model_name": "LDraw.org Official Model Repository - Bird",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 28,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7601-1",
+      "model_name": "LDraw.org Official Model Repository - LEGO Go-Kart Set",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "OMR-7602-1",
+      "model_name": "LDraw.org Official Model Repository - Jeep",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
       "parts_count": 47,
-      "steps_count": 25,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "steps_count": 24
     },
     {
-      "pair_id": "RB-MOC-26387",
-      "model_name": "31057 Sea integrator",
+      "pair_id": "OMR-7603-1",
+      "model_name": "LDraw.org Official Model Repository - Dump Truck",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 34,
+      "steps_count": 22
+    },
+    {
+      "pair_id": "OMR-7607-1",
+      "model_name": "LDraw.org Official Model Repository - Butterfly",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 35,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7608-1",
+      "model_name": "LDraw.org Official Model Repository - Shark",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 28,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7609-1",
+      "model_name": "LDraw.org Official Model Repository - Helicopter",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 28,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7610-1",
+      "model_name": "LDraw.org Official Model Repository - Speedboat",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 18,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7613-1",
+      "model_name": "LDraw.org Official Model Repository - Track Racer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 35,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-7736-1",
+      "model_name": "LDraw.org Official Model Repository - Coast Guard Quad Bike",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-7802-1",
+      "model_name": "LDraw.org Official Model Repository - Black Racer Polybag",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 29,
+      "steps_count": 6
+    },
+    {
+      "pair_id": "OMR-7803-1",
+      "model_name": "LDraw.org Official Model Repository - Jeep",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "OMR-7808-1",
+      "model_name": "LDraw.org Official Model Repository - Yellow Airplane",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 35,
+      "steps_count": 23
+    },
+    {
+      "pair_id": "OMR-7875-1",
+      "model_name": "LDraw.org Official Model Repository - Backhoe",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 27
+    },
+    {
+      "pair_id": "OMR-8028-1",
+      "model_name": "LDraw.org Official Model Repository - TIE Fighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8033-1",
+      "model_name": "LDraw.org Official Model Repository - General Grievous Starfighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 17
+    },
+    {
+      "pair_id": "OMR-8119-1",
+      "model_name": "LDraw.org Official Model Repository - Thunder Racer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "OMR-8120-1",
+      "model_name": "LDraw.org Official Model Repository - Rally Sprinter",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 47,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "OMR-8121-1",
+      "model_name": "LDraw.org Official Model Repository - Track Marshal",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8122-1",
+      "model_name": "LDraw.org Official Model Repository - Desert Viper",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8130-1",
+      "model_name": "LDraw.org Official Model Repository - Terrain Crusher",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8132-1",
+      "model_name": "LDraw.org Official Model Repository - Night Driver",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "OMR-8148-1",
+      "model_name": "LDraw.org Official Model Repository - EZ-Roadster",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 45,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-8149-1",
+      "model_name": "LDraw.org Official Model Repository - Midnight Streak",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 43,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8192-1",
+      "model_name": "LDraw.org Official Model Repository - Lime Racer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "OMR-8193-1",
+      "model_name": "LDraw.org Official Model Repository - Blue Bullet",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8194-1",
+      "model_name": "LDraw.org Official Model Repository - Nitro Muscle",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 47,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "OMR-8195-1",
+      "model_name": "LDraw.org Official Model Repository - Turbo Tow",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 16
+    },
+    {
+      "pair_id": "OMR-8301-1",
+      "model_name": "LDraw.org Official Model Repository - Urban Enforcer",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 45,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "OMR-8302-1",
+      "model_name": "LDraw.org Official Model Repository - Rod Rider",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8304-1",
+      "model_name": "LDraw.org Official Model Repository - Smokin&amp;#039; Slickster",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8399-1",
+      "model_name": "LDraw.org Official Model Repository - K-9 Bot",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 18,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8400-1",
+      "model_name": "LDraw.org Official Model Repository - Space Speeder",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 12,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8642-1",
+      "model_name": "LDraw.org Official Model Repository - Monster Crusher",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 43,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "OMR-8643-1",
+      "model_name": "LDraw.org Official Model Repository - Power Cruiser",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "OMR-8644-1",
+      "model_name": "LDraw.org Official Model Repository - Street Maniac",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 36,
+      "steps_count": 6
+    },
+    {
+      "pair_id": "OMR-8656-1",
+      "model_name": "LDraw.org Official Model Repository - F6 Truck",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "OMR-8657-1",
+      "model_name": "LDraw.org Official Model Repository - ATR 4",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8658-1",
+      "model_name": "LDraw.org Official Model Repository - Big Bling Wheelie",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 32,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "OMR-8661-1",
+      "model_name": "LDraw.org Official Model Repository - Carbon Star",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "OMR-8662-1",
+      "model_name": "LDraw.org Official Model Repository - Blue Renegade",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-8663-1",
+      "model_name": "LDraw.org Official Model Repository - Fat Trax",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "RB-MOC-100751",
+      "model_name": "31114 Deep Charger",
       "designer_name": "drosse",
-      "parts_count": 47,
-      "steps_count": 22,
-      "category": null,
       "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "category": "Otro",
+      "parts_count": 37,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "RB-MOC-100752",
+      "model_name": "31114 Slingshot",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "Otro",
+      "parts_count": 23,
+      "steps_count": 5
+    },
+    {
+      "pair_id": "RB-MOC-100753",
+      "model_name": "31114 Nightpiercer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "N/A",
+      "parts_count": 25,
+      "steps_count": 9
     },
     {
       "pair_id": "RB-MOC-101140",
       "model_name": "30433 Lifting Platform",
       "designer_name": "jorah",
-      "parts_count": 48,
-      "steps_count": 15,
+      "source": "rebrickable_bricksafe",
       "category": "Plataforma_Elevadora",
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "parts_count": 48,
+      "steps_count": 15
     },
     {
-      "pair_id": "RB-MOC-27122",
-      "model_name": "31072 Truck",
-      "designer_name": "dannyvop",
-      "parts_count": 49,
-      "steps_count": 16,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-31740",
-      "model_name": "31072 Forklift",
-      "designer_name": "dannyvop",
-      "parts_count": 49,
-      "steps_count": 16,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-33618",
-      "model_name": "31091 - Crazy Hovercraft",
-      "designer_name": "InfernalQuack",
-      "parts_count": 49,
-      "steps_count": 27,
-      "category": null,
-      "source": "rebrickable_bricksafe",
-      "official_set_num": null
-    },
-    {
-      "pair_id": "RB-MOC-65972",
-      "model_name": "31090 Reef diver & Trench raider",
+      "pair_id": "RB-MOC-101572",
+      "model_name": "31114 Explorer",
       "designer_name": "drosse",
-      "parts_count": 49,
-      "steps_count": 21,
-      "category": null,
       "source": "rebrickable_bricksafe",
-      "official_set_num": null
+      "category": "Mascotas",
+      "parts_count": 30,
+      "steps_count": 14
+    },
+    {
+      "pair_id": "RB-MOC-101573",
+      "model_name": "31114 Harrier",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "Otro",
+      "parts_count": 25,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "RB-MOC-101576",
+      "model_name": "31114 Vulture",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "Otro",
+      "parts_count": 23,
+      "steps_count": 6
+    },
+    {
+      "pair_id": "RB-MOC-101577",
+      "model_name": "31114 Vaulter",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "Otro",
+      "parts_count": 35,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "RB-MOC-101924",
+      "model_name": "40469 Arcade",
+      "designer_name": "noamu",
+      "source": "rebrickable_bricksafe",
+      "category": "Otro",
+      "parts_count": 23,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "RB-MOC-102371",
+      "model_name": "31114 Shadowfox",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": "Obstaculo/Elemento del entorno",
+      "parts_count": 5,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-102372",
+      "model_name": "31114 Corvette",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 2,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-102373",
+      "model_name": "31114 Arbalest",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 17,
+      "steps_count": 5
+    },
+    {
+      "pair_id": "RB-MOC-102374",
+      "model_name": "31114 Buccaneer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 18,
+      "steps_count": 5
+    },
+    {
+      "pair_id": "RB-MOC-104234",
+      "model_name": "31123 Kakapo",
+      "designer_name": "noamu",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "RB-MOC-118664",
+      "model_name": "31130 Manta Diver",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "RB-MOC-121417",
+      "model_name": "31130 Reconnaissance Diver",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "RB-MOC-122755",
+      "model_name": "31130 Manatee Warden",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-122756",
+      "model_name": "31130 Flush Racer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 15,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-122757",
+      "model_name": "31130 Cardinal Chaser",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 22,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-136896",
+      "model_name": "30655 Tricycle for Kids",
+      "designer_name": "Larsagri",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 19,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-143700",
+      "model_name": "30655 Van",
+      "designer_name": "jorah",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-143903",
+      "model_name": "Hover Racer",
+      "designer_name": "mobyeatworld",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 21,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "RB-MOC-144914",
+      "model_name": "30655 Tow Truck",
+      "designer_name": "jorah",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 43,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "RB-MOC-144988",
+      "model_name": "30655 Rally Truck",
+      "designer_name": "jorah",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "RB-MOC-151590",
+      "model_name": "windmill (31023)",
+      "designer_name": "Heaventree",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "RB-MOC-158439",
+      "model_name": "31112 platypus",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 47,
+      "steps_count": 41
+    },
+    {
+      "pair_id": "RB-MOC-162883",
+      "model_name": "42107 Three Wheel Tractor with Cutter Bar, Three Share Plow, and Grubber",
+      "designer_name": "Larsagri",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 45,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "RB-MOC-164062",
+      "model_name": "30655 Ride-on Toy Car",
+      "designer_name": "Larsagri",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 19,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-164407",
+      "model_name": "Spaceship Stand",
+      "designer_name": "tneller",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 27,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-204089",
+      "model_name": "30655 Ride-on Trolley for Single-Axle Tractor #16",
+      "designer_name": "Larsagri",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 19,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-20421",
+      "model_name": "31074 Mini Cooper",
+      "designer_name": "Leo1",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 5,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-208578",
+      "model_name": "31040 excavator",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-209084",
+      "model_name": "31040 hovercraft",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-209916",
+      "model_name": "31040 dragster",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 40
+    },
+    {
+      "pair_id": "RB-MOC-210023",
+      "model_name": "31040 grader",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-210073",
+      "model_name": "31040 golf cart",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 36,
+      "steps_count": 28
+    },
+    {
+      "pair_id": "RB-MOC-210826",
+      "model_name": "31040 mobile crane",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-211383",
+      "model_name": "31040 forklift",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-218791",
+      "model_name": "31040 snowmobile",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-23927",
+      "model_name": "31074 Bugatti",
+      "designer_name": "Leo1",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 5,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-26384",
+      "model_name": "31057 Sea puncher",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 19,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "RB-MOC-26385",
+      "model_name": "31057 Sky runner",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 18,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "RB-MOC-26386",
+      "model_name": "31057 Sea grinder",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-26387",
+      "model_name": "31057 Sea integrator",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 21
+    },
+    {
+      "pair_id": "RB-MOC-26635",
+      "model_name": "31057 Brazen bow",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-26637",
+      "model_name": "31057 Sea digger",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-26638",
+      "model_name": "31057 Bug tracker",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 31,
+      "steps_count": 16
+    },
+    {
+      "pair_id": "RB-MOC-26728",
+      "model_name": "31087 Formula 1",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 48,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-26845",
+      "model_name": "31057 Dragonfly",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 29,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "RB-MOC-26846",
+      "model_name": "31057 Sea assessor",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-26847",
+      "model_name": "31057 Shubunkin cruiser",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 26,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "RB-MOC-26848",
+      "model_name": "31057 Hybrid swallow",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-27146",
+      "model_name": "31087 Forklift",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 3
+    },
+    {
+      "pair_id": "RB-MOC-27258",
+      "model_name": "31087 Speedboat",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-29254",
+      "model_name": "31087 Sand Blaster Buggy",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 6
+    },
+    {
+      "pair_id": "RB-MOC-29510",
+      "model_name": "31087 Blue Running Bird",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 38,
+      "steps_count": 14
+    },
+    {
+      "pair_id": "RB-MOC-29565",
+      "model_name": "31087 Mini tractor with lawn mower attachment",
+      "designer_name": "fosamax",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-32823",
+      "model_name": "31057 - Fighter Jet",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 8,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-33858",
+      "model_name": "31091 - Drag Race - Hot Rod Dragster",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 36
+    },
+    {
+      "pair_id": "RB-MOC-33860",
+      "model_name": "31091 - Drag Race - Modern Dragster",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 36
+    },
+    {
+      "pair_id": "RB-MOC-33862",
+      "model_name": "31091 - Drag Race - Dragstrip Accessories",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 36
+    },
+    {
+      "pair_id": "RB-MOC-34007",
+      "model_name": "31092 - Pusher Fighter",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 26,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "RB-MOC-34170",
+      "model_name": "31091 - Return from Fishing - Fishing Boat",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 36
+    },
+    {
+      "pair_id": "RB-MOC-35202",
+      "model_name": "31091 - Hoodless Hot Rod",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 36
+    },
+    {
+      "pair_id": "RB-MOC-35686",
+      "model_name": "31092 - Three Wheeled Lawn Mower",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 36,
+      "steps_count": 18
+    },
+    {
+      "pair_id": "RB-MOC-39608",
+      "model_name": "31058 - Sorcerer",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "RB-MOC-41986",
+      "model_name": "31071 alt : Mini Starfighter",
+      "designer_name": "snowgoon88",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 14
+    },
+    {
+      "pair_id": "RB-MOC-42395",
+      "model_name": "31087 Millennium Falcon",
+      "designer_name": "Leibowitz92",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 23,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-45693",
+      "model_name": "31081 Office",
+      "designer_name": "Nicole1",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 49,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-47092",
+      "model_name": "31107 Fuel Skiff (Accessory for C-Model)",
+      "designer_name": "Leibowitz92",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 33,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-62448",
+      "model_name": "75891 blue sportcar",
+      "designer_name": "jemunoz0",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 47,
+      "steps_count": 20
+    },
+    {
+      "pair_id": "RB-MOC-62695",
+      "model_name": "Gray concept car (75892 C Model)",
+      "designer_name": "jemunoz0",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 22,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-67125",
+      "model_name": "31090 Drift speeder",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 38,
+      "steps_count": 16
+    },
+    {
+      "pair_id": "RB-MOC-68060",
+      "model_name": "31090 Shell skimmer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 25,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-68062",
+      "model_name": "31090 Surf smasher",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 31,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-68839",
+      "model_name": "31090 Pelican patroller",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "RB-MOC-68842",
+      "model_name": "31090 Sea shrew",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 28,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "RB-MOC-68844",
+      "model_name": "31090 Sea hunter",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "RB-MOC-71103",
+      "model_name": "31090 Bow rattler",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 37,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "RB-MOC-71105",
+      "model_name": "31090 Alien annihilator",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 17
+    },
+    {
+      "pair_id": "RB-MOC-71106",
+      "model_name": "31090 Alien submarine",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 17
+    },
+    {
+      "pair_id": "RB-MOC-71872",
+      "model_name": "31090 Baby turtle",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 31,
+      "steps_count": 5
+    },
+    {
+      "pair_id": "RB-MOC-71873",
+      "model_name": "31090 Space probe",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 13,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-71875",
+      "model_name": "31090 Sea ranger",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 38,
+      "steps_count": 15
+    },
+    {
+      "pair_id": "RB-MOC-71876",
+      "model_name": "31090 Wave blaster",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 19,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-98254",
+      "model_name": "31114 Interceptor",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 46,
+      "steps_count": 21
+    },
+    {
+      "pair_id": "RB-MOC-99046",
+      "model_name": "31114 Vanquisher",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 20,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "RB-MOC-99825",
+      "model_name": "31114 Marauder",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 6,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "RB-MOC-99826",
+      "model_name": "31114 Raider",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 28,
+      "steps_count": 10
+    },
+    {
+      "pair_id": "RB-MOC-99827",
+      "model_name": "31114 Speedracer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 23,
+      "steps_count": 4
     }
   ]
 }

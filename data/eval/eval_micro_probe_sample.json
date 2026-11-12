@@ -1,0 +1,143 @@
+{
+  "dataset_name": "eval_micro_probe_sample",
+  "tier": "MICRO",
+  "description": "Representative sample for quick MICRO probe (15 sets, ~10-20 min)",
+  "total_samples": 15,
+  "samples": [
+    {
+      "pair_id": "OMR-30103-1",
+      "model_name": "LDraw.org Official Model Repository - Car",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 37,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-30105-1",
+      "model_name": "LDraw.org Official Model Repository - Stephanie and Mailbox",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 4
+    },
+    {
+      "pair_id": "OMR-30161-1",
+      "model_name": "LDraw.org Official Model Repository - Batmobile",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 45,
+      "steps_count": 9
+    },
+    {
+      "pair_id": "OMR-5610-1",
+      "model_name": "LDraw.org Official Model Repository - Builder",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 8
+    },
+    {
+      "pair_id": "OMR-5864-1",
+      "model_name": "LDraw.org Official Model Repository - Mini Helicopter",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 42,
+      "steps_count": 25
+    },
+    {
+      "pair_id": "OMR-6967-1",
+      "model_name": "LDraw.org Official Model Repository - ARC-170 Starfighter - Mini",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 11
+    },
+    {
+      "pair_id": "OMR-7235-1",
+      "model_name": "LDraw.org Official Model Repository - Police Motorcycle (Black Sticker Version)",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 30,
+      "steps_count": 1
+    },
+    {
+      "pair_id": "OMR-7603-1",
+      "model_name": "LDraw.org Official Model Repository - Dump Truck",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 34,
+      "steps_count": 22
+    },
+    {
+      "pair_id": "OMR-8193-1",
+      "model_name": "LDraw.org Official Model Repository - Blue Bullet",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 50,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8304-1",
+      "model_name": "LDraw.org Official Model Repository - Smokin&amp;#039; Slickster",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 7
+    },
+    {
+      "pair_id": "OMR-8658-1",
+      "model_name": "LDraw.org Official Model Repository - Big Bling Wheelie",
+      "designer_name": "LEGO / LDraw Community",
+      "source": "ldraw_omr",
+      "category": null,
+      "parts_count": 32,
+      "steps_count": 12
+    },
+    {
+      "pair_id": "RB-MOC-210023",
+      "model_name": "31040 grader",
+      "designer_name": "maratus",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 41,
+      "steps_count": 32
+    },
+    {
+      "pair_id": "RB-MOC-39608",
+      "model_name": "31058 - Sorcerer",
+      "designer_name": "InfernalQuack",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 44,
+      "steps_count": 19
+    },
+    {
+      "pair_id": "RB-MOC-68844",
+      "model_name": "31090 Sea hunter",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 39,
+      "steps_count": 13
+    },
+    {
+      "pair_id": "RB-MOC-99827",
+      "model_name": "31114 Speedracer",
+      "designer_name": "drosse",
+      "source": "rebrickable_bricksafe",
+      "category": null,
+      "parts_count": 23,
+      "steps_count": 4
+    }
+  ]
+}
