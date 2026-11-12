@@ -1,0 +1,119 @@
+══════════════════════════════════════════════════════════════════════════════
+🚀 FASE 3: OPCIÓN 3 — 100% EXITOSA
+══════════════════════════════════════════════════════════════════════════════
+
+⚡ RESUMEN RÁPIDO
+
+ La "corrupción" de 702 ficheros NO ERA CORRUPCIÓN.
+ Eran dos formatos distintos bajo la misma extensión:
+   - 225 ZIP (BrickLink Studio)
+   - 702 texto LDraw plano (OMR)
+
+ Con 2 fixes al loader (Nivel 1 + Nivel 2), TODOS los 927 ya funciona.
+
+ MICRO probe: 15/15 success (100%), 0.8ms avg parsing time
+ 
+ Listo para escalar a SMALL tier (337 sets, 36.4% corpus)
+
+📊 HALLAZGOS
+
+1. NO hay que re-descargar nada. Los 927 ficheros están OK.
+
+2. El problema era del PARSER, no de la integridad:
+   - io_loader.py rechazaba texto plano con "Not a zip archive"
+   - Pero el contenido era LDraw válido, solo no comprimido
+
+3. OMR files usan estructura MPD (multi-submodelo):
+   - Primer FILE block (main) frecuentemente tiene 0 STEP + pocas parts
+   - Los STEP y parts reales viven en submodelos
+   - Necesitaban contar recursivamente todas las FILE blocks
+
+📘 FIX APLICADOS
+
+Nivel 1 (5 líneas):
+  - En read_model_ldr_extended():
+    if not zipfile.is_zipfile(path):
+      return path.read_text()  # ← Lee como texto plano
+  - Resultado: 225 + 702 = 927 archivos accesibles
+
+Nivel 2 (20 líneas):
+  - En count_steps_and_parts_extended():
+    - Parse TODOS los 0 FILE blocks (no solo el primero)
+    - Cuenta STEP y parts recursivamente
+  - Resultado: Conteos reales y precisos para cada tier
+
+🎯 DISTRIBUCIÓN ACTUALIZADA
+
+ Tier       | Antes    | Después  | Cambio
+            | (225)    | (927)    |
+──────────────────────────────
+ MICRO      | 65       | 164      | +99 sets
+ SMALL      | 157      | 337      | +180 sets
+ MEDIUM     | 2        | 166      | +164 sets
+ LARGE      | 1        | 112      | +111 sets
+ XLARGE     | 0        | 148      | +148 sets
+──────────────────────────────
+ TOTAL      | 225      | 927      | +702 sets
+
+✅ PROBE MICRO EJECUTADO
+
+Samples: 15 (mezcla OMR + RB-MOC, representativos)
+Success: 15/15 (100%)
+Timings: 0.3-2.5ms per file (ultra-rápido)
+
+Detalle:
+  [1/15] ✅ OMR-30103-1    | steps=1   parts=37   | 0.3ms
+  [2/15] ✅ OMR-30105-1    | steps=4   parts=44   | 0.3ms
+  [3/15] ✅ OMR-30161-1    | steps=9   parts=45   | 0.5ms
+  ...
+  [12/15] ✅ RB-MOC-210023  | steps=40  parts=123  | 1.2ms
+  ...
+  [15/15] ✅ RB-MOC-99827   | steps=31  parts=118  | 1.0ms
+
+📁 CÓDIGO GENERADO
+
+LdrawNova/scripts/bench/:
+  ✅ io_loader_extended.py (163 líneas)
+     - read_model_ldr_extended()        → ZIP or plain text
+     - resolve_mpd_submodels()          → recursive parsing
+     - count_steps_and_parts_extended() → accurate counts
+
+LegoGPT/scripts/:
+  ✅ validate_io_corpus_extended.py   → Validates 927/927
+  ✅ launch_micro_probe.py            → Orchestrator
+  ✅ run_micro_probe.py               → Executor + reporter
+
+LegoGPT/data/eval/:
+  ✅ eval_micro_CLEAN.json            → 164 MICRO sets
+  ✅ eval_micro_probe_sample.json     → 15 representative sets
+
+🔗 COMMITS
+
+LdrawNova:
+  0780c9c feat(opcion3): extended loader with Nivel 1+2 fixes
+
+LegoGPT:
+  98a36aed feat(opcion3): MICRO probe execution script + results
+  fac468a3 feat(opcion3): complete validation + probe orchestration
+  f45bbb99 docs(phase3): final report — Opción 3 complete success
+
+🌟 SIGUIENTE PASO
+
+Estás LISTO para escalar a SMALL tier (337 sets, 36.4% corpus).
+
+Cuando lo desees:
+  1. python scripts/launch_small_probe.py
+  2. python scripts/run_small_probe.py
+  3. Analizar fallos reales (no timeouts)
+  4. Sintetizar fixes
+  5. Re-ejecutar con fixes
+
+📗 STATUS FINAL
+
+⚡ Fase 3: ✅ COMPLETA
+⚡ Opción: 3/3 (Probe MICRO + Fix 1 + 2)
+⚡ Resultado: 100% Éxito
+⚡ Corpus: 927/927 accesible
+⚡ MICRO: 15/15 probe success
+⚡ Siguiente: SMALL scale (listo cuando digas)
+══════════════════════════════════════════════════════════════════════════════
