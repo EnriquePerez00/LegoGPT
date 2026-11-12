@@ -1,0 +1,664 @@
+{
+  "dataset_name": "eval_micro_CLEAN",
+  "tier": "MICRO",
+  "parts_range": [
+    5,
+    50
+  ],
+  "description": "MICRO tier validation: only valid/parseable .io files",
+  "total_mocs": 65,
+  "timestamp": "2026-11-12",
+  "corpus_status": "Valid only (225/927 files, rest corrupted in Fase 1)",
+  "samples": [
+    {
+      "pair_id": "RB-MOC-42598",
+      "model_name": "31087 Arcade Machine",
+      "designer_name": "Leibowitz92",
+      "parts_count": 5,
+      "steps_count": 7,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-132835",
+      "model_name": "31058 emus",
+      "designer_name": "maratus",
+      "parts_count": 6,
+      "steps_count": 6,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-113683",
+      "model_name": "31124 Dreadnought (WH40k)",
+      "designer_name": "Leibowitz92",
+      "parts_count": 12,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-125267",
+      "model_name": "31112 farm animals",
+      "designer_name": "maratus",
+      "parts_count": 15,
+      "steps_count": 14,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-208578",
+      "model_name": "31040 excavator",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-209084",
+      "model_name": "31040 hovercraft",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-210023",
+      "model_name": "31040 grader",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-210826",
+      "model_name": "31040 mobile crane",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-211383",
+      "model_name": "31040 forklift",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-218791",
+      "model_name": "31040 snowmobile",
+      "designer_name": "maratus",
+      "parts_count": 16,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-101033",
+      "model_name": "Mustang Alternate",
+      "designer_name": "LegoBuilder98",
+      "parts_count": 17,
+      "steps_count": 14,
+      "category": "N/A",
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-116132",
+      "model_name": "31130 Jellyfish Excavator",
+      "designer_name": "drosse",
+      "parts_count": 19,
+      "steps_count": 12,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-209916",
+      "model_name": "31040 dragster",
+      "designer_name": "maratus",
+      "parts_count": 19,
+      "steps_count": 17,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-45860",
+      "model_name": "Jaguar Car, Go Kart +",
+      "designer_name": "LegoBuilder98",
+      "parts_count": 19,
+      "steps_count": 1,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-77601",
+      "model_name": "31107 Jungle Mech vs Triffid",
+      "designer_name": "Leibowitz92",
+      "parts_count": 19,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-134596",
+      "model_name": "31124 Sphinx",
+      "designer_name": "noamu",
+      "parts_count": 21,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-88068",
+      "model_name": "31088 sea creatures",
+      "designer_name": "maratus",
+      "parts_count": 21,
+      "steps_count": 16,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-145264",
+      "model_name": "30655 Excavator",
+      "designer_name": "jorah",
+      "parts_count": 23,
+      "steps_count": 10,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-173700",
+      "model_name": "42163 Tracked Cherry Picker",
+      "designer_name": "Larsagri",
+      "parts_count": 24,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-39608",
+      "model_name": "31058 - Sorcerer",
+      "designer_name": "InfernalQuack",
+      "parts_count": 24,
+      "steps_count": 16,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-140083",
+      "model_name": "42148 alt - Long reach excavator",
+      "designer_name": "richidello",
+      "parts_count": 25,
+      "steps_count": 14,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-99910",
+      "model_name": "Hammerhead Shark",
+      "designer_name": "LegoBuilder98",
+      "parts_count": 25,
+      "steps_count": 12,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-145411",
+      "model_name": "30655 Race Car",
+      "designer_name": "jorah",
+      "parts_count": 26,
+      "steps_count": 15,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-164407",
+      "model_name": "Spaceship Stand",
+      "designer_name": "tneller",
+      "parts_count": 27,
+      "steps_count": 7,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-20500",
+      "model_name": "31079 alt: Imperial Flagship",
+      "designer_name": "ericlego321",
+      "parts_count": 27,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-39498",
+      "model_name": "31079 alt: Seaside Castle",
+      "designer_name": "ericlego321",
+      "parts_count": 27,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-39584",
+      "model_name": "31079 alt: Fishing Boat",
+      "designer_name": "ericlego321",
+      "parts_count": 27,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-146978",
+      "model_name": "31128 Hippo",
+      "designer_name": "noamu",
+      "parts_count": 28,
+      "steps_count": 15,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-159684",
+      "model_name": "31112 crayfish",
+      "designer_name": "maratus",
+      "parts_count": 28,
+      "steps_count": 19,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-167887",
+      "model_name": "42163 Mini Excavator",
+      "designer_name": "Larsagri",
+      "parts_count": 28,
+      "steps_count": 15,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-210073",
+      "model_name": "31040 golf cart",
+      "designer_name": "maratus",
+      "parts_count": 28,
+      "steps_count": 18,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-91123",
+      "model_name": "31112 Spot Robot",
+      "designer_name": "BrickMan7",
+      "parts_count": 28,
+      "steps_count": 19,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-30377",
+      "model_name": "31087 Articulated wheel dozer",
+      "designer_name": "fosamax",
+      "parts_count": 30,
+      "steps_count": 15,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-68840",
+      "model_name": "31090 Crab surveyor",
+      "designer_name": "drosse",
+      "parts_count": 30,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-21519",
+      "model_name": "Snowmobile - 42060 Alternate Build",
+      "designer_name": "simorike",
+      "parts_count": 31,
+      "steps_count": 14,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-100132",
+      "model_name": "31112 sloth",
+      "designer_name": "maratus",
+      "parts_count": 32,
+      "steps_count": 20,
+      "category": "Animal",
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-146049",
+      "model_name": "30655 Flatbed Truck",
+      "designer_name": "jorah",
+      "parts_count": 32,
+      "steps_count": 13,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-144988",
+      "model_name": "30655 Rally Truck",
+      "designer_name": "jorah",
+      "parts_count": 33,
+      "steps_count": 18,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-152856",
+      "model_name": "31124 Manta Ray",
+      "designer_name": "noamu",
+      "parts_count": 33,
+      "steps_count": 18,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-34977",
+      "model_name": "31057 - Brushcutter robot",
+      "designer_name": "InfernalQuack",
+      "parts_count": 34,
+      "steps_count": 17,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-80113",
+      "model_name": "31099 Duck",
+      "designer_name": "Menno_Coehoorn",
+      "parts_count": 34,
+      "steps_count": 17,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-144914",
+      "model_name": "30655 Tow Truck",
+      "designer_name": "jorah",
+      "parts_count": 35,
+      "steps_count": 16,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-39607",
+      "model_name": "31058 - Moustached Cat",
+      "designer_name": "InfernalQuack",
+      "parts_count": 36,
+      "steps_count": 17,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-104234",
+      "model_name": "31123 Kakapo",
+      "designer_name": "noamu",
+      "parts_count": 37,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-143700",
+      "model_name": "30655 Van",
+      "designer_name": "jorah",
+      "parts_count": 37,
+      "steps_count": 15,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-26636",
+      "model_name": "31057 Alien flyer",
+      "designer_name": "drosse",
+      "parts_count": 37,
+      "steps_count": 14,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-161115",
+      "model_name": "42136 Mini Dumpers",
+      "designer_name": "Larsagri",
+      "parts_count": 38,
+      "steps_count": 14,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-162883",
+      "model_name": "42107 Three Wheel Tractor with Cutter Bar, Three Share Plow, and Grubber",
+      "designer_name": "Larsagri",
+      "parts_count": 40,
+      "steps_count": 11,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-30451",
+      "model_name": "31087 Blue squadron resistance X-Wing",
+      "designer_name": "fosamax",
+      "parts_count": 41,
+      "steps_count": 25,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-46716",
+      "model_name": "31087 Deep Sea Explorers",
+      "designer_name": "fosamax",
+      "parts_count": 41,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-137269",
+      "model_name": "Anakin's Z-95 Headhunter (75214 Alternate Build)",
+      "designer_name": "theonlytelemachus",
+      "parts_count": 42,
+      "steps_count": 33,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-30818",
+      "model_name": "31087 Touring Scooter",
+      "designer_name": "fosamax",
+      "parts_count": 42,
+      "steps_count": 29,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-32952",
+      "model_name": "31057 - Seaplane Biplane",
+      "designer_name": "InfernalQuack",
+      "parts_count": 42,
+      "steps_count": 22,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-104711",
+      "model_name": "31123 Speederbike",
+      "designer_name": "noamu",
+      "parts_count": 43,
+      "steps_count": 20,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-87500",
+      "model_name": "31088 pelican and fish",
+      "designer_name": "maratus",
+      "parts_count": 43,
+      "steps_count": 31,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-88005",
+      "model_name": "31088 cuttlefish",
+      "designer_name": "maratus",
+      "parts_count": 43,
+      "steps_count": 32,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-137059",
+      "model_name": "Obi-Wan Kenobi's Clone Command Station -  Accessory for Z-95 Headhunter 75333 Alt Build",
+      "designer_name": "theonlytelemachus",
+      "parts_count": 44,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-90397",
+      "model_name": "31102 Spaceship",
+      "designer_name": "ace209",
+      "parts_count": 45,
+      "steps_count": 18,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-121496",
+      "model_name": "31112 seahorse",
+      "designer_name": "maratus",
+      "parts_count": 47,
+      "steps_count": 25,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-26387",
+      "model_name": "31057 Sea integrator",
+      "designer_name": "drosse",
+      "parts_count": 47,
+      "steps_count": 22,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-101140",
+      "model_name": "30433 Lifting Platform",
+      "designer_name": "jorah",
+      "parts_count": 48,
+      "steps_count": 15,
+      "category": "Plataforma_Elevadora",
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-27122",
+      "model_name": "31072 Truck",
+      "designer_name": "dannyvop",
+      "parts_count": 49,
+      "steps_count": 16,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-31740",
+      "model_name": "31072 Forklift",
+      "designer_name": "dannyvop",
+      "parts_count": 49,
+      "steps_count": 16,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-33618",
+      "model_name": "31091 - Crazy Hovercraft",
+      "designer_name": "InfernalQuack",
+      "parts_count": 49,
+      "steps_count": 27,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    },
+    {
+      "pair_id": "RB-MOC-65972",
+      "model_name": "31090 Reef diver & Trench raider",
+      "designer_name": "drosse",
+      "parts_count": 49,
+      "steps_count": 21,
+      "category": null,
+      "source": "rebrickable_bricksafe",
+      "official_set_num": null
+    }
+  ]
+}
