@@ -1,0 +1,153 @@
+{
+  "dataset_name": "eval_large_probe_sample",
+  "tier": "LARGE",
+  "parts_range": [
+    501,
+    1000
+  ],
+  "description": "Representative sample for LARGE tier probe (20 sets, ~4 min)",
+  "total_samples": 20,
+  "timestamp": "2026-11-12T11:43:45.553175",
+  "samples": [
+    {
+      "pair_id": "OMR-10176-1",
+      "filename": "OMR-10176-1_normalized.io",
+      "steps": 234,
+      "parts": 966,
+      "size_bytes": 55765
+    },
+    {
+      "pair_id": "OMR-10281-1",
+      "filename": "OMR-10281-1_normalized.io",
+      "steps": 106,
+      "parts": 710,
+      "size_bytes": 974089
+    },
+    {
+      "pair_id": "OMR-21028-1",
+      "filename": "OMR-21028-1_normalized.io",
+      "steps": 1,
+      "parts": 534,
+      "size_bytes": 28934
+    },
+    {
+      "pair_id": "OMR-21030-1",
+      "filename": "OMR-21030-1_normalized.io",
+      "steps": 1,
+      "parts": 906,
+      "size_bytes": 44941
+    },
+    {
+      "pair_id": "OMR-21034-1",
+      "filename": "OMR-21034-1_normalized.io",
+      "steps": 1,
+      "parts": 656,
+      "size_bytes": 191159
+    },
+    {
+      "pair_id": "OMR-21039-1",
+      "filename": "OMR-21039-1_normalized.io",
+      "steps": 174,
+      "parts": 647,
+      "size_bytes": 51032
+    },
+    {
+      "pair_id": "OMR-31038-1",
+      "filename": "OMR-31038-1_normalized.io",
+      "steps": 148,
+      "parts": 565,
+      "size_bytes": 33268
+    },
+    {
+      "pair_id": "OMR-31039-1",
+      "filename": "OMR-31039-1_normalized.io",
+      "steps": 1,
+      "parts": 664,
+      "size_bytes": 159538
+    },
+    {
+      "pair_id": "OMR-31049-1",
+      "filename": "OMR-31049-1_normalized.io",
+      "steps": 111,
+      "parts": 523,
+      "size_bytes": 53928
+    },
+    {
+      "pair_id": "OMR-3187-1",
+      "filename": "OMR-3187-1_normalized.io",
+      "steps": 1,
+      "parts": 517,
+      "size_bytes": 334925
+    },
+    {
+      "pair_id": "OMR-41075-1",
+      "filename": "OMR-41075-1_normalized.io",
+      "steps": 53,
+      "parts": 810,
+      "size_bytes": 2956442
+    },
+    {
+      "pair_id": "OMR-4955-1",
+      "filename": "OMR-4955-1_normalized.io",
+      "steps": 139,
+      "parts": 558,
+      "size_bytes": 34589
+    },
+    {
+      "pair_id": "OMR-5980-1",
+      "filename": "OMR-5980-1_normalized.io",
+      "steps": 116,
+      "parts": 509,
+      "size_bytes": 43232
+    },
+    {
+      "pair_id": "OMR-7347-1",
+      "filename": "OMR-7347-1_normalized.io",
+      "steps": 221,
+      "parts": 839,
+      "size_bytes": 58249
+    },
+    {
+      "pair_id": "OMR-75102-1",
+      "filename": "OMR-75102-1_normalized.io",
+      "steps": 249,
+      "parts": 940,
+      "size_bytes": 339670
+    },
+    {
+      "pair_id": "OMR-75277-1",
+      "filename": "OMR-75277-1_normalized.io",
+      "steps": 210,
+      "parts": 673,
+      "size_bytes": 81129
+    },
+    {
+      "pair_id": "OMR-75893-1",
+      "filename": "OMR-75893-1_normalized.io",
+      "steps": 131,
+      "parts": 501,
+      "size_bytes": 371525
+    },
+    {
+      "pair_id": "OMR-75968-1",
+      "filename": "OMR-75968-1_normalized.io",
+      "steps": 219,
+      "parts": 777,
+      "size_bytes": 99727
+    },
+    {
+      "pair_id": "OMR-7784-1",
+      "filename": "OMR-7784-1_normalized.io",
+      "steps": 187,
+      "parts": 994,
+      "size_bytes": 56503
+    },
+    {
+      "pair_id": "OMR-8161-1",
+      "filename": "OMR-8161-1_normalized.io",
+      "steps": 110,
+      "parts": 551,
+      "size_bytes": 30660
+    }
+  ]
+}

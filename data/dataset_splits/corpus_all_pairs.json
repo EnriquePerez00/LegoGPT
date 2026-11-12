@@ -1,0 +1,4790 @@
+[
+  {
+    "moc_id": "OMR-31153-1",
+    "io_path": "data/omr_raw/31153-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42045-1",
+    "io_path": "data/omr_raw/42045-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42046-1",
+    "io_path": "data/omr_raw/42046-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42044-1",
+    "io_path": "data/omr_raw/42044-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21002-1",
+    "io_path": "data/omr_raw/21002-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21005-1",
+    "io_path": "data/omr_raw/21005-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21004-1",
+    "io_path": "data/omr_raw/21004-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21008-1",
+    "io_path": "data/omr_raw/21008-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21013-1",
+    "io_path": "data/omr_raw/21013-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21009-1",
+    "io_path": "data/omr_raw/21009-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21011-1",
+    "io_path": "data/omr_raw/21011-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7325-1",
+    "io_path": "data/omr_raw/7325-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7306-1",
+    "io_path": "data/omr_raw/7306-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4349-1",
+    "io_path": "data/omr_raw/4349-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10214-1",
+    "io_path": "data/omr_raw/10214-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4838-1",
+    "io_path": "data/omr_raw/4838-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9469-1",
+    "io_path": "data/omr_raw/9469-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9476-1",
+    "io_path": "data/omr_raw/9476-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7875-1",
+    "io_path": "data/omr_raw/7875-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9471-1",
+    "io_path": "data/omr_raw/9471-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9470-1",
+    "io_path": "data/omr_raw/9470-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21010-1",
+    "io_path": "data/omr_raw/21010-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21001-1",
+    "io_path": "data/omr_raw/21001-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21016-1",
+    "io_path": "data/omr_raw/21016-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42033-1",
+    "io_path": "data/omr_raw/42033-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42034-1",
+    "io_path": "data/omr_raw/42034-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42032-1",
+    "io_path": "data/omr_raw/42032-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42031-1",
+    "io_path": "data/omr_raw/42031-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42036-1",
+    "io_path": "data/omr_raw/42036-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42035-1",
+    "io_path": "data/omr_raw/42035-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42038-1",
+    "io_path": "data/omr_raw/42038-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42047-1",
+    "io_path": "data/omr_raw/42047-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42040-1",
+    "io_path": "data/omr_raw/42040-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42039-1",
+    "io_path": "data/omr_raw/42039-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42043-1",
+    "io_path": "data/omr_raw/42043-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42042-1",
+    "io_path": "data/omr_raw/42042-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42048-1",
+    "io_path": "data/omr_raw/42048-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42037-1",
+    "io_path": "data/omr_raw/42037-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40138-1",
+    "io_path": "data/omr_raw/40138-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21003-1",
+    "io_path": "data/omr_raw/21003-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21007-1",
+    "io_path": "data/omr_raw/21007-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21000-1",
+    "io_path": "data/omr_raw/21000-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21014-1",
+    "io_path": "data/omr_raw/21014-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21012-1",
+    "io_path": "data/omr_raw/21012-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21006-1",
+    "io_path": "data/omr_raw/21006-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21019-1",
+    "io_path": "data/omr_raw/21019-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21020-1",
+    "io_path": "data/omr_raw/21020-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21022-1",
+    "io_path": "data/omr_raw/21022-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21021-1",
+    "io_path": "data/omr_raw/21021-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21015-1",
+    "io_path": "data/omr_raw/21015-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21023-1",
+    "io_path": "data/omr_raw/21023-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21017-1",
+    "io_path": "data/omr_raw/21017-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21024-1",
+    "io_path": "data/omr_raw/21024-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21018-1",
+    "io_path": "data/omr_raw/21018-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21026-1",
+    "io_path": "data/omr_raw/21026-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21031-1",
+    "io_path": "data/omr_raw/21031-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4915-1",
+    "io_path": "data/omr_raw/4915-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4918-1",
+    "io_path": "data/omr_raw/4918-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3063-1",
+    "io_path": "data/omr_raw/3063-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3931-1",
+    "io_path": "data/omr_raw/3931-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3930-1",
+    "io_path": "data/omr_raw/3930-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42049-1",
+    "io_path": "data/omr_raw/42049-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42050-1",
+    "io_path": "data/omr_raw/42050-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42052-1",
+    "io_path": "data/omr_raw/42052-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7667-1",
+    "io_path": "data/omr_raw/7667-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8028-1",
+    "io_path": "data/omr_raw/8028-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8033-1",
+    "io_path": "data/omr_raw/8033-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30050-1",
+    "io_path": "data/omr_raw/30050-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8031-1",
+    "io_path": "data/omr_raw/8031-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30051-1",
+    "io_path": "data/omr_raw/30051-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30055-1",
+    "io_path": "data/omr_raw/30055-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7607-1",
+    "io_path": "data/omr_raw/7607-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7609-1",
+    "io_path": "data/omr_raw/7609-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7610-1",
+    "io_path": "data/omr_raw/7610-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30023-1",
+    "io_path": "data/omr_raw/30023-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30029-1",
+    "io_path": "data/omr_raw/30029-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7608-1",
+    "io_path": "data/omr_raw/7608-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4903-1",
+    "io_path": "data/omr_raw/4903-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4905-1",
+    "io_path": "data/omr_raw/4905-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7209-1",
+    "io_path": "data/omr_raw/7209-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4904-1",
+    "io_path": "data/omr_raw/4904-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7269-1",
+    "io_path": "data/omr_raw/7269-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7270-1",
+    "io_path": "data/omr_raw/7270-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7268-1",
+    "io_path": "data/omr_raw/7268-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31039-1",
+    "io_path": "data/omr_raw/31039-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40148-1",
+    "io_path": "data/omr_raw/40148-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31038-1",
+    "io_path": "data/omr_raw/31038-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21027-1",
+    "io_path": "data/omr_raw/21027-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41500-1",
+    "io_path": "data/omr_raw/41500-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41501-1",
+    "io_path": "data/omr_raw/41501-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41505-1",
+    "io_path": "data/omr_raw/41505-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41504-1",
+    "io_path": "data/omr_raw/41504-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41502-1",
+    "io_path": "data/omr_raw/41502-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41503-1",
+    "io_path": "data/omr_raw/41503-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31027-1",
+    "io_path": "data/omr_raw/31027-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21028-1",
+    "io_path": "data/omr_raw/21028-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31037-1",
+    "io_path": "data/omr_raw/31037-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30283-1",
+    "io_path": "data/omr_raw/30283-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31028-1",
+    "io_path": "data/omr_raw/31028-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30284-1",
+    "io_path": "data/omr_raw/30284-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21113-1",
+    "io_path": "data/omr_raw/21113-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42053-1",
+    "io_path": "data/omr_raw/42053-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42054-1",
+    "io_path": "data/omr_raw/42054-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42055-1",
+    "io_path": "data/omr_raw/42055-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42056-1",
+    "io_path": "data/omr_raw/42056-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10251-1",
+    "io_path": "data/omr_raw/10251-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60101-1",
+    "io_path": "data/omr_raw/60101-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42020-1",
+    "io_path": "data/omr_raw/42020-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7893-1",
+    "io_path": "data/omr_raw/7893-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10174-1",
+    "io_path": "data/omr_raw/10174-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10252-1",
+    "io_path": "data/omr_raw/10252-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3061-1",
+    "io_path": "data/omr_raw/3061-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3184-1",
+    "io_path": "data/omr_raw/3184-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41015-1",
+    "io_path": "data/omr_raw/41015-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42004-1",
+    "io_path": "data/omr_raw/42004-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3315-1",
+    "io_path": "data/omr_raw/3315-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10212-1",
+    "io_path": "data/omr_raw/10212-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10134-1",
+    "io_path": "data/omr_raw/10134-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10227-1",
+    "io_path": "data/omr_raw/10227-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10179-1",
+    "io_path": "data/omr_raw/10179-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10240-1",
+    "io_path": "data/omr_raw/10240-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41092-1",
+    "io_path": "data/omr_raw/41092-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42024-1",
+    "io_path": "data/omr_raw/42024-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42022-1",
+    "io_path": "data/omr_raw/42022-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42021-1",
+    "io_path": "data/omr_raw/42021-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42058-1",
+    "io_path": "data/omr_raw/42058-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8049-1",
+    "io_path": "data/omr_raw/8049-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42023-1",
+    "io_path": "data/omr_raw/42023-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30285-1",
+    "io_path": "data/omr_raw/30285-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30311-1",
+    "io_path": "data/omr_raw/30311-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75010-1",
+    "io_path": "data/omr_raw/75010-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42060-1",
+    "io_path": "data/omr_raw/42060-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42057-1",
+    "io_path": "data/omr_raw/42057-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31045-1",
+    "io_path": "data/omr_raw/31045-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42059-1",
+    "io_path": "data/omr_raw/42059-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42064-1",
+    "io_path": "data/omr_raw/42064-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42065-1",
+    "io_path": "data/omr_raw/42065-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42066-1",
+    "io_path": "data/omr_raw/42066-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42063-1",
+    "io_path": "data/omr_raw/42063-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42061-1",
+    "io_path": "data/omr_raw/42061-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42062-1",
+    "io_path": "data/omr_raw/42062-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-70127-1",
+    "io_path": "data/omr_raw/70127-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41071-1",
+    "io_path": "data/omr_raw/41071-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41073-1",
+    "io_path": "data/omr_raw/41073-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21107-1",
+    "io_path": "data/omr_raw/21107-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30313-1",
+    "io_path": "data/omr_raw/30313-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41072-1",
+    "io_path": "data/omr_raw/41072-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30312-1",
+    "io_path": "data/omr_raw/30312-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60065-1",
+    "io_path": "data/omr_raw/60065-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60067-1",
+    "io_path": "data/omr_raw/60067-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60066-1",
+    "io_path": "data/omr_raw/60066-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60083-1",
+    "io_path": "data/omr_raw/60083-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30259-1",
+    "io_path": "data/omr_raw/30259-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6208-1",
+    "io_path": "data/omr_raw/6208-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7327-1",
+    "io_path": "data/omr_raw/7327-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21034-1",
+    "io_path": "data/omr_raw/21034-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21032-1",
+    "io_path": "data/omr_raw/21032-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21030-1",
+    "io_path": "data/omr_raw/21030-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21035-1",
+    "io_path": "data/omr_raw/21035-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21033-1",
+    "io_path": "data/omr_raw/21033-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21029-1",
+    "io_path": "data/omr_raw/21029-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31040-1",
+    "io_path": "data/omr_raw/31040-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41075-1",
+    "io_path": "data/omr_raw/41075-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41181-1",
+    "io_path": "data/omr_raw/41181-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41587-1",
+    "io_path": "data/omr_raw/41587-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41586-1",
+    "io_path": "data/omr_raw/41586-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75144-1",
+    "io_path": "data/omr_raw/75144-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41588-1",
+    "io_path": "data/omr_raw/41588-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10175-1",
+    "io_path": "data/omr_raw/10175-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4837-1",
+    "io_path": "data/omr_raw/4837-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41585-1",
+    "io_path": "data/omr_raw/41585-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10243-1",
+    "io_path": "data/omr_raw/10243-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5762-1",
+    "io_path": "data/omr_raw/5762-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41590-1",
+    "io_path": "data/omr_raw/41590-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41591-1",
+    "io_path": "data/omr_raw/41591-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41589-1",
+    "io_path": "data/omr_raw/41589-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41592-1",
+    "io_path": "data/omr_raw/41592-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42068-1",
+    "io_path": "data/omr_raw/42068-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42069-1",
+    "io_path": "data/omr_raw/42069-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42070-1",
+    "io_path": "data/omr_raw/42070-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4492-1",
+    "io_path": "data/omr_raw/4492-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4495-1",
+    "io_path": "data/omr_raw/4495-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4494-1",
+    "io_path": "data/omr_raw/4494-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4493-1",
+    "io_path": "data/omr_raw/4493-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6966-1",
+    "io_path": "data/omr_raw/6966-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6967-1",
+    "io_path": "data/omr_raw/6967-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5864-1",
+    "io_path": "data/omr_raw/5864-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42074-1",
+    "io_path": "data/omr_raw/42074-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42078-1",
+    "io_path": "data/omr_raw/42078-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42084-1",
+    "io_path": "data/omr_raw/42084-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42073-1",
+    "io_path": "data/omr_raw/42073-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42075-1",
+    "io_path": "data/omr_raw/42075-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6741-1",
+    "io_path": "data/omr_raw/6741-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42072-1",
+    "io_path": "data/omr_raw/42072-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6742-1",
+    "io_path": "data/omr_raw/6742-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6911-1",
+    "io_path": "data/omr_raw/6911-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7601-1",
+    "io_path": "data/omr_raw/7601-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7803-1",
+    "io_path": "data/omr_raw/7803-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7808-1",
+    "io_path": "data/omr_raw/7808-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42077-1",
+    "io_path": "data/omr_raw/42077-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7603-1",
+    "io_path": "data/omr_raw/7603-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7602-1",
+    "io_path": "data/omr_raw/7602-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42071-1",
+    "io_path": "data/omr_raw/42071-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42079-1",
+    "io_path": "data/omr_raw/42079-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42076-1",
+    "io_path": "data/omr_raw/42076-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42080-1",
+    "io_path": "data/omr_raw/42080-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42082-1",
+    "io_path": "data/omr_raw/42082-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42081-1",
+    "io_path": "data/omr_raw/42081-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40274-1",
+    "io_path": "data/omr_raw/40274-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40270-1",
+    "io_path": "data/omr_raw/40270-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30542-1",
+    "io_path": "data/omr_raw/30542-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31066-1",
+    "io_path": "data/omr_raw/31066-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42083-1",
+    "io_path": "data/omr_raw/42083-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10156-1",
+    "io_path": "data/omr_raw/10156-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10159-1",
+    "io_path": "data/omr_raw/10159-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10143-1",
+    "io_path": "data/omr_raw/10143-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4348-1",
+    "io_path": "data/omr_raw/4348-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4347-1",
+    "io_path": "data/omr_raw/4347-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4439-1",
+    "io_path": "data/omr_raw/4439-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4205-1",
+    "io_path": "data/omr_raw/4205-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4778-1",
+    "io_path": "data/omr_raw/4778-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4886-1",
+    "io_path": "data/omr_raw/4886-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4947-1",
+    "io_path": "data/omr_raw/4947-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4888-1",
+    "io_path": "data/omr_raw/4888-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4641-1",
+    "io_path": "data/omr_raw/4641-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4948-1",
+    "io_path": "data/omr_raw/4948-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5969-1",
+    "io_path": "data/omr_raw/5969-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5970-1",
+    "io_path": "data/omr_raw/5970-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5971-1",
+    "io_path": "data/omr_raw/5971-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5974-1",
+    "io_path": "data/omr_raw/5974-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5973-1",
+    "io_path": "data/omr_raw/5973-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5980-1",
+    "io_path": "data/omr_raw/5980-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5982-1",
+    "io_path": "data/omr_raw/5982-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5981-1",
+    "io_path": "data/omr_raw/5981-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5972-1",
+    "io_path": "data/omr_raw/5972-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5983-1",
+    "io_path": "data/omr_raw/5983-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5979-1",
+    "io_path": "data/omr_raw/5979-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5985-1",
+    "io_path": "data/omr_raw/5985-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7326-1",
+    "io_path": "data/omr_raw/7326-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5984-1",
+    "io_path": "data/omr_raw/5984-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7613-1",
+    "io_path": "data/omr_raw/7613-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7657-1",
+    "io_path": "data/omr_raw/7657-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7802-1",
+    "io_path": "data/omr_raw/7802-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8063-1",
+    "io_path": "data/omr_raw/8063-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8122-1",
+    "io_path": "data/omr_raw/8122-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8120-1",
+    "io_path": "data/omr_raw/8120-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8123-1",
+    "io_path": "data/omr_raw/8123-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8124-1",
+    "io_path": "data/omr_raw/8124-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8125-1",
+    "io_path": "data/omr_raw/8125-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8119-1",
+    "io_path": "data/omr_raw/8119-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8126-1",
+    "io_path": "data/omr_raw/8126-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8131-1",
+    "io_path": "data/omr_raw/8131-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8133-1",
+    "io_path": "data/omr_raw/8133-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8121-1",
+    "io_path": "data/omr_raw/8121-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8147-1",
+    "io_path": "data/omr_raw/8147-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8134-1",
+    "io_path": "data/omr_raw/8134-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8130-1",
+    "io_path": "data/omr_raw/8130-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8148-1",
+    "io_path": "data/omr_raw/8148-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8149-1",
+    "io_path": "data/omr_raw/8149-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8150-1",
+    "io_path": "data/omr_raw/8150-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8135-1",
+    "io_path": "data/omr_raw/8135-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8154-1",
+    "io_path": "data/omr_raw/8154-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8132-1",
+    "io_path": "data/omr_raw/8132-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8186-1",
+    "io_path": "data/omr_raw/8186-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8192-1",
+    "io_path": "data/omr_raw/8192-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8182-1",
+    "io_path": "data/omr_raw/8182-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8193-1",
+    "io_path": "data/omr_raw/8193-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8195-1",
+    "io_path": "data/omr_raw/8195-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8196-1",
+    "io_path": "data/omr_raw/8196-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8197-1",
+    "io_path": "data/omr_raw/8197-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8198-1",
+    "io_path": "data/omr_raw/8198-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8199-1",
+    "io_path": "data/omr_raw/8199-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8194-1",
+    "io_path": "data/omr_raw/8194-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8302-1",
+    "io_path": "data/omr_raw/8302-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8301-1",
+    "io_path": "data/omr_raw/8301-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8303-1",
+    "io_path": "data/omr_raw/8303-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8152-1",
+    "io_path": "data/omr_raw/8152-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8211-1",
+    "io_path": "data/omr_raw/8211-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8495-1",
+    "io_path": "data/omr_raw/8495-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8641-1",
+    "io_path": "data/omr_raw/8641-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8151-1",
+    "io_path": "data/omr_raw/8151-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8642-1",
+    "io_path": "data/omr_raw/8642-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8643-1",
+    "io_path": "data/omr_raw/8643-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8655-1",
+    "io_path": "data/omr_raw/8655-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8644-1",
+    "io_path": "data/omr_raw/8644-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8304-1",
+    "io_path": "data/omr_raw/8304-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8656-1",
+    "io_path": "data/omr_raw/8656-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8657-1",
+    "io_path": "data/omr_raw/8657-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8662-1",
+    "io_path": "data/omr_raw/8662-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8658-1",
+    "io_path": "data/omr_raw/8658-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8663-1",
+    "io_path": "data/omr_raw/8663-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8661-1",
+    "io_path": "data/omr_raw/8661-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8664-1",
+    "io_path": "data/omr_raw/8664-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8665-1",
+    "io_path": "data/omr_raw/8665-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8666-1",
+    "io_path": "data/omr_raw/8666-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9094-1",
+    "io_path": "data/omr_raw/9094-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9092-1",
+    "io_path": "data/omr_raw/9092-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9093-1",
+    "io_path": "data/omr_raw/9093-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9095-1",
+    "io_path": "data/omr_raw/9095-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8681-1",
+    "io_path": "data/omr_raw/8681-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30161-1",
+    "io_path": "data/omr_raw/30161-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30300-1",
+    "io_path": "data/omr_raw/30300-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8158-1",
+    "io_path": "data/omr_raw/8158-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8159-1",
+    "io_path": "data/omr_raw/8159-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8399-1",
+    "io_path": "data/omr_raw/8399-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8258-1",
+    "io_path": "data/omr_raw/8258-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8272-1",
+    "io_path": "data/omr_raw/8272-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8161-1",
+    "io_path": "data/omr_raw/8161-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8273-1",
+    "io_path": "data/omr_raw/8273-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8160-1",
+    "io_path": "data/omr_raw/8160-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8400-1",
+    "io_path": "data/omr_raw/8400-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8274-1",
+    "io_path": "data/omr_raw/8274-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8275-1",
+    "io_path": "data/omr_raw/8275-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9390-1",
+    "io_path": "data/omr_raw/9390-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9391-1",
+    "io_path": "data/omr_raw/9391-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9394-1",
+    "io_path": "data/omr_raw/9394-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9395-1",
+    "io_path": "data/omr_raw/9395-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9392-1",
+    "io_path": "data/omr_raw/9392-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9396-1",
+    "io_path": "data/omr_raw/9396-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10182-1",
+    "io_path": "data/omr_raw/10182-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9397-1",
+    "io_path": "data/omr_raw/9397-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10213-1",
+    "io_path": "data/omr_raw/10213-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10185-1",
+    "io_path": "data/omr_raw/10185-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10197-1",
+    "io_path": "data/omr_raw/10197-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10258-1",
+    "io_path": "data/omr_raw/10258-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31084-1",
+    "io_path": "data/omr_raw/31084-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21309-1",
+    "io_path": "data/omr_raw/21309-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31063-1",
+    "io_path": "data/omr_raw/31063-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40142-1",
+    "io_path": "data/omr_raw/40142-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40141-1",
+    "io_path": "data/omr_raw/40141-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40144-1",
+    "io_path": "data/omr_raw/40144-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40180-1",
+    "io_path": "data/omr_raw/40180-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40181-1",
+    "io_path": "data/omr_raw/40181-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40143-1",
+    "io_path": "data/omr_raw/40143-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40182-1",
+    "io_path": "data/omr_raw/40182-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40183-1",
+    "io_path": "data/omr_raw/40183-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41512-1",
+    "io_path": "data/omr_raw/41512-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60001-1",
+    "io_path": "data/omr_raw/60001-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42041-1",
+    "io_path": "data/omr_raw/42041-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-71006-1",
+    "io_path": "data/omr_raw/71006-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42006-1",
+    "io_path": "data/omr_raw/42006-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75050-1",
+    "io_path": "data/omr_raw/75050-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75053-1",
+    "io_path": "data/omr_raw/75053-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75102-1",
+    "io_path": "data/omr_raw/75102-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75054-1",
+    "io_path": "data/omr_raw/75054-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42000-1",
+    "io_path": "data/omr_raw/42000-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75155-1",
+    "io_path": "data/omr_raw/75155-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75055-1",
+    "io_path": "data/omr_raw/75055-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8259-1",
+    "io_path": "data/omr_raw/8259-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8256-1",
+    "io_path": "data/omr_raw/8256-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4432-1",
+    "io_path": "data/omr_raw/4432-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10230-1",
+    "io_path": "data/omr_raw/10230-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8285-1",
+    "io_path": "data/omr_raw/8285-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21041-1",
+    "io_path": "data/omr_raw/21041-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8260-1",
+    "io_path": "data/omr_raw/8260-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8261-1",
+    "io_path": "data/omr_raw/8261-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21036-1",
+    "io_path": "data/omr_raw/21036-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21039-1",
+    "io_path": "data/omr_raw/21039-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21042-1",
+    "io_path": "data/omr_raw/21042-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21047-1",
+    "io_path": "data/omr_raw/21047-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40354-1",
+    "io_path": "data/omr_raw/40354-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21043-1",
+    "io_path": "data/omr_raw/21043-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41594-1",
+    "io_path": "data/omr_raw/41594-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41596-1",
+    "io_path": "data/omr_raw/41596-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41595-1",
+    "io_path": "data/omr_raw/41595-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42026-1",
+    "io_path": "data/omr_raw/42026-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42092-1",
+    "io_path": "data/omr_raw/42092-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42094-1",
+    "io_path": "data/omr_raw/42094-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42095-1",
+    "io_path": "data/omr_raw/42095-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42096-1",
+    "io_path": "data/omr_raw/42096-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21307-1",
+    "io_path": "data/omr_raw/21307-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42093-1",
+    "io_path": "data/omr_raw/42093-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4208-1",
+    "io_path": "data/omr_raw/4208-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41593-1",
+    "io_path": "data/omr_raw/41593-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-70814-1",
+    "io_path": "data/omr_raw/70814-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21303-1",
+    "io_path": "data/omr_raw/21303-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-70816-1",
+    "io_path": "data/omr_raw/70816-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40199-1",
+    "io_path": "data/omr_raw/40199-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7245-1",
+    "io_path": "data/omr_raw/7245-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7236-1",
+    "io_path": "data/omr_raw/7236-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21037-1",
+    "io_path": "data/omr_raw/21037-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30571-1",
+    "io_path": "data/omr_raw/30571-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41486-1",
+    "io_path": "data/omr_raw/41486-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41485-1",
+    "io_path": "data/omr_raw/41485-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21045-1",
+    "io_path": "data/omr_raw/21045-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10885-1",
+    "io_path": "data/omr_raw/10885-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21046-1",
+    "io_path": "data/omr_raw/21046-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40290-1",
+    "io_path": "data/omr_raw/40290-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75033-1",
+    "io_path": "data/omr_raw/75033-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30277-1",
+    "io_path": "data/omr_raw/30277-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75060-1",
+    "io_path": "data/omr_raw/75060-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10264-1",
+    "io_path": "data/omr_raw/10264-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10246-1",
+    "io_path": "data/omr_raw/10246-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8099-1",
+    "io_path": "data/omr_raw/8099-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42099-1",
+    "io_path": "data/omr_raw/42099-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31313-1",
+    "io_path": "data/omr_raw/31313-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42088-1",
+    "io_path": "data/omr_raw/42088-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42110-1",
+    "io_path": "data/omr_raw/42110-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42100-1",
+    "io_path": "data/omr_raw/42100-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40433-1",
+    "io_path": "data/omr_raw/40433-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3178-1",
+    "io_path": "data/omr_raw/3178-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60017-1",
+    "io_path": "data/omr_raw/60017-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3181-1",
+    "io_path": "data/omr_raw/3181-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3179-1",
+    "io_path": "data/omr_raw/3179-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4991-1",
+    "io_path": "data/omr_raw/4991-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3221-1",
+    "io_path": "data/omr_raw/3221-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4200-1",
+    "io_path": "data/omr_raw/4200-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4206-1",
+    "io_path": "data/omr_raw/4206-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4896-1",
+    "io_path": "data/omr_raw/4896-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4436-1",
+    "io_path": "data/omr_raw/4436-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4643-1",
+    "io_path": "data/omr_raw/4643-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7235-1",
+    "io_path": "data/omr_raw/7235-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4434-1",
+    "io_path": "data/omr_raw/4434-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4433-1",
+    "io_path": "data/omr_raw/4433-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7242-1",
+    "io_path": "data/omr_raw/7242-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7246-1",
+    "io_path": "data/omr_raw/7246-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7248-1",
+    "io_path": "data/omr_raw/7248-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5610-1",
+    "io_path": "data/omr_raw/5610-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7635-1",
+    "io_path": "data/omr_raw/7635-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7636-1",
+    "io_path": "data/omr_raw/7636-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7639-1",
+    "io_path": "data/omr_raw/7639-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7638-1",
+    "io_path": "data/omr_raw/7638-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7631-1",
+    "io_path": "data/omr_raw/7631-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7630-1",
+    "io_path": "data/omr_raw/7630-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7634-1",
+    "io_path": "data/omr_raw/7634-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7637-1",
+    "io_path": "data/omr_raw/7637-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7641-1",
+    "io_path": "data/omr_raw/7641-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7733-1",
+    "io_path": "data/omr_raw/7733-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7732-1",
+    "io_path": "data/omr_raw/7732-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7741-1",
+    "io_path": "data/omr_raw/7741-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7990-1",
+    "io_path": "data/omr_raw/7990-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7685-1",
+    "io_path": "data/omr_raw/7685-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7737-1",
+    "io_path": "data/omr_raw/7737-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31072-1",
+    "io_path": "data/omr_raw/31072-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7736-1",
+    "io_path": "data/omr_raw/7736-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42102-1",
+    "io_path": "data/omr_raw/42102-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8110-1",
+    "io_path": "data/omr_raw/8110-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7743-1",
+    "io_path": "data/omr_raw/7743-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75181-1",
+    "io_path": "data/omr_raw/75181-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-76139-1",
+    "io_path": "data/omr_raw/76139-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7746-1",
+    "io_path": "data/omr_raw/7746-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42101-1",
+    "io_path": "data/omr_raw/42101-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7747-1",
+    "io_path": "data/omr_raw/7747-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7903-1",
+    "io_path": "data/omr_raw/7903-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7942-1",
+    "io_path": "data/omr_raw/7942-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7997-1",
+    "io_path": "data/omr_raw/7997-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7991-1",
+    "io_path": "data/omr_raw/7991-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7992-1",
+    "io_path": "data/omr_raw/7992-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10176-1",
+    "io_path": "data/omr_raw/10176-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7936-1",
+    "io_path": "data/omr_raw/7936-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75253-1",
+    "io_path": "data/omr_raw/75253-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10184-1",
+    "io_path": "data/omr_raw/10184-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10218-1",
+    "io_path": "data/omr_raw/10218-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60059-1",
+    "io_path": "data/omr_raw/60059-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75892-1",
+    "io_path": "data/omr_raw/75892-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42108-1",
+    "io_path": "data/omr_raw/42108-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-76897-1",
+    "io_path": "data/omr_raw/76897-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75895-1",
+    "io_path": "data/omr_raw/75895-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4917-1",
+    "io_path": "data/omr_raw/4917-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10270-1",
+    "io_path": "data/omr_raw/10270-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4956-1",
+    "io_path": "data/omr_raw/4956-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4993-1",
+    "io_path": "data/omr_raw/4993-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4954-1",
+    "io_path": "data/omr_raw/4954-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4996-1",
+    "io_path": "data/omr_raw/4996-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60216-1",
+    "io_path": "data/omr_raw/60216-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6743-1",
+    "io_path": "data/omr_raw/6743-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5865-1",
+    "io_path": "data/omr_raw/5865-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5766-1",
+    "io_path": "data/omr_raw/5766-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5893-1",
+    "io_path": "data/omr_raw/5893-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6745-1",
+    "io_path": "data/omr_raw/6745-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6747-1",
+    "io_path": "data/omr_raw/6747-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30572-1",
+    "io_path": "data/omr_raw/30572-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31031-1",
+    "io_path": "data/omr_raw/31031-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5891-1",
+    "io_path": "data/omr_raw/5891-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4883-1",
+    "io_path": "data/omr_raw/4883-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7784-1",
+    "io_path": "data/omr_raw/7784-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31048-1",
+    "io_path": "data/omr_raw/31048-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31092-1",
+    "io_path": "data/omr_raw/31092-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31088-1",
+    "io_path": "data/omr_raw/31088-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8081-1",
+    "io_path": "data/omr_raw/8081-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7632-1",
+    "io_path": "data/omr_raw/7632-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31025-1",
+    "io_path": "data/omr_raw/31025-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21321-1",
+    "io_path": "data/omr_raw/21321-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8270-1",
+    "io_path": "data/omr_raw/8270-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40335-1",
+    "io_path": "data/omr_raw/40335-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8283-1",
+    "io_path": "data/omr_raw/8283-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10272-1",
+    "io_path": "data/omr_raw/10272-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8418-1",
+    "io_path": "data/omr_raw/8418-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8281-1",
+    "io_path": "data/omr_raw/8281-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8416-1",
+    "io_path": "data/omr_raw/8416-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8419-1",
+    "io_path": "data/omr_raw/8419-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10271-1",
+    "io_path": "data/omr_raw/10271-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21052-1",
+    "io_path": "data/omr_raw/21052-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30472-1",
+    "io_path": "data/omr_raw/30472-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42106-1",
+    "io_path": "data/omr_raw/42106-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42105-1",
+    "io_path": "data/omr_raw/42105-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31009-1",
+    "io_path": "data/omr_raw/31009-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21051-1",
+    "io_path": "data/omr_raw/21051-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31049-1",
+    "io_path": "data/omr_raw/31049-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60018-1",
+    "io_path": "data/omr_raw/60018-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42109-1",
+    "io_path": "data/omr_raw/42109-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8143-1",
+    "io_path": "data/omr_raw/8143-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8156-1",
+    "io_path": "data/omr_raw/8156-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8289-1",
+    "io_path": "data/omr_raw/8289-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10248-1",
+    "io_path": "data/omr_raw/10248-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21311-1",
+    "io_path": "data/omr_raw/21311-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10242-1",
+    "io_path": "data/omr_raw/10242-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41999-1",
+    "io_path": "data/omr_raw/41999-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42029-1",
+    "io_path": "data/omr_raw/42029-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40396-1",
+    "io_path": "data/omr_raw/40396-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8169-1",
+    "io_path": "data/omr_raw/8169-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-9393-1",
+    "io_path": "data/omr_raw/9393-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10224-1",
+    "io_path": "data/omr_raw/10224-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42111-1",
+    "io_path": "data/omr_raw/42111-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75075-1",
+    "io_path": "data/omr_raw/75075-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-76042-1",
+    "io_path": "data/omr_raw/76042-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75277-1",
+    "io_path": "data/omr_raw/75277-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-77904-1",
+    "io_path": "data/omr_raw/77904-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75276-1",
+    "io_path": "data/omr_raw/75276-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75953-1",
+    "io_path": "data/omr_raw/75953-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75948-1",
+    "io_path": "data/omr_raw/75948-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75969-1",
+    "io_path": "data/omr_raw/75969-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75272-1",
+    "io_path": "data/omr_raw/75272-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75966-1",
+    "io_path": "data/omr_raw/75966-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75980-1",
+    "io_path": "data/omr_raw/75980-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75954-1",
+    "io_path": "data/omr_raw/75954-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75968-1",
+    "io_path": "data/omr_raw/75968-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42107-1",
+    "io_path": "data/omr_raw/42107-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42114-1",
+    "io_path": "data/omr_raw/42114-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42112-1",
+    "io_path": "data/omr_raw/42112-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-51515-1",
+    "io_path": "data/omr_raw/51515-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40413-1",
+    "io_path": "data/omr_raw/40413-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-76161-1",
+    "io_path": "data/omr_raw/76161-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40272-1",
+    "io_path": "data/omr_raw/40272-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40273-1",
+    "io_path": "data/omr_raw/40273-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40271-1",
+    "io_path": "data/omr_raw/40271-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40348-1",
+    "io_path": "data/omr_raw/40348-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40351-1",
+    "io_path": "data/omr_raw/40351-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40353-1",
+    "io_path": "data/omr_raw/40353-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40349-1",
+    "io_path": "data/omr_raw/40349-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40367-1",
+    "io_path": "data/omr_raw/40367-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40350-1",
+    "io_path": "data/omr_raw/40350-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40377-1",
+    "io_path": "data/omr_raw/40377-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40412-1",
+    "io_path": "data/omr_raw/40412-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40380-1",
+    "io_path": "data/omr_raw/40380-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40352-1",
+    "io_path": "data/omr_raw/40352-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40425-1",
+    "io_path": "data/omr_raw/40425-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40436-1",
+    "io_path": "data/omr_raw/40436-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40378-1",
+    "io_path": "data/omr_raw/40378-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40441-1",
+    "io_path": "data/omr_raw/40441-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40379-1",
+    "io_path": "data/omr_raw/40379-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41487-1",
+    "io_path": "data/omr_raw/41487-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40466-1",
+    "io_path": "data/omr_raw/40466-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40440-1",
+    "io_path": "data/omr_raw/40440-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41488-1",
+    "io_path": "data/omr_raw/41488-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41598-1",
+    "io_path": "data/omr_raw/41598-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41599-1",
+    "io_path": "data/omr_raw/41599-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41604-1",
+    "io_path": "data/omr_raw/41604-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41605-1",
+    "io_path": "data/omr_raw/41605-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41603-1",
+    "io_path": "data/omr_raw/41603-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41606-1",
+    "io_path": "data/omr_raw/41606-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41601-1",
+    "io_path": "data/omr_raw/41601-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41600-1",
+    "io_path": "data/omr_raw/41600-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41602-1",
+    "io_path": "data/omr_raw/41602-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41607-1",
+    "io_path": "data/omr_raw/41607-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41609-1",
+    "io_path": "data/omr_raw/41609-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41611-1",
+    "io_path": "data/omr_raw/41611-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41608-1",
+    "io_path": "data/omr_raw/41608-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41614-1",
+    "io_path": "data/omr_raw/41614-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41612-1",
+    "io_path": "data/omr_raw/41612-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41613-1",
+    "io_path": "data/omr_raw/41613-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41616-1",
+    "io_path": "data/omr_raw/41616-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41618-1",
+    "io_path": "data/omr_raw/41618-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41615-1",
+    "io_path": "data/omr_raw/41615-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41621-1",
+    "io_path": "data/omr_raw/41621-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41624-1",
+    "io_path": "data/omr_raw/41624-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41620-1",
+    "io_path": "data/omr_raw/41620-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41617-1",
+    "io_path": "data/omr_raw/41617-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41625-1",
+    "io_path": "data/omr_raw/41625-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41627-1",
+    "io_path": "data/omr_raw/41627-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41630-1",
+    "io_path": "data/omr_raw/41630-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41634-1",
+    "io_path": "data/omr_raw/41634-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75317-1",
+    "io_path": "data/omr_raw/75317-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41637-1",
+    "io_path": "data/omr_raw/41637-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21302-1",
+    "io_path": "data/omr_raw/21302-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21318-1",
+    "io_path": "data/omr_raw/21318-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-41632-1",
+    "io_path": "data/omr_raw/41632-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21319-1",
+    "io_path": "data/omr_raw/21319-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21325-1",
+    "io_path": "data/omr_raw/21325-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10220-1",
+    "io_path": "data/omr_raw/10220-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40448-1",
+    "io_path": "data/omr_raw/40448-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-21323-1",
+    "io_path": "data/omr_raw/21323-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75878-1",
+    "io_path": "data/omr_raw/75878-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75893-1",
+    "io_path": "data/omr_raw/75893-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-75870-1",
+    "io_path": "data/omr_raw/75870-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31199-1",
+    "io_path": "data/omr_raw/31199-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31197-1",
+    "io_path": "data/omr_raw/31197-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40386-1",
+    "io_path": "data/omr_raw/40386-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40428-1",
+    "io_path": "data/omr_raw/40428-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40431-1",
+    "io_path": "data/omr_raw/40431-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40457-1",
+    "io_path": "data/omr_raw/40457-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40456-1",
+    "io_path": "data/omr_raw/40456-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3183-1",
+    "io_path": "data/omr_raw/3183-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40391-1",
+    "io_path": "data/omr_raw/40391-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3185-1",
+    "io_path": "data/omr_raw/3185-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3186-1",
+    "io_path": "data/omr_raw/3186-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3188-1",
+    "io_path": "data/omr_raw/3188-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3189-1",
+    "io_path": "data/omr_raw/3189-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3932-1",
+    "io_path": "data/omr_raw/3932-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3933-1",
+    "io_path": "data/omr_raw/3933-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3934-1",
+    "io_path": "data/omr_raw/3934-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3937-1",
+    "io_path": "data/omr_raw/3937-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3935-1",
+    "io_path": "data/omr_raw/3935-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3938-1",
+    "io_path": "data/omr_raw/3938-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3187-1",
+    "io_path": "data/omr_raw/3187-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3316-1",
+    "io_path": "data/omr_raw/3316-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3936-1",
+    "io_path": "data/omr_raw/3936-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3939-1",
+    "io_path": "data/omr_raw/3939-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3942-1",
+    "io_path": "data/omr_raw/3942-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30105-1",
+    "io_path": "data/omr_raw/30105-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30101-1",
+    "io_path": "data/omr_raw/30101-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30102-1",
+    "io_path": "data/omr_raw/30102-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-30103-1",
+    "io_path": "data/omr_raw/30103-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42122-1",
+    "io_path": "data/omr_raw/42122-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42121-1",
+    "io_path": "data/omr_raw/42121-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42123-1",
+    "io_path": "data/omr_raw/42123-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42125-1",
+    "io_path": "data/omr_raw/42125-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42124-1",
+    "io_path": "data/omr_raw/42124-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42116-1",
+    "io_path": "data/omr_raw/42116-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10253-1",
+    "io_path": "data/omr_raw/10253-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10256-1",
+    "io_path": "data/omr_raw/10256-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10226-1",
+    "io_path": "data/omr_raw/10226-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10269-1",
+    "io_path": "data/omr_raw/10269-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10267-1",
+    "io_path": "data/omr_raw/10267-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10241-1",
+    "io_path": "data/omr_raw/10241-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10233-1",
+    "io_path": "data/omr_raw/10233-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10262-1",
+    "io_path": "data/omr_raw/10262-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10265-1",
+    "io_path": "data/omr_raw/10265-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10277-1",
+    "io_path": "data/omr_raw/10277-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10276-1",
+    "io_path": "data/omr_raw/10276-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10295-1",
+    "io_path": "data/omr_raw/10295-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10281-1",
+    "io_path": "data/omr_raw/10281-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31203-1",
+    "io_path": "data/omr_raw/31203-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10280-1",
+    "io_path": "data/omr_raw/10280-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4939-1",
+    "io_path": "data/omr_raw/4939-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4953-1",
+    "io_path": "data/omr_raw/4953-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5866-1",
+    "io_path": "data/omr_raw/5866-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-8527-1",
+    "io_path": "data/omr_raw/8527-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6753-1",
+    "io_path": "data/omr_raw/6753-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4955-1",
+    "io_path": "data/omr_raw/4955-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7347-1",
+    "io_path": "data/omr_raw/7347-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5761-1",
+    "io_path": "data/omr_raw/5761-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5763-1",
+    "io_path": "data/omr_raw/5763-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5764-1",
+    "io_path": "data/omr_raw/5764-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-31070-1",
+    "io_path": "data/omr_raw/31070-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5770-1",
+    "io_path": "data/omr_raw/5770-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5771-1",
+    "io_path": "data/omr_raw/5771-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5765-1",
+    "io_path": "data/omr_raw/5765-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5767-1",
+    "io_path": "data/omr_raw/5767-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5892-1",
+    "io_path": "data/omr_raw/5892-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-3180-1",
+    "io_path": "data/omr_raw/3180-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-4431-1",
+    "io_path": "data/omr_raw/4431-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-60054-1",
+    "io_path": "data/omr_raw/60054-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7731-1",
+    "io_path": "data/omr_raw/7731-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-7902-1",
+    "io_path": "data/omr_raw/7902-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10133-1",
+    "io_path": "data/omr_raw/10133-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10158-1",
+    "io_path": "data/omr_raw/10158-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10194-1",
+    "io_path": "data/omr_raw/10194-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10170-1",
+    "io_path": "data/omr_raw/10170-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-5867-1",
+    "io_path": "data/omr_raw/5867-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42115-1",
+    "io_path": "data/omr_raw/42115-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42120-1",
+    "io_path": "data/omr_raw/42120-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42131-1",
+    "io_path": "data/omr_raw/42131-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-42129-1",
+    "io_path": "data/omr_raw/42129-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10283-1",
+    "io_path": "data/omr_raw/10283-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10294-1",
+    "io_path": "data/omr_raw/10294-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10298-1",
+    "io_path": "data/omr_raw/10298-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10278-1",
+    "io_path": "data/omr_raw/10278-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10297-1",
+    "io_path": "data/omr_raw/10297-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10315-1",
+    "io_path": "data/omr_raw/10315-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-10359-1",
+    "io_path": "data/omr_raw/10359-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40782-1",
+    "io_path": "data/omr_raw/40782-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-40783-1",
+    "io_path": "data/omr_raw/40783-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  },
+  {
+    "moc_id": "OMR-6912-1",
+    "io_path": "data/omr_raw/6912-1.mpd",
+    "parts_count": 0,
+    "complexity_tier": "MICRO",
+    "category": "OFFICIAL_OMR"
+  }
+]

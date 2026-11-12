@@ -817,6 +817,7 @@ class OracleStepDebugger:
         placed_gt_parts: List[ParsedPart] = []
         incidents: List[StepFailureIncident] = []
         steps_survived = 0
+        gt_rank_histogram = [0] * 8  # bins for rank 1..8
 
         step_keys = sorted(gt_steps.keys())[:max_steps_to_eval]
         eval_total_steps = len(step_keys)
@@ -833,6 +834,9 @@ class OracleStepDebugger:
                     placed_gt_nodes.append(node)
                     placed_gt_parts.append(p)
                 steps_survived += 1
+                # GT rank = 1 for baseline steps (already placed correctly)
+                for _ in step_gt_parts:
+                    gt_rank_histogram[0] += 1
                 continue
 
             sim_cfg = (simulated_step_corruptions or {}).get(step_idx, {})
@@ -946,6 +950,21 @@ class OracleStepDebugger:
                     tf_p = np.array(h_pred.absolute_transform, dtype=np.float32).reshape((4, 4))
                     matched, _, _ = poses_match_modulo_symmetry(pid, tf_p, tf_gt, self.geom)
 
+                # Calculate GT rank among candidates (NEW - RECALL@N tracking)
+                gt_rank = None
+                for rank_idx, cand in enumerate(part_candidates_filtered[i]):
+                    tf_c = np.array(cand.absolute_transform, dtype=np.float32).reshape((4, 4))
+                    is_match, _, _ = poses_match_modulo_symmetry(pid, tf_c, tf_gt, self.geom)
+                    if is_match:
+                        gt_rank = rank_idx + 1
+                        break
+                if gt_rank is None:
+                    gt_rank = 9  # Not found in top 8
+                
+                # Update histogram
+                bucket_idx = min(gt_rank, 8) - 1
+                gt_rank_histogram[bucket_idx] += 1
+
                 if not matched:
                     # LEVEL 2: Lazy generate unfiltered only on failure
                     if part_candidates_unfiltered[i] is None:
@@ -981,7 +1000,16 @@ class OracleStepDebugger:
                 steps_survived += 1
 
         completed_all = len(incidents) == 0 and steps_survived == eval_total_steps
-        return {
+        
+        # Calculate recall@N for N=1..8
+        total_ranks = sum(gt_rank_histogram)
+        recall_at_n = {}
+        cumulative = 0
+        for n in range(1, 9):
+            cumulative += gt_rank_histogram[n - 1]
+            recall_at_n[n] = cumulative / total_ranks if total_ranks > 0 else 0.0
+        
+        result = {
             "moc_id": moc_id,
             "io_path": io_path,
             "pdf_path": pdf_path,
@@ -994,7 +1022,14 @@ class OracleStepDebugger:
             "first_error_category": incidents[0].root_cause_category if incidents else None,
             "first_error_sub_cause": incidents[0].sub_cause if incidents else None,
             "incidents": [asdict(inc) for inc in incidents],
+            "recall_at_n": recall_at_n,
         }
+        
+        # Add text summary for quick inspection
+        summary_lines = [f"Recall@{n}: {recall_at_n[n]*100:.1f}%" for n in range(1, 9)]
+        result["recall_at_n_summary"] = " | ".join(summary_lines)
+        
+        return result
 
 
 class PatternClusterAnalyzer:

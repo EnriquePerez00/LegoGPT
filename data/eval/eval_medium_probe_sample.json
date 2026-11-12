@@ -1,0 +1,188 @@
+{
+  "dataset_name": "eval_medium_probe_sample",
+  "tier": "MEDIUM",
+  "parts_range": [
+    201,
+    500
+  ],
+  "description": "Representative sample for MEDIUM tier probe (25 sets, ~5 min)",
+  "total_samples": 25,
+  "timestamp": "2026-11-12T11:43:34.092070",
+  "samples": [
+    {
+      "pair_id": "OMR-21011-1",
+      "filename": "OMR-21011-1_normalized.io",
+      "steps": 47,
+      "parts": 356,
+      "size_bytes": 17991
+    },
+    {
+      "pair_id": "OMR-21012-1",
+      "filename": "OMR-21012-1_normalized.io",
+      "steps": 1,
+      "parts": 274,
+      "size_bytes": 15016
+    },
+    {
+      "pair_id": "OMR-21013-1",
+      "filename": "OMR-21013-1_normalized.io",
+      "steps": 71,
+      "parts": 298,
+      "size_bytes": 17439
+    },
+    {
+      "pair_id": "OMR-21113-1",
+      "filename": "OMR-21113-1_normalized.io",
+      "steps": 1,
+      "parts": 240,
+      "size_bytes": 15438
+    },
+    {
+      "pair_id": "OMR-21302-1",
+      "filename": "OMR-21302-1_normalized.io",
+      "steps": 165,
+      "parts": 477,
+      "size_bytes": 29421
+    },
+    {
+      "pair_id": "OMR-31031-1",
+      "filename": "OMR-31031-1_normalized.io",
+      "steps": 98,
+      "parts": 207,
+      "size_bytes": 14455
+    },
+    {
+      "pair_id": "OMR-31045-1",
+      "filename": "OMR-31045-1_normalized.io",
+      "steps": 75,
+      "parts": 254,
+      "size_bytes": 51184
+    },
+    {
+      "pair_id": "OMR-3184-1",
+      "filename": "OMR-3184-1_normalized.io",
+      "steps": 39,
+      "parts": 344,
+      "size_bytes": 210612
+    },
+    {
+      "pair_id": "OMR-40412-1",
+      "filename": "OMR-40412-1_normalized.io",
+      "steps": 99,
+      "parts": 285,
+      "size_bytes": 18657
+    },
+    {
+      "pair_id": "OMR-40448-1",
+      "filename": "OMR-40448-1_normalized.io",
+      "steps": 63,
+      "parts": 205,
+      "size_bytes": 14599
+    },
+    {
+      "pair_id": "OMR-40466-1",
+      "filename": "OMR-40466-1_normalized.io",
+      "steps": 106,
+      "parts": 274,
+      "size_bytes": 77919
+    },
+    {
+      "pair_id": "OMR-40782-1",
+      "filename": "OMR-40782-1_normalized.io",
+      "steps": 99,
+      "parts": 273,
+      "size_bytes": 119693
+    },
+    {
+      "pair_id": "OMR-41072-1",
+      "filename": "OMR-41072-1_normalized.io",
+      "steps": 1,
+      "parts": 262,
+      "size_bytes": 22248
+    },
+    {
+      "pair_id": "OMR-41181-1",
+      "filename": "OMR-41181-1_normalized.io",
+      "steps": 9,
+      "parts": 216,
+      "size_bytes": 2019794
+    },
+    {
+      "pair_id": "OMR-41627-1",
+      "filename": "OMR-41627-1_normalized.io",
+      "steps": 77,
+      "parts": 223,
+      "size_bytes": 13780
+    },
+    {
+      "pair_id": "OMR-60101-1",
+      "filename": "OMR-60101-1_normalized.io",
+      "steps": 15,
+      "parts": 390,
+      "size_bytes": 385433
+    },
+    {
+      "pair_id": "OMR-6208-1",
+      "filename": "OMR-6208-1_normalized.io",
+      "steps": 1,
+      "parts": 457,
+      "size_bytes": 171040
+    },
+    {
+      "pair_id": "OMR-75878-1",
+      "filename": "OMR-75878-1_normalized.io",
+      "steps": 63,
+      "parts": 321,
+      "size_bytes": 622858
+    },
+    {
+      "pair_id": "OMR-8134-1",
+      "filename": "OMR-8134-1_normalized.io",
+      "steps": 62,
+      "parts": 270,
+      "size_bytes": 15110
+    },
+    {
+      "pair_id": "OMR-9470-1",
+      "filename": "OMR-9470-1_normalized.io",
+      "steps": 1,
+      "parts": 247,
+      "size_bytes": 22067
+    },
+    {
+      "pair_id": "RB-MOC-114892",
+      "filename": "RB-MOC-114892_normalized.io",
+      "steps": 108,
+      "parts": 332,
+      "size_bytes": 338647
+    },
+    {
+      "pair_id": "RB-MOC-129761",
+      "filename": "RB-MOC-129761_normalized.io",
+      "steps": 64,
+      "parts": 273,
+      "size_bytes": 6505607
+    },
+    {
+      "pair_id": "RB-MOC-174857",
+      "filename": "RB-MOC-174857_normalized.io",
+      "steps": 191,
+      "parts": 477,
+      "size_bytes": 1520221
+    },
+    {
+      "pair_id": "RB-MOC-39584",
+      "filename": "RB-MOC-39584_normalized.io",
+      "steps": 97,
+      "parts": 230,
+      "size_bytes": 149818
+    },
+    {
+      "pair_id": "RB-MOC-9581",
+      "filename": "RB-MOC-9581_normalized.io",
+      "steps": 117,
+      "parts": 274,
+      "size_bytes": 24548
+    }
+  ]
+}
