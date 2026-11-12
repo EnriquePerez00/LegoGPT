@@ -400,17 +400,29 @@ class OracleStepDebugger:
         """
         if len(existing_nodes) <= max_parents:
             return existing_nodes
-        scored = []
+        
         n_total = len(existing_nodes)
-        for idx, node in enumerate(existing_nodes):
-            tf = np.array(node["absolute_transform"], dtype=np.float32).reshape((4, 4))
-            dist = float(np.linalg.norm(tf[:3, 3] - ref_pos))
+        
+        # OPTIMIZACION (Sprint Nov 11): Vectorizar np.linalg.norm()
+        # Antes: 500K llamadas individuales a np.linalg.norm() por MOC
+        # Ahora: 1 llamada vectorizada con numpy
+        # Speedup esperado: 20-50x en esta operacion
+        positions = np.array([
+            np.array(node["absolute_transform"], dtype=np.float32).reshape((4, 4))[:3, 3]
+            for node in existing_nodes
+        ], dtype=np.float32)
+        dists = np.linalg.norm(positions - ref_pos, axis=1)  # UNA llamada vectorizada
+        
+        scored = []
+        for idx, (dist, node) in enumerate(zip(dists, existing_nodes)):
+            dist = float(dist)  # Convertir a float si es necesario
             recency_bonus = 20.0 if (n_total - idx) <= 6 else 0.0
             if dist <= radius_ldu or (n_total - idx) <= 6:
                 scored.append((dist - recency_bonus, node))
         scored.sort(key=lambda x: x[0])
         selected = [n for _, n in scored[:max_parents]]
         return selected if selected else existing_nodes[-max_parents:]
+
 
     def generate_candidates_with_fixes(
         self,
@@ -419,6 +431,7 @@ class OracleStepDebugger:
         existing_nodes: List[Dict[str, Any]],
         substrate_parents: Optional[List[int]] = None,
         is_flip: bool = False,
+        connector_2d_filter: Optional[Dict[str, Any]] = None,
     ) -> List[ConnectionHypothesis]:
         """Generates candidate hypotheses honoring the active GeneralizedFixBundle."""
         target_parents = None if self.fix_bundle.disable_substrate_filter else substrate_parents
@@ -428,6 +441,7 @@ class OracleStepDebugger:
             existing_nodes,
             target_parent_indices=target_parents,
             is_flip=is_flip,
+            connector_2d_filter=connector_2d_filter,
         )
         if not cands and self.fix_bundle.auto_retry_flip_on_dead_end:
             cands = self.hypothesis_gen.generate_candidate_hypotheses(
@@ -436,6 +450,7 @@ class OracleStepDebugger:
                 existing_nodes,
                 target_parent_indices=target_parents,
                 is_flip=not is_flip,
+                connector_2d_filter=connector_2d_filter,
             )
         return cands
 
@@ -562,7 +577,7 @@ class OracleStepDebugger:
         # -------------------------------------------------------------------------
         # Stage 3: Check FALSE_SOLID_COLLISION_PRUNING
         # -------------------------------------------------------------------------
-        local_nodes = self._select_local_parent_nodes(prior_gt_nodes, tf_gt[:3, 3], max_parents=12)
+        local_nodes = self._select_local_parent_nodes(prior_gt_nodes, tf_gt[:3, 3], max_parents=5)
         is_valid_solid, col_reason = self.solid_validator.validate_new_part_placement(
             pid, tf_gt, local_nodes, penetration_threshold=self.fix_bundle.penetration_threshold_ldu
         )
@@ -773,6 +788,9 @@ class OracleStepDebugger:
         abort_on_first_error: bool = True,
         max_steps_to_eval: int = 30,
         simulated_step_corruptions: Optional[Dict[int, Dict[str, Any]]] = None,
+        parent_radius_ldu: Optional[float] = None,
+        max_parents_override: Optional[int] = None,
+        connector_2d_filter_global: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Runs the step-by-step inference loop for a single MOC against its Ground-Truth .io file.
@@ -848,7 +866,9 @@ class OracleStepDebugger:
             is_flip_step = bool(sim_cfg.get("is_flip", False))
 
             part_candidates_filtered: List[List[ConnectionHypothesis]] = []
-            part_candidates_unfiltered: List[List[ConnectionHypothesis]] = []
+            part_candidates_unfiltered: List[Optional[List[ConnectionHypothesis]]] = []
+            # Level 2 optimization: store (pid, el_id, local_parents, is_flip_step) for lazy unfiltered generation
+            unfiltered_lazy_data: List[Tuple[str, str, List[Dict[str, Any]], bool]] = []
 
             for p_gt in step_gt_parts:
                 pid = self.geom.resolve_compatible_part_id(p_gt.part_id.replace(".dat", ""))
@@ -856,18 +876,19 @@ class OracleStepDebugger:
                 tf_gt = np.array(p_gt.transform, dtype=np.float32).reshape((4, 4))
 
                 local_parents = self._select_local_parent_nodes(
-                    placed_gt_nodes, tf_gt[:3, 3], max_parents=10
+                    placed_gt_nodes, tf_gt[:3, 3], 
+                    max_parents=max_parents_override or 3,
+                    radius_ldu=parent_radius_ldu or 120.0
                 )
 
-                unfiltered = self.hypothesis_gen.generate_candidate_hypotheses(
-                    pid, el_id, local_parents, target_parent_indices=None, is_flip=is_flip_step
-                )
+                # LEVEL 2: Don't generate unfiltered yet. Store data for lazy generation on failure.
                 filtered = self.generate_candidates_with_fixes(
                     pid,
                     el_id,
                     local_parents,
                     substrate_parents=substrate_indices,
                     is_flip=is_flip_step,
+                    connector_2d_filter=connector_2d_filter_global or sim_cfg.get("connector_2d_filter"),
                 )
 
                 bias_fn = sim_cfg.get("visual_edge_scorer")
@@ -886,7 +907,8 @@ class OracleStepDebugger:
 
                 filtered.sort(key=lambda c: c.total_score, reverse=True)
                 part_candidates_filtered.append(filtered)
-                part_candidates_unfiltered.append(unfiltered)
+                part_candidates_unfiltered.append(None)  # Placeholder for lazy generation
+                unfiltered_lazy_data.append((pid, el_id, local_parents, is_flip_step))
 
             pred_hypotheses: List[Optional[ConnectionHypothesis]] = [
                 cands[0] if cands else None for cands in part_candidates_filtered
@@ -925,6 +947,13 @@ class OracleStepDebugger:
                     matched, _, _ = poses_match_modulo_symmetry(pid, tf_p, tf_gt, self.geom)
 
                 if not matched:
+                    # LEVEL 2: Lazy generate unfiltered only on failure
+                    if part_candidates_unfiltered[i] is None:
+                        pid_i, el_id_i, local_parents_i, is_flip_i = unfiltered_lazy_data[i]
+                        part_candidates_unfiltered[i] = self.hypothesis_gen.generate_candidate_hypotheses(
+                            pid_i, el_id_i, local_parents_i, target_parent_indices=None, is_flip=is_flip_i
+                        )
+                    
                     incident = self.diagnose_step_failure(
                         moc_id=moc_id,
                         step_idx=step_idx,

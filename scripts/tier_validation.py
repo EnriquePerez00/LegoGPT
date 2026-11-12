@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import signal
 import sys
 import time
 from collections import defaultdict
@@ -64,6 +65,10 @@ CATEGORIES = ["MOC", "OFFICIAL_OMR"]
 CORPUS_PATH = "data/dataset_splits/corpus_all_pairs.json"
 DEFAULT_OUTDIR = "outputs/tier_validation"
 
+# Tope duro por set. Sin esto, un set patológico cuelga el pool entero
+# (bug histórico que dejó jobs colgados durante 11 h consumiendo un core).
+TIMEOUT_PER_MOC = 120
+
 
 def assign_tier(parts: int) -> str:
     """Mapea nº de piezas → tier de complejidad (misma lógica que el stratifier)."""
@@ -78,9 +83,24 @@ def assign_tier(parts: int) -> str:
 # --------------------------------------------------------------------------- #
 
 
+class _EvalTimeout(Exception):
+    """Se lanza cuando un set excede el tiempo máximo permitido."""
+
+
+def _alarm_handler(signum, frame):  # noqa: ARG001
+    raise _EvalTimeout(f"timeout tras {TIMEOUT_PER_MOC}s")
+
+
 def _eval_worker(task: Dict[str, Any]) -> Dict[str, Any]:
-    """Evalúa un set contra su ground truth. Aísla fallos por set."""
+    """
+    Evalúa un set contra su ground truth. Aísla fallos por set.
+
+    El timeout se aplica con signal.alarm (el worker corre en el hilo principal
+    de su proceso, así que SIGALRM es seguro aquí). Sin esto, un set problemático
+    cuelga el pool entero indefinidamente.
+    """
     t0 = time.time()
+    timeout = task.get("timeout_sec") or TIMEOUT_PER_MOC
     try:
         from src.geometry_cache import GeometryCache
 
@@ -88,13 +108,24 @@ def _eval_worker(task: Dict[str, Any]) -> Dict[str, Any]:
         geom = GeometryCache.get()
         debugger = OracleStepDebugger(geom_resolver=geom, fix_bundle=bundle)
 
-        result = debugger.evaluate_moc_fail_fast(
-            moc_id=task["moc_id"],
-            io_path=task["io_path"],
-            pdf_path=task.get("pdf_path"),
-            abort_on_first_error=False,
-            max_steps_to_eval=task["max_steps"],
-        )
+        # Instala el temporizador solo si hay un timeout configurado
+        alarm_installed = False
+        if timeout and timeout > 0:
+            signal.signal(signal.SIGALRM, _alarm_handler)
+            signal.alarm(int(timeout))
+            alarm_installed = True
+
+        try:
+            result = debugger.evaluate_moc_fail_fast(
+                moc_id=task["moc_id"],
+                io_path=task["io_path"],
+                pdf_path=task.get("pdf_path"),
+                abort_on_first_error=False,
+                max_steps_to_eval=task["max_steps"],
+            )
+        finally:
+            if alarm_installed:
+                signal.alarm(0)
 
         elapsed = time.time() - t0
         result["elapsed_sec"] = round(elapsed, 3)
@@ -105,6 +136,24 @@ def _eval_worker(task: Dict[str, Any]) -> Dict[str, Any]:
         result["steps_count"] = task.get("steps_count")
         return result
 
+    except _EvalTimeout as e:
+        return {
+            "moc_id": task["moc_id"],
+            "io_path": task["io_path"],
+            "success": False,
+            "completed_all_steps": False,
+            "total_steps": task.get("steps_count", 0),
+            "steps_survived": 0,
+            "survival_ratio": 0.0,
+            "incidents": [],
+            "error": f"TIMEOUT: {e}",
+            "elapsed_sec": round(time.time() - t0, 3),
+            "worker_status": "TIMEOUT",
+            "complexity_tier": task.get("complexity_tier"),
+            "category": task.get("category"),
+            "parts_count": task.get("parts_count"),
+            "steps_count": task.get("steps_count"),
+        }
     except Exception as e:  # noqa: BLE001
         return {
             "moc_id": task["moc_id"],
@@ -209,6 +258,7 @@ def evaluate_sets(
     bundle: GeneralizedFixBundle,
     max_steps: Optional[int] = None,
     workers: int = P_CORES,
+    timeout_sec: int = TIMEOUT_PER_MOC,
 ) -> List[Dict[str, Any]]:
     """Evalúa una lista de sets en paralelo. Devuelve un resultado por set."""
     if not items:
@@ -222,6 +272,7 @@ def evaluate_sets(
         task["max_steps"] = max_steps or it.get("num_steps", 30)
         task["parts_count"] = it.get("num_parts", 0)
         task["steps_count"] = it.get("num_steps", 0)
+        task["timeout_sec"] = timeout_sec
         tasks.append(task)
 
     results: List[Dict[str, Any]] = []
@@ -445,7 +496,7 @@ def phase_probe(args) -> Dict[str, Any]:
     print(f"Workers: {P_CORES} | Max steps: {args.max_steps or 'auto'}\n")
 
     bundle = load_bundle(args.bundle)
-    results = evaluate_sets(items, bundle, args.max_steps, args.workers)
+    results = evaluate_sets(items, bundle, args.max_steps, args.workers, args.timeout)
 
     summary = summarize(results)
     timings = analyze_timings(results)
@@ -607,7 +658,7 @@ def phase_scale(args) -> Dict[str, Any]:
     )
     print(f"Bundle en uso: {bundle_path} ({'con fixes' if has_fixes else 'default'})")
 
-    results = evaluate_sets(items, bundle, args.max_steps, args.workers)
+    results = evaluate_sets(items, bundle, args.max_steps, args.workers, args.timeout)
 
     summary = summarize(results)
     timings = analyze_timings(results)
@@ -696,6 +747,10 @@ def main() -> None:
     parser.add_argument(
         "--workers", type=int, default=P_CORES,
         help="Workers del pool de evaluación"
+    )
+    parser.add_argument(
+        "--timeout", type=int, default=TIMEOUT_PER_MOC,
+        help="Timeout por set en segundos (0 = sin timeout)"
     )
     parser.add_argument(
         "--categories", nargs="*", default=None,

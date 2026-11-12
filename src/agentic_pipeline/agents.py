@@ -36,6 +36,7 @@ from src.agentic_pipeline.schemas import (
 
 
 LEARNED_RULES_PATH = "data/agentic_fixes/learned_rules.json"
+MIN_FIX_EVIDENCE = 3  # observations of the same failure class before a fix is auto-applied
 
 
 def classify_part_family(part_id: str) -> str:
@@ -148,6 +149,9 @@ def load_learned_rules(rules_path: str = LEARNED_RULES_PATH) -> Dict[str, Any]:
 def save_learned_rules(rules: Dict[str, Any], rules_path: str = LEARNED_RULES_PATH) -> None:
     """Persists updated rules synthesized by the GT Auditor Agent."""
     os.makedirs(os.path.dirname(os.path.abspath(rules_path)), exist_ok=True)
+    if os.path.exists(rules_path):  # keep a rollback copy before overwriting learned rules
+        import shutil
+        shutil.copy2(rules_path, rules_path + ".bak")
     with open(rules_path, "w", encoding="utf-8") as f:
         json.dump(rules, f, indent=2)
 
@@ -706,8 +710,9 @@ class PlacerVisualROIAgent:
 class TemporalSupervisorAgent:
     """
     Agent 5 (`lego-supervisor-agent`, model=`flash`):
-    Coordinates multi-step consistency, manages backtracking if a step t placement
-    blocks step t+1, and enforces final ground normalization (Y <= 0.0, <= 4 base parts).
+    Enforces final ground normalization (Y <= 0.0, <= 4 base parts).
+    NOTE: temporal beam search / cross-step backtracking is NOT implemented; the only
+    backtracking is the per-piece Guardian -> Identifier ROI relaxation in the orchestrator.
     """
     agent_id = "lego-supervisor-agent"
     model_tier = MODEL_ROUTING_CONFIG["lego-supervisor-agent"]["model"]
@@ -980,7 +985,19 @@ class GTAuditorAndFixerAgent:
 
     @staticmethod
     def apply_fix_to_rules(fix: ProposedFix, learned_rules: Dict[str, Any]) -> None:
-        """Merges the parameter patch from a ProposedFix into the persistent learned_rules store."""
+        """
+        Merges the parameter patch from a ProposedFix into the persistent learned_rules store.
+
+        Guard against overfitting: a patch is only applied once the same
+        (target_agent, root_cause, part family) has been observed MIN_FIX_EVIDENCE times.
+        Earlier observations are only counted in `fix_evidence`.
+        """
+        key = f"{fix.target_agent}:{fix.root_cause}:{classify_part_family(fix.part_id)}"
+        evidence = learned_rules.setdefault("fix_evidence", {})
+        evidence[key] = int(evidence.get(key, 0)) + 1
+        if evidence[key] < MIN_FIX_EVIDENCE:
+            fix.applied_automatically = False
+            return
         patch = fix.parameter_patch
         if "family_roi_margin_overrides" in patch:
             learned_rules.setdefault("family_roi_margin_overrides", {}).update(patch["family_roi_margin_overrides"])

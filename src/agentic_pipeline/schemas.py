@@ -66,11 +66,10 @@ MODEL_ROUTING_CONFIG: Dict[str, Dict[str, Any]] = {
         ],
     },
     "lego-supervisor-agent": {
-        "role": "Temporal Beam Supervisor & .io Exporter",
+        "role": "Ground Normalizer & .io Exporter",
         "model": AgentModelTier.FLASH.value,
         "cost_tier": "low-medium ($$)",
         "responsibilities": [
-            "Maintain top-K beam states across steps and trigger backtracking on step t+1 dead-ends.",
             "Normalize assembly ground level and export final graph to BrickLink Studio .io and .json.",
         ],
     },
@@ -215,6 +214,8 @@ class AgenticPipelineReport:
     first_attempt_accuracy_ratio: float = 0.0
     pct_parts_correct_before_fixes: float = 0.0
     pct_parts_correct_after_fixes: float = 0.0
+    # Headline metric: excludes poses injected by teacher forcing from the GT
+    pct_parts_correct_after_fixes_no_teacher_forcing: float = 0.0
     pct_edges_correct: float = 0.0
     convergence_depth: int = 0
     root_cause_breakdown: Dict[str, int] = field(default_factory=dict)

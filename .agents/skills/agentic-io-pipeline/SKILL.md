@@ -21,7 +21,7 @@ Al invocar subagentes desde Antigravity mediante `invoke_subagent`, utiliza siem
 | `lego-identifier-agent` | `flash` | Cruza las piezas añadidas en la página con la geometría 3D LDraw (`LDrawGeometryResolver`) y los conectores libres en $G_{t-1}$ (`ConnectorOccupancyMap`) para proponer hipótesis 3D. |
 | `lego-guardian-agent` | `flash_lite` | Valida determinísticamente `Stud-to-Socket`, cero colisión sólida OBB (`SolidCollisionValidator`), exclusividad de studs y regla de suelo ($Y \le 0.0$, máx 4 piezas base). |
 | `lego-placer-agent` | `flash` | Monta los grafos candidatos, los renderiza en 3D (`StepAxonometricRenderer`) y compara la **Zona de Interés (ROI) con margen de holgura** (incluyendo piezas vecinas) contra la imagen 2D del PDF en GPU MPS. |
-| `lego-supervisor-agent` | `flash` | Gestiona la coherencia temporal entre pasos (*Beam Search* / *Backtracking*), normaliza el suelo y empaqueta el archivo `.io` final para BrickLink Studio. |
+| `lego-supervisor-agent` | `flash` | Normaliza el suelo y empaqueta el archivo `.io` final para BrickLink Studio (no implementa beam search entre pasos). |
 | `lego-gt-auditor-agent` | `pro` | Compara el grafo inferido contra el grafo Ground Truth `.io`, diagnostica la causa raíz de cualquier error (`IDENTIFIER_RECALL_MISS`, `GUARDIAN_FALSE_REJECTION`, `PLACER_ROI_RANKING_ERROR`, `FLIP_OR_CALLOUT_DESYNC`) y guarda el *fix* en `data/agentic_fixes/learned_rules.json`. |
 
 ---

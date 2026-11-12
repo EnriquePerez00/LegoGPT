@@ -31,7 +31,7 @@ import sys
 import json
 import time
 import math
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src.ldraw_geometry import LDrawGeometryResolver

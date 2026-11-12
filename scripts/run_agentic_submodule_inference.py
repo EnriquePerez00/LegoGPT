@@ -862,6 +862,27 @@ def generate_interactive_html_report(data: Dict[str, Any], html_path: str):
             loadCurrentGraph();
         }}
 
+        
+        function autoFitCamera(smooth = true) {
+            if (!assemblyGroup || (!assemblyGroup.children.length && !currentGlowGroup.children.length)) return;
+            const fullBox = new THREE.Box3();
+            if (assemblyGroup.children.length > 0) fullBox.expandByObject(assemblyGroup);
+            if (currentGlowGroup.children.length > 0) fullBox.expandByObject(currentGlowGroup);
+            if (fullBox.isEmpty()) return;
+
+            const center = new THREE.Vector3();
+            fullBox.getCenter(center);
+            const size = new THREE.Vector3();
+            fullBox.getSize(size);
+            const maxDim = Math.max(size.x, size.y, size.z, 50);
+
+            controls.target.copy(center);
+            const dist = maxDim * 2.2;
+            camera.position.set(center.x + dist * 0.75, center.y + dist * 0.6, center.z + dist * 0.85);
+            camera.lookAt(center);
+            controls.update();
+        }
+
         function loadCurrentGraph() {{
             const graph = SUBMODULES[currentGraphId];
             if (!graph) return;
@@ -895,6 +916,7 @@ def generate_interactive_html_report(data: Dict[str, Any], html_path: str):
 
             updateStepRender();
             buildPageCards();
+            autoFitCamera();
         }}
 
         function buildMeshForPart(node, isNew = false) {{
@@ -923,7 +945,7 @@ def generate_interactive_html_report(data: Dict[str, Any], html_path: str):
                 if (GEO_DATA.edges && GEO_DATA.edges[pid]) {{
                     const edgeVerts = GEO_DATA.edges[pid];
                     const edgeGeom = new THREE.BufferGeometry();
-                    edgeGeom.setAttribute('position', new THREE.Float32BufferAttribute(edgeVerts, 2));
+                    edgeGeom.setAttribute('position', new THREE.Float32BufferAttribute(edgeVerts, 3));
                     const edgeMat = new THREE.LineBasicMaterial({{ color: 0x000000, linewidth: 1 }});
                     const line = new THREE.LineSegments(edgeGeom, edgeMat);
                     group.add(line);
@@ -1154,7 +1176,24 @@ def generate_interactive_html_report(data: Dict[str, Any], html_path: str):
             renderer.render(scene, camera);
         }}
 
-        window.onload = initScene;
+        let isSceneInitialized = false;
+        function safeInitScene() {
+            if (isSceneInitialized) return;
+            if (document.readyState === "complete" || document.readyState === "interactive") {
+                isSceneInitialized = true;
+                initScene();
+            } else {
+                const trigger = () => {
+                    if (!isSceneInitialized) {
+                        isSceneInitialized = true;
+                        initScene();
+                    }
+                };
+                document.addEventListener("DOMContentLoaded", trigger);
+                window.addEventListener("load", trigger);
+            }
+        }
+        safeInitScene();
     </script>
 </body>
 </html>

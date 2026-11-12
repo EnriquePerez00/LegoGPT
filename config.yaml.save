@@ -1,8 +1,0 @@
-model_list:
-  - model_name: gpt-sol-6.1
-    litellm_params:
-      model: openai/gpt-6.1-sol-2026-09-29-global-std
-      api_key: os.environ/OPENAI_API_KEY
-      reasoning_effort: "none"
-      drop_params: true
-
