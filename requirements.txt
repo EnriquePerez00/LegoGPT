@@ -1,0 +1,37 @@
+# LegoGPT Core Dependencies
+# Consolidated from legogpt_env (Nov 2026) + missing imports from src/ + scripts/
+# Python 3.11 required; isolated venv (no system-site-packages)
+
+# Core scientific / ML stack
+numpy==2.4.6
+scipy==1.17.1
+networkx==3.6.1
+
+# PyTorch + Vision
+torch==2.15.0
+torchvision==0.29.2
+torch-geometric>=2.4.0
+
+# 3D / Geometry
+trimesh==5.2.0
+onnxruntime==1.31.1
+
+# Image processing / PDF extraction
+opencv-python-headless==5.0.0.93
+Pillow==13.0.0
+pymupdf==2.1
+pymupdf4llm==2.1
+pymupdf_layout==2.1
+matplotlib
+
+# Web / API / Scraping
+fastapi
+pydantic
+requests
+certifi
+python-dotenv
+playwright
+psutil==7.2.2
+
+# System utilities (transitive deps resolved by pip)
+# filelock, fsspec, Jinja2, MarkupSafe, mpmath, packaging, protobuf, PyYAML, sympy, tabulate, typing_extensions
