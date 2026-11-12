@@ -52,3 +52,53 @@ scratch/
 outputs/
 temp_uploaded.mpd
 temp_uploaded.ldr
+
+# Session Documentation & Temporary Scripts (Fase 6 - Cleanup prevention)
+# Sesion artifacts (one-time checkpoint/status docs)
+/CHECKPOINT_*.md
+/CHECKPOINT_*.txt
+/PHASE_1D_*.md
+/PHASE_1D_*.txt
+/PHASE1A_*.txt
+/PHASE1B_*.sh
+/PHASE2_*.md
+/PHASE_*.md
+/WHERE_WE_*.md
+/WHERE_I_*.md
+/*_STATUS.md
+/*_STATUS.txt
+/EXECUTION_*.md
+/EXECUTION_*.txt
+/CURRENT_*.md
+/CURRENT_*.txt
+/SESSION_*.md
+/SESSION_*.txt
+/SESION_*.md
+/SESION_*.txt
+
+# One-shot monitor/test scripts (not part of formal test suite)
+/test_*.py
+/monitor_*.py
+/monitor_*.sh
+/verify_*.py
+/benchmark_*.py
+/show_*.py
+/show_*.sh
+/quick_*.py
+
+# Temporary shell scripts from sessions
+/run_phase*.sh
+/*_LAUNCHER.sh
+/MONITORING_COMMANDS.sh
+/PHASE1B_*.sh
+
+# Backup/save files
+*.save
+*.bak
+
+# Trash/review folder (cleanup staging)
+/_trash_review/
+
+# Report artifacts (consider git-rm if tracked)
+*_report.html
+*_report.md
