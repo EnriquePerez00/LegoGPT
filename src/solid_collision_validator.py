@@ -1,6 +1,7 @@
 import numpy as np
 from typing import List, Dict, Tuple, Optional, Any
 from src.ldraw_geometry import LDrawGeometryResolver
+from src.connectivity_db import get_part_ports, are_ports_compatible, check_port_coupling
 
 
 class SolidCollisionValidator:
@@ -21,8 +22,6 @@ class SolidCollisionValidator:
         Obtiene todos los puertos tipados de una pieza transformados a coordenadas mundiales.
         Cachea por (part_id, transform_hash).
         """
-        from src.connectivity_db import get_part_ports
-        
         # Hash simplificado de la transformación
         tf_hash = tuple(np.round(transform.flatten(), 2))
         cache_key = (part_id, tf_hash)
@@ -78,8 +77,6 @@ class SolidCollisionValidator:
         
         Retorna True si la penetración es validable como acoplamiento.
         """
-        from src.connectivity_db import are_ports_compatible, check_port_coupling
-        
         try:
             ports_a = self._get_world_ports(obb_a["part_id"], obb_a["transform"])
             ports_b = self._get_world_ports(obb_b["part_id"], obb_b["transform"])
