@@ -72,6 +72,7 @@ class StepFailureIncident:
     collision_reason: Optional[str] = None
     diagnostic_explanation: str = ""
     suggested_fix: str = ""
+    responsible_agent: str = ""  # FASE 1: agent responsible for this failure
 
 
 @dataclass
@@ -109,6 +110,26 @@ class GeneralizedFixBundle:
 def clean_part_id(part_id: str) -> str:
     pid = str(part_id).strip().lower()
     return pid if pid.endswith(".dat") else f"{pid}.dat"
+
+
+# FASE 1: Agent attribution mapping
+_AGENT_RESPONSIBILITY_MAP = {
+    ("INVENTORY_OCR_MISMATCH", "*"): "lego-context-agent",
+    ("MISSING_CONNECTIVITY_PORT", "*"): "lego-identifier-agent",
+    ("FALSE_SOLID_COLLISION_PRUNING", "*"): "lego-guardian-agent",
+    ("HYPOTHESIS_NOT_GENERATED", "*"): "lego-identifier-agent",
+    ("VISUAL_SCORER_RANKING_ERROR", "*"): "lego-placer-agent",
+}
+
+
+def map_root_cause_to_responsible_agent(root_cause_category: str, sub_cause: str = "*") -> str:
+    """Maps root cause to responsible agent. Wildcard sub_cause matches all."""
+    key = (root_cause_category, sub_cause)
+    if key in _AGENT_RESPONSIBILITY_MAP:
+        return _AGENT_RESPONSIBILITY_MAP[key]
+    # Fallback to category-only match
+    key = (root_cause_category, "*")
+    return _AGENT_RESPONSIBILITY_MAP.get(key, "unknown-agent")
 
 
 def _fast_layer_step_synthesis(parts: List[ParsedPart], max_parts_per_step: int = 4) -> List[ParsedPart]:
@@ -350,7 +371,7 @@ class OracleStepDebugger:
         """Applies generalized fixes from self.fix_bundle to the active geometry & validator components."""
         extra_hollow = set(self.fix_bundle.multi_box_hollow_parts)
         if extra_hollow:
-            orig_sub_boxes = SolidCollisionValidator.get_part_sub_boxes_local
+            orig_method = self.solid_validator.get_part_sub_boxes_local
 
             def patched_sub_boxes(part_id: str, meta: Dict[str, Any]):
                 clean_id = part_id.replace(".dat", "").lower()
@@ -367,7 +388,7 @@ class OracleStepDebugger:
                             (float(bx1 - pillar_w), y_top, float(bz0), float(bx1), y_bot, float(bz1)),
                             (float(bx0), y_top, float(bz0), float(bx1), min(y_bot, y_top + 8.0), float(bz1)),
                         ]
-                return orig_sub_boxes(part_id, meta)
+                return orig_method(part_id, meta)
 
             self.solid_validator.get_part_sub_boxes_local = patched_sub_boxes
             self.hypothesis_gen.solid_validator.get_part_sub_boxes_local = patched_sub_boxes
@@ -524,6 +545,7 @@ class OracleStepDebugger:
                         "Reforzar el matching con restricción de stock global en LegoInventoryMatcher "
                         "y verificar escala en puntos PDF (bbox_pt) para diferenciar longitudes 1xN."
                     ),
+                    responsible_agent="lego-context-agent",  # FASE 1
                 )
 
         # Find nearest parent in local neighborhood of prior_gt_parts
@@ -572,7 +594,8 @@ class OracleStepDebugger:
                     f"Añadir metadatos de puertos LDCad Shadow / paramétricos para '{pid}' y "
                     f"'{nearest_parent_id}' en src/connectivity_db.py."
                 ),
-            )
+                    responsible_agent="lego-identifier-agent"  # FASE 1
+                )
 
         # -------------------------------------------------------------------------
         # Stage 3: Check FALSE_SOLID_COLLISION_PRUNING
@@ -611,7 +634,8 @@ class OracleStepDebugger:
                     f"Descomponer '{pid}' o '{colliding_pid}' en sub-cajas multi-OBB en "
                     f"SolidCollisionValidator.get_part_sub_boxes_local."
                 ),
-            )
+                    responsible_agent="lego-guardian-agent"  # FASE 1
+                )
 
         # -------------------------------------------------------------------------
         # Stage 4: Check if GT pose exists in generated candidates (VISUAL_SCORER vs GENERATOR)
@@ -672,7 +696,8 @@ class OracleStepDebugger:
                     "Recalibrar los pesos (w_edge_score, w_stud_score) en VisualPoseScorer y ampliar "
                     f"beam_width >= {max(self.fix_bundle.beam_width + 1, gt_rank)}."
                 ),
-            )
+                    responsible_agent="lego-placer-agent"  # FASE 1
+                )
 
         in_unfiltered = False
         for cand in unfiltered_candidates:
@@ -707,7 +732,8 @@ class OracleStepDebugger:
                     "Desactivar o relajar el filtro restrictivo de substrate_parents cuando la pieza "
                     "puede acoplarse a capas inferiores aún expuestas."
                 ),
-            )
+                    responsible_agent="lego-identifier-agent"  # FASE 1
+                )
 
         # -------------------------------------------------------------------------
         # Stage 5: Probe specific sub-causes of HYPOTHESIS_NOT_GENERATED
@@ -742,6 +768,7 @@ class OracleStepDebugger:
                         "Activar auto_retry_flip_on_dead_end y ampliar detect_flip_icons() para "
                         "iconos de rotación en manuales Studio/Rebrickable."
                     ),
+                    responsible_agent="lego-identifier-agent"  # FASE 1
                 )
 
         R_gt = tf_gt[:3, :3]
@@ -778,7 +805,8 @@ class OracleStepDebugger:
                 f"enumerada por PhysicalHypothesisGenerator (sub-causa: {sub_cause})."
             ),
             suggested_fix=fix_msg,
-        )
+                    responsible_agent="lego-identifier-agent"  # FASE 1
+                )
 
     def evaluate_moc_fail_fast(
         self,
@@ -1041,6 +1069,63 @@ class PatternClusterAnalyzer:
     def __init__(self, prior_fix_bundle: Optional[GeneralizedFixBundle] = None):
         self.prior_bundle = prior_fix_bundle or GeneralizedFixBundle()
 
+    def _compute_agent_survival_attribution(
+        self,
+        all_incidents: List[StepFailureIncident]
+    ) -> Dict[str, Any]:
+        """
+        FASE 1: Computes survival loss attributed to each agent.
+        Returns { agent_name: { incidents, total_survival_loss, pct_of_total, top_root_causes } }
+        """
+        agent_incidents: Dict[str, List[StepFailureIncident]] = defaultdict(list)
+        for inc in all_incidents:
+            agent_incidents[inc.responsible_agent].append(inc)
+        
+        total_survival_loss = sum(inc.survival_ratio for inc in all_incidents)
+        result = {}
+        
+        for agent in sorted(agent_incidents.keys()):
+            incidents = agent_incidents[agent]
+            agent_survival_loss = sum(inc.survival_ratio for inc in incidents)
+            pct_of_total = 100.0 * agent_survival_loss / max(0.001, total_survival_loss)
+            avg_survival_loss = np.mean([inc.survival_ratio for inc in incidents]) if incidents else 0.0
+            
+            result[agent] = {
+                "incidents": len(incidents),
+                "total_survival_loss": round(agent_survival_loss, 4),
+                "avg_survival_loss_per_incident": round(float(avg_survival_loss), 4),
+                "pct_of_total_survival_loss": round(pct_of_total, 2),
+                "top_root_causes": Counter(inc.root_cause_category for inc in incidents).most_common(3),
+            }
+        
+        return result
+
+    def _compute_tier_metrics(self, moc_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """FASE 2: Computes KPIs segmented by set tier (small/medium/large)."""
+        from src.phase2_scale_hygiene import SetTier
+        
+        tier_data: Dict[str, List[Dict]] = {"SMALL": [], "MEDIUM": [], "LARGE": []}
+        for res in moc_results:
+            total_steps = res.get("total_steps", 1)
+            tier = SetTier.classify(total_steps)
+            if tier != "UNKNOWN":
+                tier_data[tier].append(res)
+        
+        tier_metrics = {}
+        for tier, results in tier_data.items():
+            if results:
+                completed = sum(1 for r in results if r.get("completed_all_steps"))
+                tier_metrics[tier] = {
+                    "mean_survival_ratio": round(sum(r.get("survival_ratio", 0.0) for r in results) / len(results), 4),
+                    "pass_rate_percent": round(100.0 * completed / len(results), 2),
+                    "num_sets": len(results),
+                }
+            else:
+                tier_metrics[tier] = {"mean_survival_ratio": 0.0, "pass_rate_percent": 0.0, "num_sets": 0}
+        return tier_metrics
+
+
+
     def analyze_and_synthesize_fixes(
         self,
         moc_results: List[Dict[str, Any]],
@@ -1220,6 +1305,8 @@ class PatternClusterAnalyzer:
             "total_first_error_aborts": len(all_incidents),
             "top_failing_parts": part_failure_counts.most_common(15),
             "pattern_clusters": pattern_clusters_report,
+            "agent_survival_attribution": self._compute_agent_survival_attribution(all_incidents),  # FASE 1
+            "tier_metrics": self._compute_tier_metrics(moc_results),  # FASE 2: per-tier KPIs
             "synthesized_fix_bundle": next_bundle.to_dict(),
         }
         return summary, next_bundle
