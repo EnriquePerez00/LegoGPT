@@ -176,6 +176,7 @@ class ConnectorOccupancyMap:
         transform_4x4: np.ndarray,
         connected_parent_index: Optional[int] = None,
         contact_points: Optional[List[List[float]]] = None,
+        matched_port_pairs: Optional[List[tuple]] = None,  # CHANGE 3: (parent_port_idx, child_port_idx) tuples
     ) -> PartOccupancyRecord:
         """
         Registers a newly placed part into the occupancy map.

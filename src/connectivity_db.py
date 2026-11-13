@@ -47,6 +47,7 @@ class ConnectionPort:
     dof: JointDOF = JointDOF.FIXED
     symmetry: int = 4             # 4 for square studs (90° steps), 1 for continuous
     clutch_power: float = 2.0     # Nominal retention force in Newtons
+    source: str = "parametric"    # "parametric" | "ldraw_dat" | "ldcad_snap" (for diagnostics)
 
 # Port compatibility pairing rules
 COMPATIBLE_PORT_PAIRS = {
@@ -229,6 +230,7 @@ def _parse_ldcad_shadow_line(line_str: str, current_transform: np.ndarray, port_
         dof=dof,
         symmetry=sym,
         clutch_power=2.0,
+        source="ldcad_snap",
     )
 
 
@@ -315,7 +317,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.FIXED,
                     symmetry=4,
-                    clutch_power=2.0
+                    clutch_power=2.0,
+                    source="ldraw_dat"
                 ))
             elif sub_name in ("stud2.dat", "stud2a.dat", "studopen.dat"):
                 ports.append(ConnectionPort(
@@ -326,7 +329,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.REVOLUTE,
                     symmetry=1,
-                    clutch_power=2.0
+                    clutch_power=2.0,
+                    source="ldraw_dat"
                 ))
             elif sub_name in ("stud4.dat", "stud3.dat", "studtube.dat"):
                 # Tube / socket underneath
@@ -338,7 +342,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=-normal,
                     dof=JointDOF.FIXED,
                     symmetry=4,
-                    clutch_power=2.0
+                    clutch_power=2.0,
+                    source="ldraw_dat"
                 ))
             elif sub_name.startswith("pin") and not sub_name.startswith("pinhole"):
                 ports.append(ConnectionPort(
@@ -349,7 +354,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.REVOLUTE,
                     symmetry=1,
-                    clutch_power=3.0
+                    clutch_power=3.0,
+                    source="ldraw_dat"
                 ))
             elif sub_name.startswith("pinhole") or "pinhol" in sub_name:
                 ports.append(ConnectionPort(
@@ -360,7 +366,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.REVOLUTE,
                     symmetry=1,
-                    clutch_power=3.0
+                    clutch_power=3.0,
+                    source="ldraw_dat"
                 ))
             elif sub_name.startswith("axle") and not sub_name.startswith("axlehol"):
                 ports.append(ConnectionPort(
@@ -371,7 +378,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.PRISMATIC,
                     symmetry=4,
-                    clutch_power=2.5
+                    clutch_power=2.5,
+                    source="ldraw_dat"
                 ))
             elif "axlehol" in sub_name:
                 ports.append(ConnectionPort(
@@ -382,7 +390,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.PRISMATIC,
                     symmetry=4,
-                    clutch_power=2.5
+                    clutch_power=2.5,
+                    source="ldraw_dat"
                 ))
             elif sub_name.startswith("clip"):
                 ports.append(ConnectionPort(
@@ -393,7 +402,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.REVOLUTE,
                     symmetry=1,
-                    clutch_power=1.8
+                    clutch_power=1.8,
+                    source="ldraw_dat"
                 ))
             elif sub_name.startswith("bar"):
                 ports.append(ConnectionPort(
@@ -404,7 +414,8 @@ def _extract_ports_from_ldraw_dat(part_id: str, ldraw_root: str | None = None) -
                     local_normal=normal,
                     dof=JointDOF.REVOLUTE,
                     symmetry=1,
-                    clutch_power=1.8
+                    clutch_power=1.8,
+                    source="ldraw_dat"
                 ))
             elif sub_name.endswith(".dat"):
                 sub_file = find_ldraw_part_file(sub_name, ldraw_root)
@@ -424,11 +435,19 @@ def _generate_parametric_ports(part_id: str) -> list[ConnectionPort]:
     """
     from src.validator import get_part_dimensions
 
+    clean_id = part_id.lower().replace(".dat", "")
+    
+    # NOTE: 6 LEGO parts previously marked as unsupported (10247, 2516, 2540, 30377, 4274, 6141)
+    # Changed 2026-11-12: Now attempt parametric generation + .dat extraction anyway.
+    # If no ports are found, the validation layer can mark them as unsupported_connectivity.
+    # This allows recovery of connectivity data from .conn files or LDraw .dat primitives.
+    
+    ports: list[ConnectionPort] = []
+    
     dim = get_part_dimensions(part_id)
     W, H, D = dim[0], dim[1], dim[2]
     N = max(1, int(round(W / 20.0)))
     M = max(1, int(round(D / 20.0)))
-    clean_id = part_id.lower()
 
     ports: list[ConnectionPort] = []
 
